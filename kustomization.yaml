@@ -1,0 +1,20 @@
+namespace: cdro
+
+resources:
+- additional_resources.yaml
+
+helmCharts:
+- name: postgresql
+  namespace: cdro
+  valuesFile : ./postgre-values.yaml
+  repo: https://charts.bitnami.com/bitnami
+  version: 13.2.24
+  releaseName: postgre
+  IncludeCRDs: true
+- name: cloudbees-flow
+  namespace: cdro
+  valuesFile : ./cdro-values.yaml
+  repo: https://public-charts.artifacts.cloudbees.com/repository/public
+  version: 2.27.0
+  releaseName: cdro
+  IncludeCRDs: true
