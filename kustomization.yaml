@@ -33,15 +33,15 @@ patches:
       - op: add
         path: /spec/rules/0/http/paths/1/pathType
         value: ImplementationSpecific
-#      - op: replace
-#        path: /spec/rules/0/http/paths/0/backend
-#        value:
-#          serviceName: flow-web
-#          servicePort:
-#            number: 80
-#      - op: replace
-#        path: /spec/rules/0/http/paths/1/backend
-#        value:
-#          serviceName: flow-web
-#          servicePort:
-#            number: 80
+      - op: replace
+        path: /spec/rules/0/http/paths/0/backend
+        value:
+          serviceName: flow-web
+          servicePort:
+            number: 80
+      - op: replace
+        path: /spec/rules/0/http/paths/1/backend
+        value:
+          serviceName: flow-web
+          servicePort:
+            number: 80
