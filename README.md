@@ -1,1 +1,1 @@
-kustomize build --enable-helm --helm-api-versions=networking.k8s.io/v1,apps/v1,v1
+kustomize build --enable-helm --helm-api-versions=networking.k8s.io/v1,apps/v1,v1 > app.yaml
