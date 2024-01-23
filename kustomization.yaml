@@ -47,3 +47,6 @@ patches:
             name: flow-web
             port: 
               number: 80 
+      - op: add
+        path: /spec/ingressClassName
+        value: alb
