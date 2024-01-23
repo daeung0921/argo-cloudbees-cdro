@@ -36,12 +36,14 @@ patches:
       - op: replace
         path: /spec/rules/0/http/paths/0/backend
         value:
-          serviceName: flow-web
-          servicePort:
-            number: 80
+          service:
+            name: flow-web
+            port: 
+              number: 80 
       - op: replace
         path: /spec/rules/0/http/paths/1/backend
         value:
-          serviceName: flow-web
-          servicePort:
-            number: 80
+          service:
+            name: flow-web
+            port: 
+              number: 80 
