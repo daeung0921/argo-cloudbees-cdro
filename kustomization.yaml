@@ -9,12 +9,21 @@ helmCharts:
   valuesFile : ./postgre-values.yaml
   repo: https://charts.bitnami.com/bitnami
   version: 13.2.24
-  releaseName: postgre
+  releaseName: postgre 
   IncludeCRDs: true
 - name: cloudbees-flow
   namespace: cdro
   valuesFile : ./cdro-values.yaml
   repo: https://public-charts.artifacts.cloudbees.com/repository/public
   version: 2.27.0
-  releaseName: cdro
+  releaseName: cdro 
   IncludeCRDs: true
+
+patches:
+  - target:
+      kind: Ingress
+      name: flow-ingress
+    patch: |
+      - op: replace
+        path: /apiVersion
+        value: networking.k8s.io/v1

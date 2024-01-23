@@ -59,40 +59,15 @@ serverName: flow-server
 ### --------------------------------------------
 ### Ingress configuration section
 ### ---------------------------------------------
-
 ingress:
-
-  ## Flag that dictates the ingress workload and its accompanying services are installed.
   enabled: true
-  host: "cdro.idtplateer.com"
-  ## CloudBees CD/RO flow-web ingress annotations.
-  ## Nginx is used, but any ingress that supports
-  ## sticky sessions will suffice.
+  host: "cdro.idtplateer.com" 
   annotations: 
     "alb.ingress.kubernetes.io/certificate-arn": "arn:aws:acm:ap-northeast-2:960249453675:certificate/5ef7ac4b-8549-480b-ac9b-6efae081ecbf"
     "alb.ingress.kubernetes.io/scheme": "internet-facing"
-    "external-dns.alpha.kubernetes.io/hostname": "cdro.idtplateer.com"
-
-     ## If you are using EKS with ALB, enable the follow annotations:
-#    alb.ingress.kubernetes.io/scheme: internet-facing
-#    alb.ingress.kubernetes.io/certificate-arn: "<acm certificate arn>"
-
-
-  ## Set to the same value as `nginx-ingress.controller.ingressClass` if enabled.
-  ## Set to the same value as `ingress-nginx.controller.ingressClassResource.name` if enabled.
-#  class: flow-ingress
-  ## If using EKS and need to deploy ALB load balancer with alb controller enabled, set to `alb`.
-  class: alb
-
-
-   ## Certificate for CloudBees flow-web ingress.
-   ## You can also set using `helm install --set-file`.
-#   ingress.certificate.key=path/to/key` `--set-file
-#   ingress.certificate.crt=path/to/certificate`
-
-  ## Example structure to configure an ingress certificate for TLS.
+    "external-dns.alpha.kubernetes.io/hostname": "cdro.idtplateer.com" 
+  class: "cdro-ingress" 
   certificate:
-    existingSecret:
     key: |
      -----BEGIN RSA PRIVATE KEY-----
      MIIEpAIBAAKCAQEAy227vwehTiBI4sBBA9hu412dERH2PUq/ygJ//iBf4GW0Kkfc
@@ -148,9 +123,6 @@ ingress:
      Uupia089kErAri0/LNAT3Qm+HzoS+j93gV99mHAJxhiggb1bhZIBSbQlVOzXyXlf
      3lNR/LNHVFFP3ApofFBr
      -----END CERTIFICATE-----
-
-  ## Create an OpenShift route rather than a generic ingress.
-  route: false
 
 ## Enables platform-specific settings.
 ## Platform-specific values are: `eks`, `aws`, `gke`, `aks`, `openshift`

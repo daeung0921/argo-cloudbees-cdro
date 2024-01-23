@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata: 
-  name: kust-helm-app
+  name: cdro
   namespace: argocd
 spec: 
   project: default
