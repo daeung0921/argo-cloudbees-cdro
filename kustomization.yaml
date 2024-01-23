@@ -19,14 +19,14 @@ helmCharts:
   releaseName: cdro 
   IncludeCRDs: true
 
-#patches:
-#  - target:
-#      kind: Ingress
-#      name: flow-ingress
-#    patch: |
-#      - op: replace
-#        path: /apiVersion
-#        value: networking.k8s.io/v1
+patches:
+  - target:
+      kind: Ingress
+      name: flow-ingress
+    patch: |
+      - op: replace
+        path: /apiVersion
+        value: networking.k8s.io/v1
 
 patchesStrategicMerge:
   - |-
@@ -39,5 +39,13 @@ patchesStrategicMerge:
       rules:
       - http:
           paths:
-          - pathType: ImplementationSpecific
-          - pathType: ImplementationSpecific
+          - backend:
+              serviceName: flow-web
+              servicePort: 80
+            path: /
+            pathType: ImplementationSpecific
+          - backend:
+              serviceName: flow-web
+              servicePort: 80
+            path: /*
+            pathType: ImplementationSpecific
