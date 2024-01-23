@@ -27,25 +27,9 @@ patches:
       - op: replace
         path: /apiVersion
         value: networking.k8s.io/v1
-
-patchesStrategicMerge:
-  - |-
-    apiVersion: networking.k8s.io/v1
-    kind: Ingress
-    metadata:
-      name: flow-ingress
-      namespace: cdro
-    spec:
-      rules:
-      - http:
-          paths:
-          - backend:
-              serviceName: flow-web
-              servicePort: 80
-            path: /
-            pathType: ImplementationSpecific
-          - backend:
-              serviceName: flow-web
-              servicePort: 80
-            path: /*
-            pathType: ImplementationSpecific
+      - op: add
+        path: /spec/rules/0/http/paths/0/pathType
+        value: ImplementationSpecific
+      - op: add
+        path: /spec/rules/0/http/paths/1/pathType
+        value: ImplementationSpecific
