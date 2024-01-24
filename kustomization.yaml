@@ -72,8 +72,8 @@ patches:
             defaultMode: 420
             name: php-ini-config
       - op: add
-        path: /spec/template/spec/volumeMounts/-
+        path: /spec/template/spec/containers/0/volumeMounts/-
         value:
           mountPath: /custom-config/apache/php.ini
           name: php-ini-config
-          subPath: php-ini-config          
+          subPath: php-ini-config
