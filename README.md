@@ -1,18 +1,20 @@
 ## Kustomized Helm Chart - Cloudbees CD Ro
 
-CDRO kustomized helm chart 를 ArgoCD 통해 배포하기 위한 예제 Repo
+CDRO kustomized helm chart 를 ArgoCD 통해 배포하기 위한 예제 Repo 입니다.
 
-### Step 1 > 백업
+### 단계 1 > 백업
 
-업그레이드를 진행하기 전에 Backup 한다.
-- [Velero 를 통해 Persistent Volume 을 백업하고 수동으로 DB 백업](https://docs.bitnami.com/tutorials/backup-restore-data-mariadb-galera-kubernetes/)
+업그레이드 전에 반드시 [백업](https://docs.bitnami.com/tutorials/backup-restore-data-mariadb-galera-kubernetes/)을 수행하세요:
+- Velero를 사용하여 Persistent Volume을 백업합니다.
+- 선택적으로, 수동으로 데이터베이스(DB) 백업을 수행합니다.
 
-### Step 2 > Cloudbees CDRO Chart 변경분 확인
+```bash
+<doSometing>
+```
 
-먼저 아래와 같이 Cloudbees CDRO 에서 신규 버전을 확인하고 Values.yaml 및 Chart 파일이 구성이 어디가 변경되었는지 확인한다.
-- Release Note 를 통해 신규 버전과 이전 버전의 차이를 확인한다.
-- values-origin.yaml, values-new.yaml 의 변경된 사항을 확인한다.
-- values-new.yaml 내용이 values-origin.yaml 과 비교하여 많이 변경이 된 경우는 chart 전체에서 어떤 수정이 일어났는지도 확인한다.
+### 단계 2 >  CloudBees CDRO 차트 변경 확인 
+
+CloudBees CDRO의 최신 버전을 확인합니다.
 
 ```bash
 $ helm repo add cb https://public-charts.artifacts.cloudbees.com/repository/public/
@@ -26,30 +28,54 @@ cb/cloudbees-flow       2.25.1          2023.06.1.165376        A Helm chart for
 cb/cloudbees-flow       2.25.0          2023.06.0.164409        A Helm chart for CloudBees Flow
 ...
 
+```
+
+업그레이드 버전의 values.yaml 을 얻습니다.
+
+```bash
 # 풀소스 
-$ helm pull cb/cloudbees-flow --version 2.28.0 # 신규 적용 버전
+$ helm pull cb/cloudbees-flow --version 2.28.0
 
 # 신규 Values.yaml 다운로드
 $ helm inspect values cb/cloudbees-flow --version  2.28.0   > cdro-values-new.yaml
+```
+
+이전 values.yaml 과 신규 values.yaml 을 비교하여  cdro-values.yaml 에 신규 값을 업데이트 합니다.
+
+```yaml
+
+# 추가된 내용 반영
+...
+## Custom Labels for CDRO workload pods
+customLabels:
+  product: cdro
 
 ```
 
-### Step 3 > 변경 분을 확인하고 Tagging 하여 신규 Tag 로 Application 배포
-
-1. cdro-values.yaml, cdro-values-new.yaml 두 값을 비교하여 차이점을 cdro-values.yaml 에 반영한다.
-2. cdro-values.yaml 을 수정한 상태에서 kustomize build 를 사용하여 실제 배포할 매니페스트를 얻는다.
-3. cdro-kust.bk, cdro-kust-new.bk 두 값을 비교하여 차이가 있는 점을 확인한다.
-4. cdro-kust.bk 를 신규 컨텐츠로 변경한다.
-5. 필요시 kustomization.yaml 을 수정한다.
-6. Application.yaml 에 신규 태그명을 넣는다.
-7. Tagging 한다.
-8. Application.yaml 을 배포하여 ArgoCD 에서 OutOfSync 상태에서 Diff 를 확인하여 변경 정보를 확인 후 문제 없으면 Sync 한다.
+kustomize 빌드하여 적용되려는 매니페스트를 얻고 이전 매니페스트(cdro-kust.bk) 와 비교합니다. 이때 반드시 매니페스트에 kustomization.yaml 의 패치값을 적용해도 문제 없을지 검토합니다.
 
 ```bash
-# cdro-kust.bk, cdro-kust-new.bk 두 값을 비교하여 차이가 있는 점을 확인
-$ kustomize build --enable-helm  > kust_result_new.bk
+$ kustomize build --enable-helm  > cdro-kust-new.bk
 
-# application.yaml 에서 ArgoCD Application 의 targetRevision 을 신규 태그명으로 수정
+# kustomizaiton 의 patch 의 내용이 아래와 같다면 cdro-kust-new.bk 에 flow-ingress 가 있는지 확인하고 apiVersion 을 바꿔도 될지 확인
+patches:
+  - target:
+      kind: Ingress
+      name: flow-ingress
+    patch: |
+      - op: replace
+        path: /apiVersion
+        value: networking.k8s.io/v1
+
+```
+
+### 단계 3 > 변경 분을 확인하고 Tagging 하여 신규 Tag 로 Application 배포
+
+application.yaml 에서 ArgoCD Application 의 targetRevision 을 신규 태그명으로 수정합니다.
+
+```yaml
+# application.yaml
+...
 spec: 
   project: default
   source:
@@ -57,27 +83,67 @@ spec:
     path: .
     targetRevision: v2.0
 
-# Tagging 하여 저장
+...
+```
+
+변경 사항을 Commit 하고 Tagging 합니다.
+
+```bash
 $ git add .
 $ git commit -m 'v2.0'
 $ git push -u origin main
 $ git tag v2.0
 $ git push origin v2.0 
 
+```
+
+Application.yaml 을 배포한 뒤 ArgoCD 에서 OutOfSync 상태에서 Diff 를 확인하여 변경 정보를 확인 후 문제 없으면 Manual Sync 를 수행합니다.
+
+```bash
+ 
 # ArgoCD 에 배포후 Manual Sync
 $ kubectl apply -f application.yaml
 
 ``` 
 
-### Step 4 > 롤백
+업그레이드 후 문제가 없는지 확인합니다.
 
-문제가 있는 경우 아래와 같이 롤백한다.
+### 단계 4 > 롤백
 
-1.  ArgoCD 에서 Application.yaml 의 targetRevision 을 이전 Tag 를 사용하여 재배포하여 복구한다.
-2.  문제가 없이 롤백되면 그대로 사용한다.
-3.  문제가 있는 경우 ArgoCD Application 을 삭제한다.
-4.  Velero 와 DB 를 Backup 을 이용해 복원한다.
-5.  Application.yaml 의 targetRevision 을 이전 Tag 를 사용하여 재배포한다.
+문제가 있는 경우 ArgoCD 에서 Application.yaml 의 targetRevision 을 이전 Tag 를 사용하여 재배포하여 복구를 시도합니다.
+
+```bash
+#  application.yaml 에서 ArgoCD Application 의 targetRevision 을 이전 태그명으로 수정
+spec: 
+  project: default
+  source:
+    repoURL: 'https://github.com/daeung0921/kust-cdro-install.git'
+    path: .
+    targetRevision: v1.0
+
+# ArgoCD 에 배포
+$ kubectl apply -f application.yaml
+
+# Diff 확인 후 문제가 없으면 Manual Sync
+$ argocd login argo.idtplateer.com:443 --insecure
+$ argocd app list --grpc-web
+$ argocd app sync cdro --grpc-web
+```
+
+이전 버전으로 돌아가도 문제가 개선되지 않는 경우 ArgoCD Application 을 삭제합니다.
+
+```bash
+$ argocd login argo.idtplateer.com:443 --insecure
+$ argocd app delete cdro
+```
+
+Velero 와 DB 를 Backup 을 이용해 복원합니다.
+
+```bash
+<doSometing>
+```
+
+Application.yaml 의 targetRevision 을 이전 Tag 를 사용하여 재배포하고 Sync 합니다.
 
 ```YAML
 #  application.yaml 에서 ArgoCD Application 의 targetRevision 을 이전 태그명으로 수정
@@ -88,6 +154,9 @@ spec:
     path: .
     targetRevision: v1.0
 
-# ArgoCD 에 배포후 Manual Sync
+# ArgoCD 에 이전 버전 배포후 Manual Sync
 $ kubectl apply -f application.yaml
+$ argocd login argo.idtplateer.com:443 --insecure
+$ argocd app list --grpc-web
+$ argocd app sync cdro --grpc-web
 ```
