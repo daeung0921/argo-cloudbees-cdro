@@ -12,8 +12,15 @@ spec:
   destination:
     server: 'https://kubernetes.default.svc'
     namespace: cdro
+  ignoreDifferences:
+  - group: "apps"
+    kind: "Deployment"
+    name: "flow-server"
+    jsonPointers:
+    - /spec/replicas     
   syncPolicy:
-    automated: {}
+    #automated: {}
     syncOptions:
       - CreateNamespace=true
       - ApplyOutOfSyncOnly=true
+      - RespectIgnoreDifferences=true
