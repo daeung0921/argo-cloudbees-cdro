@@ -137,7 +137,7 @@ $ argocd login argo.idtplateer.com:443 --insecure
 $ argocd app delete cdro
 ```
 
-Velero 와 DB 를 Backup 을 이용해 복원합니다.
+Velero 를 사용해 Volume 을 복원하고 DB 는 Dump 뜬것을 이용해 복원합니다.
 
 ```bash
 <doSometing>
