@@ -34,7 +34,7 @@ $ helm inspect values cb/cloudbees-flow --version  2.28.0   > cdro-values-new.ya
 
 ```
 
-### Step 3 > 변경 분을 확인하고 Tagging 하여 저장
+### Step 3 > 변경 분을 확인하고 Tagging 하여 신규 Tag 로 Application 배포
 
 1. cdro-values.yaml, cdro-values-new.yaml 두 값을 비교하여 차이점을 cdro-values.yaml 에 반영한다.
 2. cdro-values.yaml 을 수정한 상태에서 kustomize build 를 사용하여 실제 배포할 매니페스트를 얻는다.
@@ -43,12 +43,13 @@ $ helm inspect values cb/cloudbees-flow --version  2.28.0   > cdro-values-new.ya
 5. 필요시 kustomization.yaml 을 수정한다.
 6. Application.yaml 에 신규 태그명을 넣는다.
 7. Tagging 한다.
+8. Application.yaml 을 배포하여 ArgoCD 에서 OutOfSync 상태에서 Diff 를 확인하여 변경 정보를 확인 후 문제 없으면 Sync 한다.
 
 ```bash
 # cdro-kust.bk, cdro-kust-new.bk 두 값을 비교하여 차이가 있는 점을 확인
 $ kustomize build --enable-helm  > kust_result_new.bk
 
-# ArgoCD Application 의 targetRevision 을 신규 태그명으로 수정
+# application.yaml 에서 ArgoCD Application 의 targetRevision 을 신규 태그명으로 수정
 spec: 
   project: default
   source:
@@ -62,5 +63,31 @@ $ git commit -m 'v2.0'
 $ git push -u origin main
 $ git tag v2.0
 $ git push origin v2.0 
+
+# ArgoCD 에 배포후 Manual Sync
+$ kubectl apply -f application.yaml
+
 ``` 
- 
+
+### Step 4 > 롤백
+
+문제가 있는 경우 아래와 같이 롤백한다.
+
+1.  ArgoCD 에서 Application.yaml 의 targetRevision 을 이전 Tag 를 사용하여 재배포하여 복구한다.
+2.  문제가 없이 롤백되면 그대로 사용한다.
+3.  문제가 있는 경우 ArgoCD Application 을 삭제한다.
+4.  Velero 와 DB 를 Backup 을 이용해 복원한다.
+5.  Application.yaml 의 targetRevision 을 이전 Tag 를 사용하여 재배포한다.
+
+```YAML
+#  application.yaml 에서 ArgoCD Application 의 targetRevision 을 이전 태그명으로 수정
+spec: 
+  project: default
+  source:
+    repoURL: 'https://github.com/daeung0921/kust-cdro-install.git'
+    path: .
+    targetRevision: v1.0
+
+# ArgoCD 에 배포후 Manual Sync
+$ kubectl apply -f application.yaml
+```
