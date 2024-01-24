@@ -23,7 +23,7 @@ helmCharts:
   valuesFile : ./cdro-agent-values.yaml
   repo: https://public-charts.artifacts.cloudbees.com/repository/public
   version: 2.28.0
-  releaseName: cdro 
+  releaseName: cdro-remote-agent
   IncludeCRDs: true
 
 patches:
