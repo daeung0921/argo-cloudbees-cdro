@@ -71,6 +71,18 @@ patches:
 
 ### 단계 3 > 변경 분을 확인하고 Tagging 하여 신규 Tag 로 Application 배포
 
+kustomization.yaml 에서 chart 버전을 수정합니다.
+
+```yaml
+- name: cloudbees-flow
+  namespace: cdro
+  valuesFile : ./cdro-values.yaml
+  repo: https://public-charts.artifacts.cloudbees.com/repository/public
+  version: 2.28.0
+  releaseName: cdro 
+  IncludeCRDs: true
+```
+
 application.yaml 에서 ArgoCD Application 의 targetRevision 을 신규 태그명으로 수정합니다.
 
 ```yaml
