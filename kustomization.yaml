@@ -61,3 +61,19 @@ patches:
           alb.ingress.kubernetes.io/ssl-redirect: "443"
           alb.ingress.kubernetes.io/target-type: "ip"
           external-dns.alpha.kubernetes.io/hostname: "cdro.idtplateer.com"
+  - target:
+      kind: Deployment
+      name: flow-web
+    patch: |
+      - op: add
+        path: /spec/template/spec/volumes/-
+        value:
+          configMap:
+            defaultMode: 420
+            name: php-ini-config
+      - op: add
+        path: /spec/template/spec/volumeMounts/-
+        value:
+          mountPath: /custom-config/apache/php.ini
+          name: php-ini-config
+          subPath: php-ini-config          
