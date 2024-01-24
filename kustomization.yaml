@@ -74,6 +74,7 @@ patches:
       - op: add
         path: /spec/template/spec/volumes/-
         value:
+          name: php-ini-config        
           configMap:
             defaultMode: 420
             name: php-ini-config
