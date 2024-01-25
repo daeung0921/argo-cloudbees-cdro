@@ -145,11 +145,11 @@ externalService:
 storage:
   volumes:
     agentWorkspace:
-      name:  cdro-remote-agent-pvc ## cdro-ragent-pvc
-      accessMode: ReadWriteMany ## ReadWriteOnce
+      name:  cdro-remote-agent-pvc
+      accessMode: ReadWriteMany
       storage: 5Gi
-      storageClass: sc-cdro ## 공백
-      existingClaim: true ## false
+      storageClass: sc-cdro
+      existingClaim: true
       #name:  cdro-ragent-pvc
       #accessMode: ReadWriteOnce
       #storage: 5Gi
