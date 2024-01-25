@@ -104,7 +104,7 @@ tolerations: []
 affinity: {}
 
 ## Interpreted as if passed to the CloudBees ecconfigure utility within the container.
-ecconfigure: "--agentInitMemoryMB=1024 --agentMaxMemoryMB=1024"
+ecconfigure: "--agentInitMemory=50 --agentMaxMemory=80"
 
 ## The default loglevel for the agent.
 logLevel: DEBUG
