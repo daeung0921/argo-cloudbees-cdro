@@ -109,12 +109,17 @@ patches:
       - op: add
         path: /spec/template/spec/initContainers/-
         value:
-          name: busybox-installer
-          image: busybox
-          command:
-          - sh
-          - '-c'
+          name: stress-installer
+          image: docker.io/cloudbees/cbflow-agent:2023.12.0.171596_3.2.64_20231207
+          command: ["/bin/sh", "-c"]
           - |
-            set -e
-            set -x
-            apk add --no-cache stress    
+            microdnf install -y sudo
+            useradd -u 1000 -g root user
+            echo "user ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/user
+            chmod 0440 /etc/sudoers.d/user
+            sudo -u user microdnf install -y stress
+          securityContext:
+              runAsUser: 0
+          volumeMounts:
+            - name: install-scripts
+              mountPath: /scripts
