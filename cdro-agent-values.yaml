@@ -149,13 +149,13 @@ storage:
       ## `access-mode` is either:
       ## NFS: `accessMode: ReadWriteMany`
       ## Traditional volume mount `accessMode: ReadWriteOnce`
-      accessMode: ReadWriteMany
-      storage: 20Gi
+      accessMode: ReadWriteOnce
+      storage: 5Gi
       ## To use any  custom storage class just uncomment the line and state required storageClass name
-#      storageClass: sc-cdro
+      storageClass: sc-cdro
 
       ## Configure `existingClaim: true` if you have agents already deployed with a shared workspace or PVC.
-      existingClaim: true
+      existingClaim: false
 
 resources:
   limits:
