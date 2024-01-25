@@ -245,7 +245,7 @@ volumePermissions:
 
 gateway:
   ## Install this agent as a gateway agent.
-  enabled: false
+  enabled: true
   ## Name of the gateway to create.
   name: external
   ## Name of the gateway agent to pair with as gateway resource 2.
@@ -259,12 +259,26 @@ additionalContainers:
 
 ## Horizontal Pod Autoscaling configuration for agent.
 autoscaling:
-  enabled: false
-  minReplicas: 1
-  maxReplicas: 3
-  targetCPUUtilizationPercentage: 80
-  targetMemoryUtilizationPercentage: 80
-  templates: []
+  enabled: true
+  minReplicas: 3
+  maxReplicas: 5
+  targetCPUUtilizationPercentage: 50
+  targetMemoryUtilizationPercentage: 50
+  templates: 
+    - name: custom-behavior
+      behavior:
+        scaleUp:
+          stabilizationWindowSeconds: 120
+          policies:
+            - type: Pods
+              value: 2
+              periodSeconds: 30
+        scaleDown:
+          stabilizationWindowSeconds: 60
+          policies:
+            - type: Percent
+              value: 10
+              periodSeconds: 20  
     ## Specify custom or additional autoscaling metrics.
     ## Ref: https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/#support-for-custom-metrics
 #    - type: Pods
