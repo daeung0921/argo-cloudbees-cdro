@@ -270,7 +270,7 @@ autoscaling:
         scaleUp:
           stabilizationWindowSeconds: 120
           policies:
-            - type: Pods
+            - type: Resource
               value: 2
               periodSeconds: 30
         scaleDown:
