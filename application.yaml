@@ -17,6 +17,10 @@ spec:
     kind: "Deployment"
     name: "flow-server"
     jsonPointers:
+    - /spec/replicas 
+  - group: "apps"
+    kind: "StatefulSet" 
+    jsonPointers:
     - /spec/replicas     
   syncPolicy:
     #automated: {}
