@@ -104,7 +104,7 @@ tolerations: []
 affinity: {}
 
 ## Interpreted as if passed to the CloudBees ecconfigure utility within the container.
-ecconfigure: "--agentInitMemoryMB=16 --agentMaxMemoryMB=64"
+ecconfigure: "--agentInitMemoryMB=256 --agentMaxMemoryMB=512"
 
 ## The default loglevel for the agent.
 logLevel: DEBUG
@@ -145,17 +145,17 @@ externalService:
 storage:
   volumes:
     agentWorkspace:
-      name: cdro-ragent-pvc
+      name: cdro-ragent-pvc ## cdro-remote-agent-pvc
       ## `access-mode` is either:
       ## NFS: `accessMode: ReadWriteMany`
       ## Traditional volume mount `accessMode: ReadWriteOnce`
-      accessMode: ReadWriteOnce
+      accessMode: ReadWriteOnce ## ReadWriteMany
       storage: 5Gi
       ## To use any  custom storage class just uncomment the line and state required storageClass name
-      storageClass: sc-cdro
+      storageClass: ## sc-cdro
 
       ## Configure `existingClaim: true` if you have agents already deployed with a shared workspace or PVC.
-      existingClaim: false
+      existingClaim: false ## true
 
 resources:
   limits:
