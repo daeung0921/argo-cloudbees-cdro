@@ -91,6 +91,377 @@ data:
 apiVersion: v1
 kind: ConfigMap
 metadata:
+  name: server-wrapper-config
+  namespace: cdro
+  labels:
+    app: cloudbees-flow
+    chart: cloudbees-flow
+data:
+  server-wrapper-config: |
+    #encoding=UTF-8
+    #********************************************************************
+    # Wrapper Properties
+    #********************************************************************
+    #
+    # This is a configuration file for the Java Service Wrapper from
+    # Tanuki Software.  It is *not* a Java properties file.  Differences
+    # include:
+    # - The \ character is not an escape character.
+    # - The # character is a comment character; to include it in a property
+    #   value, it must be inside double quotes or escaped by a second #.
+    # - Anything in %percent_signs% will be expanded from the environment.
+
+    # Configure the installation and data directories.  This is
+    # setting environment variables that can be expanded below.  (Because
+    # they are set.default.WHATEVER instead of set.WHATEVER, they will
+    # not override WHATEVER if already set in the environment.)
+    set.default.INSTALL_DIRECTORY=/opt/cbflow
+    set.default.DATA_DIRECTORY=/opt/cbflow
+    set.default.WEBAPPS_DIR_PATH=%INSTALL_DIRECTORY%/server/wars
+    set.default.COMMANDER_PORT=8000
+    set.default.COMMANDER_HTTPS_PORT=8443
+
+    # Set current working directory after wrapper executable starts
+    wrapper.working.dir=%DATA_DIRECTORY%
+
+    wrapper.pidfile=%DATA_DIRECTORY%/server/commander.pid
+
+    # Java Application
+    wrapper.java.command=%INSTALL_DIRECTORY%/jre/bin/java
+
+    # Java Main class.  This class must implement the WrapperListener interface
+    # or guarantee that the WrapperManager class is initialized.  Helper
+    # classes are provided to do this for you.  See the Integration section
+    # of the documentation for details.
+    wrapper.java.mainclass=com.electriccloud.util.AppStart
+
+    # Set the umask to make files only writable by owner on Linux
+    wrapper.java.umask=022
+
+    # Be lenient about sequence gaps
+    wrapper.ignore_sequence_gaps=true
+
+    # Java Classpath
+
+    wrapper.java.classpath.3=%INSTALL_DIRECTORY%/server/lib/commander-bootstrap.jar
+    wrapper.java.classpath.5=%INSTALL_DIRECTORY%/server/lib/*.jar
+
+    # Classpath on command line is too long for windows,
+    # so pass it in the environment
+    wrapper.java.classpath.use_environment=true
+
+    # Java Library Path (location of Wrapper.DLL or libwrapper.so)
+    wrapper.java.library.path.1=%INSTALL_DIRECTORY%/server/lib
+
+    # You can restore the behavior in CloudBees CD versions 4.2.x in which
+    # spaces are not stripped from UI form's parameter values that contain
+    # only spaces. To do so, set this variable to 'false'. When set to
+    # 'true' (the default), these spaces are stripped. This variable does not
+    # strip spaces in parameter values that contain leading or trailing spaces
+    # in conjunction with other characters.
+    set.default.COMMANDER_XML_READER_STRIP_WHITESPACE_TEXT=true
+
+    # Java Additional Parameters
+    #
+    # These do not need to be consecutive or ordered.
+    # ****CloudBees CD reserves the 1-1000 integer range****
+    #     DO NOT use integers between 1-1000 for custom settings.
+
+    # Default location for log output
+    set.default.EC_LOG_ROOT=%DATA_DIRECTORY%/logs/commander.log
+
+    wrapper.java.additional.100=-server
+    wrapper.java.additional.110=-XX:+UseG1GC
+    wrapper.java.additional.120=-XX:+HeapDumpOnOutOfMemoryError
+    wrapper.java.additional.170=-Dec.logRoot="%EC_LOG_ROOT%"
+    wrapper.java.additional.180=-Dcommander.logSetup=true
+    wrapper.java.additional.190=-Dcommander.logEvents=true
+    wrapper.java.additional.192=-Dcommander.appName=ElectricFlowServer
+    wrapper.java.additional.210=-Djavax.net.ssl.sessionCacheSize=1000
+    wrapper.java.additional.211=-Djgroups.logging.log_factory_class=com.electriccloud.cluster.JGroupsLogFactory
+    wrapper.java.additional.204=-Dec.logging-local.properties=conf/logging-local.properties
+
+    # Ports
+    wrapper.java.additional.220=-DCOMMANDER_PORT=%COMMANDER_PORT%
+    wrapper.java.additional.230=-DCOMMANDER_HTTPS_PORT=%COMMANDER_HTTPS_PORT%
+
+    # SSL Properties
+    wrapper.java.additional.250=-DCOMMANDER_KEYSTORE=conf/keystore
+
+    # Jetty arguments
+    wrapper.java.additional.270=-DWEBAPPS_DIR="%WEBAPPS_DIR_PATH%"
+    wrapper.java.additional.270.stripquotes=TRUE
+
+    # Logging properties
+    wrapper.java.additional.280=-Dorg.eclipse.jetty.util.log.class=org.eclipse.jetty.util.log.Slf4jLog
+    wrapper.java.additional.290=-Dorg.eclipse.jetty.LEVEL=INFO
+
+    # SSL set the enabled client protocol list
+    wrapper.java.additional.310=-Djdk.tls.client.protocols="TLSv1.2"
+
+    # SSL/TLS: Increase DH key size from default 1024 to 2048
+    wrapper.java.additional.311=-Djdk.tls.ephemeralDHKeySize=2048
+
+    # SSL/TLS: Reject client initiated renegotiation which may cause vulnerability
+    wrapper.java.additional.312=-Djdk.tls.rejectClientInitiatedRenegotiation=true
+
+    # SSL set the enabled server protocol list
+    wrapper.java.additional.320=-Dcommander.tls.enabledProtocols="TLSv1.2"
+
+    # Enabled endpoint identification for LDAPS connections.
+    wrapper.java.additional.325=-Dcom.sun.jndi.ldap.object.disableEndpointIdentification=true
+
+    # Avoid the wrapper's MBeanServer factory
+    wrapper.java.additional.330=-Dorg.tanukisoftware.wrapper.WrapperManager.mbean=false
+
+    #set server ip adress and host name
+    #wrapper.java.additional.350=-DCOMMANDER_BIND_IP=
+
+    #sda mode
+    #wrapper.java.additional.360=-Dcommander.sda=
+
+    # JRE trust store
+    #wrapper.java.additional.370=-DCOMMANDER_JRE_TRUSTORE=%INSTALL_DIRECTORY%/jre/lib/security/cacerts
+
+    # JRE trust store password
+    #wrapper.java.additional.380=-DCOMMANDER_JRE_TRUSTORE_PASSWORD=changeit
+
+    # Debug arguments
+
+    #wrapper.java.additional.500=-ea
+    #wrapper.java.additional.510=-Xdebug
+    #wrapper.java.additional.520=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:8019
+
+    # Please don't use the 550, 560, and 570 indices.
+    # They are used in commanderServer service startup file and in the server docker image.
+    #wrapper.java.additional.550
+    #wrapper.java.additional.560
+    #wrapper.java.additional.570
+
+    # Clustered mode ZooKeeper connection settings
+    #
+    # COMMANDER_ZK_CONNECTION is required for clustered mode
+
+    #wrapper.java.additional.600=-DCOMMANDER_ZK_CONNECTION=<HOST_ZOOKEEPER1>:2181,<HOST_ZOOKEEPER2>:2181,<HOST_ZOOKEEPER3>:2181
+    #wrapper.java.additional.602=-Dcurator-dont-log-connection-problems=true
+    #wrapper.java.additional.603=-DCLUSTER_CERTIFICATE_SERVICE_USE_ZOOKEEPER=false
+
+    # Support old CD agents < v10.6 with broken ec-groovy
+    wrapper.java.additional.650=-DSERVER_SUPPORT_BROKEN_EC_GROOVY=true
+
+
+    # These are for enabling http/https proxy settings
+
+    # Set java.net.useSystemProxies to true to use the system HTTP/HTTPS proxy settings
+    wrapper.java.additional.700=-Djava.net.useSystemProxies=false
+
+    # Set http.proxyHost to the IP Address of your HTTP proxy
+    # Set http.proxyPort to the port to HTTP proxy through
+    #wrapper.java.additional.701=-Dhttp.proxyHost=<IP_ADDRESS_PROXY>
+    #wrapper.java.additional.702=-Dhttp.proxyPort=<PROXY_PORT>
+
+    # Set http.nonProxyHosts to a pipe delimited list of hosts
+    # that should be reached directly, bypassing the HTTP and HTTPS proxy servers
+    wrapper.java.additional.703=-Dhttp.nonProxyHosts=localhost
+
+    # Credentials to be used to authenticate to HTTP proxy server
+    #wrapper.java.additional.704=-Dhttp.proxyUser=<USERNAME>
+    #wrapper.java.additional.705=-Dhttp.proxyPassword=<PASSWORD>
+
+    # Set https.proxyHost to the IP Address of your HTTPS proxy
+    # Set https.proxyPort to the port to HTTPS proxy through
+    #wrapper.java.additional.710=-Dhttps.proxyHost=<IP_ADDRESS_PROXY>
+    #wrapper.java.additional.711=-Dhttps.proxyPort=<PROXY_PORT>
+
+    # Credentials to be used to authenticate to HTTPS proxy server
+    #wrapper.java.additional.714=-Dhttps.proxyUser=<USERNAME>
+    #wrapper.java.additional.715=-Dhttps.proxyPassword=<PASSWORD>
+
+
+    # These are for enabling email proxy settings
+
+    # Specifies the host name of an HTTP web proxy server that will be used
+    # for connections to the mail server.
+    #wrapper.java.additional.750=-Dmail.smtp.proxy.host=<PROXY_SERVER_ADDRESS>
+
+    # Specifies the port number for the HTTP web proxy server. Defaults to port 80.
+    #wrapper.java.additional.751=-Dmail.smtp.proxy.port=<PROXY_SERVER_PORT>
+
+    # Specifies the user name to use to authenticate with the HTTP web proxy server.
+    # By default, no authentication is done.
+    #wrapper.java.additional.752=-Dmail.smtp.proxy.user=<PROXY_USER>
+
+    # Specifies the password to use to authenticate with the HTTP web proxy server.
+    # By default, no authentication is done.
+    #wrapper.java.additional.753=-Dmail.smtp.proxy.password=<PROXY_PASSWORD>
+
+
+    # These are for enabling CloudBees CD to send data to a statsd server.
+    # Only the hostname is required, the other options are included to show
+    # the default values.
+    #wrapper.java.additional.800=-DCOMMANDER_STATSD_HOST=statsd-host-name
+    #wrapper.java.additional.801=-DCOMMANDER_STATSD_PORT=8125
+    #wrapper.java.additional.802=-DCOMMANDER_STATSD_PREFIX=commander
+    #wrapper.java.additional.803=-DCOMMANDER_STATSD_INCLUDE_HOSTNAME=true
+
+    # Overrides transfer protocol and port in REST documentation
+    # Transfer protocol should be set to http if we use CloudBees CD in appliances
+    # and port should be set to 8000
+    wrapper.java.additional.901=-DREST_DOC_TRANSFER_PROTOCOL=https
+    wrapper.java.additional.902=-DREST_DOC_PORT=8443
+
+    wrapper.java.additional.903=-DCHANGE_TRACKING_HARD_MAX_RECORDS=1000
+
+    # Overrides the SPN for the Kerberos authentication
+    #wrapper.java.additional.950=-Dsun.security.krb5.principal=*
+
+    # Log messages related to Kerberos communication.
+    #
+    # To activate these messages, also uncomment the line
+    # 'logger("com.electriccloud.security.kerberos", TRACE)' in
+    # the configuration file "logging-local.properties".
+    #
+    # The messages will be sent to file "commander-service.log".
+    #
+    #wrapper.java.additional.955=-Dsun.security.krb5.debug=true
+    #wrapper.java.additional.956=-Dsun.security.spnego.debug=true
+    #wrapper.java.additional.957=-Dsun.security.jgss.debug=true
+    #wrapper.java.additional.958=-Djava.security.debug=access,gssloginconfig,configfile,configparser,logincontext
+
+    # Do not print warning when DBA_RECYCLEBIN is not available
+    # https://liquibase.jira.com/browse/CORE-2940
+    wrapper.java.additional.960=-Dliquibase.ignoreRecycleBinWarning=true
+
+    # Plugin catalog URL
+    wrapper.java.additional.970=-Dplugin.catalog.url=https://downloads.cloudbees.com/cloudbees-cd/plugins/catalog.xml
+
+    # Enable (1) or disable (0) preserving sessions even if there is
+    # the CloudBees CD server hostname mismatch.
+    # Default value is '0'.
+    wrapper.java.additional.1601=-DCOMMANDER_PRESERVE_SESSIONS=1
+
+    wrapper.app.parameter.30=-jaxpmodule
+    wrapper.app.parameter.31=javax.xml.jaxp-provider
+
+    # Specify java heap size in percentage OR mb.
+
+    # Initial Java Heap Size (in %)
+    #wrapper.java.additional.1101=-XX:InitialRAMPercentage=20
+
+    # Initial Java Heap Size (in mb)
+    wrapper.java.initmemory=4096
+
+    # Maximum Java Heap Size (in %)
+    #wrapper.java.additional.1102=-XX:MaxRAMPercentage=40
+
+    # Maximum Java Heap Size (in mb)
+    wrapper.java.maxmemory=4096
+
+    #********************************************************************
+    # Wrapper Logging Properties
+    #********************************************************************
+    # Format of output for the console.  (See docs for formats)
+    wrapper.console.format=LPZM
+
+    # Log file to use for wrapper output logging.
+    wrapper.logfile=%DATA_DIRECTORY%/logs/commander-service.log
+
+    # Format of output for the log file.  (See docs for formats)
+    wrapper.logfile.format=LPZM
+
+    # Log Level for log file output.  (See docs for log levels)
+    wrapper.logfile.loglevel=INFO
+
+    # Maximum size that the log file will be allowed to grow to before
+    #  the log is rolled. Size is specified in bytes.  The default value
+    #  of 0, disables log rolling.  May abbreviate with the 'k' (kb) or
+    #  'm' (mb) suffix.  For example: 10m = 10 megabytes.
+    wrapper.logfile.maxsize=100m
+
+    # Maximum number of rolled log files which will be allowed before old
+    #  files are deleted.  The default value of 0 implies no limit.
+    wrapper.logfile.maxfiles=10
+
+    # Log Level for sys/event log output.  (See docs for log levels)
+    wrapper.syslog.loglevel=STATUS
+
+    #********************************************************************
+    # Wrapper Windows Properties
+    #********************************************************************
+    # Title to use when running as a console
+    wrapper.console.title=CloudBees CD Server
+
+    #********************************************************************
+    # Service Properties
+    #********************************************************************
+
+    # Name of the service
+    wrapper.name=CommanderServer
+
+    # Display name of the service
+    wrapper.displayname=CloudBees CD Server
+
+    # Description of the service
+    wrapper.description=CloudBees CD Server
+
+    # Service dependencies.  Add dependencies as needed starting from 1
+    wrapper.ntservice.dependency.1=
+
+    # Mode in which the service is installed.  AUTO_START or DEMAND_START
+    wrapper.ntservice.starttype=AUTO_START
+
+    # Allow the service to interact with the desktop.
+    wrapper.ntservice.interactive=false
+
+    # NT Service recovery options
+    wrapper.ntservice.recovery.reset=86400
+    wrapper.ntservice.recovery.1.delay=90
+    wrapper.ntservice.recovery.1.failure=RESTART
+    wrapper.ntservice.recovery.2.delay=90
+    wrapper.ntservice.recovery.2.failure=RESTART
+    wrapper.ntservice.recovery.3.delay=90
+    wrapper.ntservice.recovery.3.failure=RESTART
+
+    # If the JVM doesn't exit cleanly, try to get a thread dump
+    wrapper.request_thread_dump_on_failed_jvm_exit=true
+
+    # Set the JVM-wrapper heartbeat to reasonably large interval and timeout
+    wrapper.ping.interval=60
+    wrapper.ping.timeout=900
+
+    # Set the startup timeout.  Some machines with large sets of service
+    # take a while to get going.
+    wrapper.startup.timeout=300
+
+    # The shutdown timeout.
+    wrapper.shutdown.timeout=180
+
+    # The amount of time the server has to be up before it's considered a
+    # "successful" invocation.  If there are 5 or more failed invocations, the
+    # server will no longer startup.
+    wrapper.successful_invocation_time=30
+
+    # Java Service Wrapper License information
+    wrapper.license.type=DEV
+    wrapper.license.id=202303310000041
+    wrapper.license.licensee=CloudBees, Inc.
+    wrapper.license.group=SDA
+    wrapper.license.dev_application=CloudBees CD
+    wrapper.license.features=64bit
+    wrapper.license.upgrade_term.begin_date=2009-06-26
+    wrapper.license.upgrade_term.end_date=2024-06-26
+    wrapper.license.key.1=db4a-a5af-296f-882f
+    wrapper.license.key.2=c04f-bdb0-2312-495f
+    wrapper.license.key.3=7222-dc11-fab9-0363
+    wrapper.license.key.4=f35b-dc2f-e4e9-a68b
+    wrapper.console.flush=TRUE
+
+    wrapper.timezone=UTC+9
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
   name: php-ini-config
   namespace: cdro
   labels:
