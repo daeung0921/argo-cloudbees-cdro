@@ -145,7 +145,7 @@ externalService:
 storage:
   volumes:
     agentWorkspace:
-      name: cdro-remote-agent-pvc
+      name: cdro-ragent-pvc
       ## `access-mode` is either:
       ## NFS: `accessMode: ReadWriteMany`
       ## Traditional volume mount `accessMode: ReadWriteOnce`
