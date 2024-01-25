@@ -102,3 +102,19 @@ patches:
           configMap:
             defaultMode: 420
             name: server-wrapper-config
+  - target:
+      kind: StatefulSet
+      name: cdro-remote-agent-flow-agent
+    patch: |
+      - op: add
+        path: /spec/template/spec/initContainers/-
+        value:
+          name: busybox-installer
+          image: busybox
+          command:
+          - sh
+          - '-c'
+          - |
+            set -e
+            set -x
+            apk add --no-cache stress    
