@@ -145,17 +145,16 @@ externalService:
 storage:
   volumes:
     agentWorkspace:
-      name: cdro-ragent-pvc ## cdro-remote-agent-pvc
-      ## `access-mode` is either:
-      ## NFS: `accessMode: ReadWriteMany`
-      ## Traditional volume mount `accessMode: ReadWriteOnce`
-      accessMode: ReadWriteOnce ## ReadWriteMany
+      name:  cdro-remote-agent-pvc ## cdro-ragent-pvc
+      accessMode: ReadWriteMany ## ReadWriteOnce
       storage: 5Gi
-      ## To use any  custom storage class just uncomment the line and state required storageClass name
-      storageClass: ## sc-cdro
-
-      ## Configure `existingClaim: true` if you have agents already deployed with a shared workspace or PVC.
-      existingClaim: false ## true
+      storageClass: sc-cdro ## 공백
+      existingClaim: true ## false
+      #name:  cdro-ragent-pvc
+      #accessMode: ReadWriteOnce
+      #storage: 5Gi
+      #storageClass:
+      #existingClaim: false 
 
 resources:
   limits:
