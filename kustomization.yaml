@@ -102,18 +102,3 @@ patches:
           configMap:
             defaultMode: 420
             name: server-wrapper-config
-  - target:
-      kind: StatefulSet
-      name: cdro-remote-agent-flow-agent
-    patch: |
-      - op: add
-        path: /spec/template/spec/initContainers/-
-        value:
-          name: stress-installer
-          image: docker.io/cloudbees/cbflow-agent:2023.12.0.171596_3.2.64_20231207
-          command: ["/usr/bin/microdnf", "install", "-y", "sudo", "&&", "useradd -u 1000 -g root user", "&&", "echo 'user ALL=(ALL) NOPASSWD: ALL' > /etc/sudoers.d/user", "&&", "chmod 0440 /etc/sudoers.d/user", "&&", "sudo -u user microdnf install -y stress"]
-          securityContext:
-              runAsUser: 0
-          volumeMounts:
-            - name: install-scripts
-              mountPath: /scripts
