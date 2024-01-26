@@ -529,7 +529,7 @@ dois:
   ## IMPORTANT: If the `adminPassword` is left empty, *no admin user is created*,
   ## and administrative access is *not* granted to any user.
   credentials:
-    existingSecret: cdro-cred
+    existingSecret: cdro-dois-cred
     adminPassword:
     ## If `reportUserPassword` is an empty string, a random 20 characters password is generated.
     reportUserPassword: "changeme!@#"
