@@ -491,7 +491,7 @@ repository:
 dois:
 
   ## Flag that dictates the cbflow-dois workload and its accompanying services are installed.
-  enabled: false
+  enabled: true
   ## The `imageRepository` in the `images.registry` to pull component image from.
   imageRepository: cbflow-dois
   ## Number replicas of Elasticsearch nodes to create.
@@ -529,10 +529,10 @@ dois:
   ## IMPORTANT: If the `adminPassword` is left empty, *no admin user is created*,
   ## and administrative access is *not* granted to any user.
   credentials:
-    existingSecret:
+    existingSecret: cdro-cred
     adminPassword:
     ## If `reportUserPassword` is an empty string, a random 20 characters password is generated.
-    reportUserPassword:
+    reportUserPassword: "changeme!@#"
 
   ## The heap size in MB for Elasticsearch and Logstash services.
   esRam: 1024
@@ -653,6 +653,13 @@ dois:
     ## cbflow-dois LoadBalancer service annotations for
     ## creating internal LoadBalancer on GCP or AWS.
     annotations:
+    #  "service.beta.kubernetes.io/aws-load-balancer-type":  "external"
+    #  "service.beta.kubernetes.io/aws-load-balancer-nlb-target-type": "instance"
+    #  "service.beta.kubernetes.io/load-balancer-source-ranges": "0.0.0.0/0"
+    #  "service.beta.kubernetes.io/aws-load-balancer-scheme": "internet-facing"
+    #  "service.beta.kubernetes.io/aws-load-balancer-ssl-ports": "9200"
+    #  "service.beta.kubernetes.io/aws-load-balancer-backend-protocol": "tcp"
+    #  "external-dns.alpha.kubernetes.io/hostname": "dois.idtplateer.com"
 #      networking.gke.io/load-balancer-type: "Internal"
 #      service.beta.kubernetes.io/aws-load-balancer-internal: "0.0.0.0/0"
 
