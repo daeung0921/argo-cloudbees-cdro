@@ -649,17 +649,17 @@ dois:
   ## Requires `dois.expose.enable: true` and ports `9200`  to be open and externally exposed.
   ## Creates extra Kubernetes service with type LoadBalancer.
   externalService:
-    enabled: false
+    enabled: true
     ## cbflow-dois LoadBalancer service annotations for
     ## creating internal LoadBalancer on GCP or AWS.
     annotations:
-    #  "service.beta.kubernetes.io/aws-load-balancer-type":  "external"
-    #  "service.beta.kubernetes.io/aws-load-balancer-nlb-target-type": "instance"
-    #  "service.beta.kubernetes.io/load-balancer-source-ranges": "0.0.0.0/0"
-    #  "service.beta.kubernetes.io/aws-load-balancer-scheme": "internet-facing"
-    #  "service.beta.kubernetes.io/aws-load-balancer-ssl-ports": "9200"
-    #  "service.beta.kubernetes.io/aws-load-balancer-backend-protocol": "tcp"
-    #  "external-dns.alpha.kubernetes.io/hostname": "dois.idtplateer.com"
+      "service.beta.kubernetes.io/aws-load-balancer-type":  "external"
+      "service.beta.kubernetes.io/aws-load-balancer-nlb-target-type": "instance"
+      "service.beta.kubernetes.io/load-balancer-source-ranges": "0.0.0.0/0"
+      "service.beta.kubernetes.io/aws-load-balancer-scheme": "internet-facing"
+      "service.beta.kubernetes.io/aws-load-balancer-ssl-ports": "9200"
+      "service.beta.kubernetes.io/aws-load-balancer-backend-protocol": "tcp"
+      "external-dns.alpha.kubernetes.io/hostname": "dois.idtplateer.com"
 #      networking.gke.io/load-balancer-type: "Internal"
 #      service.beta.kubernetes.io/aws-load-balancer-internal: "0.0.0.0/0"
 
