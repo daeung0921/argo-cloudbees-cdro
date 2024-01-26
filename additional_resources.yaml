@@ -37,19 +37,6 @@ spec:
   resources:
     requests:
       storage: "20Gi"
---- 
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: "cdro-dois-pvc"
-  namespace: "cdro"
-spec:
-  accessModes:
-    - ReadWriteMany
-  storageClassName: "sc-cdro"
-  resources:
-    requests:
-      storage: "10Gi"
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim

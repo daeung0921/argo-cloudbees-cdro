@@ -845,8 +845,8 @@ storage:
       accessMode: ReadWriteOnce
       storage: 10Gi
       ## To use a custom storage class, provide the storageClass name.
-      storageClass: sc-cdro
-      existingClaim: true
+      storageClass: ""
+      existingClaim: false
 
 
 ### --------------------------------------------
