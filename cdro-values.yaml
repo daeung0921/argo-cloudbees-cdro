@@ -841,11 +841,12 @@ storage:
       existingClaim: true
 
     doisStorage:
-      name: elasticsearch-data
+      name: cdro-dois-pvc
       accessMode: ReadWriteOnce
       storage: 10Gi
       ## To use a custom storage class, provide the storageClass name.
-      storageClass:
+      storageClass: sc-cdro
+      existingClaim: true
 
 
 ### --------------------------------------------
