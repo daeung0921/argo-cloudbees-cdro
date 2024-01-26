@@ -491,7 +491,7 @@ repository:
 dois:
 
   ## Flag that dictates the cbflow-dois workload and its accompanying services are installed.
-  enabled: false
+  enabled: true
   ## The `imageRepository` in the `images.registry` to pull component image from.
   imageRepository: cbflow-dois
   ## Number replicas of Elasticsearch nodes to create.

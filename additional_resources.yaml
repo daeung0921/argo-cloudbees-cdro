@@ -20,7 +20,7 @@ reclaimPolicy: Delete
 volumeBindingMode: Immediate
 parameters:
   provisioningMode: efs-ap
-  fileSystemId: "fs-08ab0c2ca203b8fa1"
+  fileSystemId: "fs-09ed9f75f5e46dd63"
   directoryPerms: "777"
   gid: "0"
   uid: "0"
