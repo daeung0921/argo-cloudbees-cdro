@@ -1928,7 +1928,7 @@ spec:
           sleep infinity
 # Delete the rest (and delete serviceAccount above) unless your cluster uses --enable-pod-security-policy:
 ---
-apiVersion: policy/v1beta1
+apiVersion: policy/v1
 kind: PodSecurityPolicy
 metadata:
   name: privileged-tune-max-map-count
