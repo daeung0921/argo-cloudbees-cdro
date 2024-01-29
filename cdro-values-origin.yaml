@@ -60,7 +60,7 @@ serverName: flow-server
 ### Ingress configuration section
 ### ---------------------------------------------
 ingress:
-  enabled: false
+  enabled: true
   host: "cdro.idtplateer.com" 
   annotations: 
     "alb.ingress.kubernetes.io/certificate-arn": "arn:aws:acm:ap-northeast-2:960249453675:certificate/5ef7ac4b-8549-480b-ac9b-6efae081ecbf"
@@ -1068,7 +1068,7 @@ ingress-nginx:
   ## `ingress-nginx.enabled: true` installs the following ingress-nginx controller:
   ## https://github.com/kubernetes/ingress-nginx/tree/master/charts/ingress-nginx
   ## (OPTIONAL) Enable this section if you don't have an existing ingress-nginx controller installation.
-  enabled: true
+  enabled: false
   controller:
     service:
       externalTrafficPolicy: Local
@@ -1111,11 +1111,11 @@ ingress-nginx:
     61613: "{{ .Release.Namespace }}/flow-server:61613"
 
      ##  Additional TCP ports to access DOIS Elasticsearch over the ingress endpoint:
-    7800: "{{ .Release.Namespace }}/gateway-external-agent-flow-agents:7800"
-    9200: "{{ .Release.Namespace }}/flow-devopsinsight:9200"
+#    7800: "{{ .Release.Namespace }}/gateway-external-agent-flow-agents:7800"
+#    9200: "{{ .Release.Namespace }}/flow-devopsinsight:9200"
 
      ## Additional port to enable external agents to connect to flow-server.
-    8000: "{{ .Release.Namespace }}/flow-server:8000"
+#    8000: "{{ .Release.Namespace }}/flow-server:8000"
 
 ### --------------------------------------------
 ### Miscellaneous configuration section
