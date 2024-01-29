@@ -4,13 +4,6 @@ kind: Namespace
 metadata:
   name: cdro
 ---
-apiVersion: networking.k8s.io/v1
-kind: IngressClass
-metadata:
-  name: cdro-ingress
-spec:
-  controller: ingress.k8s.aws/alb
----
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
@@ -20,10 +13,17 @@ reclaimPolicy: Delete
 volumeBindingMode: Immediate
 parameters:
   provisioningMode: efs-ap
-  fileSystemId: "fs-09ed9f75f5e46dd63"
+  fileSystemId: "fs-0cfe681b6beba0537" # EKS 새로 배포시 바뀜 
   directoryPerms: "777"
   gid: "0"
   uid: "0"
+---
+apiVersion: networking.k8s.io/v1
+kind: IngressClass
+metadata:
+  name: cdro-ingress
+spec:
+  controller: ingress.k8s.aws/alb
 --- 
 apiVersion: v1
 kind: PersistentVolumeClaim
