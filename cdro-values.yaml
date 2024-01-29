@@ -60,7 +60,7 @@ serverName: flow-server
 ### Ingress configuration section
 ### ---------------------------------------------
 ingress:
-  enabled: false
+  enabled: true
   host: "cdro.idtplateer.com" 
   annotations: 
     "alb.ingress.kubernetes.io/certificate-arn": "arn:aws:acm:ap-northeast-2:960249453675:certificate/5ef7ac4b-8549-480b-ac9b-6efae081ecbf"
@@ -535,16 +535,16 @@ dois:
     reportUserPassword: "changeme!@#"
 
   ## The heap size in MB for Elasticsearch and Logstash services.
-  esRam: 1024
+  esRam: 512 #1024
 
   ## Specify the resources to request for this component.
   resources:
     limits:
       cpu: 1
-      memory: 3Gi
+      memory: 1Gi #3Gi
     requests:
       cpu: 0.1
-      memory: 2Gi
+      memory: 1Gi #2Gi
 
   nodeSelector: {}
   tolerations: []
@@ -1068,22 +1068,10 @@ ingress-nginx:
   ## `ingress-nginx.enabled: true` installs the following ingress-nginx controller:
   ## https://github.com/kubernetes/ingress-nginx/tree/master/charts/ingress-nginx
   ## (OPTIONAL) Enable this section if you don't have an existing ingress-nginx controller installation.
-  enabled: true
+  enabled: false
   controller:
     service:
-      enable: true
-      external:
-        enabled: true      
-      #externalTrafficPolicy: Local
-      annotations: 
-        "service.beta.kubernetes.io/aws-load-balancer-ssl-cert": "arn:aws:acm:ap-northeast-2:960249453675:certificate/5ef7ac4b-8549-480b-ac9b-6efae081ecbf"
-        "service.beta.kubernetes.io/aws-load-balancer-type":  "external"
-        "service.beta.kubernetes.io/aws-load-balancer-nlb-target-type": "instance"
-        "service.beta.kubernetes.io/load-balancer-source-ranges": "0.0.0.0/0"
-        "service.beta.kubernetes.io/aws-load-balancer-ssl-ports": "https"
-        "service.beta.kubernetes.io/aws-load-balancer-scheme": "internet-facing" 
-        "service.beta.kubernetes.io/aws-load-balancer-backend-protocol": "http"
-        "external-dns.alpha.kubernetes.io/hostname": "cdro.idtplateer.com"
+      externalTrafficPolicy: Local
     ingressClassResource:
       name: flow-ingress
 
@@ -1123,11 +1111,11 @@ ingress-nginx:
     61613: "{{ .Release.Namespace }}/flow-server:61613"
 
      ##  Additional TCP ports to access DOIS Elasticsearch over the ingress endpoint:
-    7800: "{{ .Release.Namespace }}/gateway-external-agent-flow-agents:7800"
-    9200: "{{ .Release.Namespace }}/flow-devopsinsight:9200"
+#    7800: "{{ .Release.Namespace }}/gateway-external-agent-flow-agents:7800"
+#    9200: "{{ .Release.Namespace }}/flow-devopsinsight:9200"
 
      ## Additional port to enable external agents to connect to flow-server.
-    8000: "{{ .Release.Namespace }}/flow-server:8000"
+#    8000: "{{ .Release.Namespace }}/flow-server:8000"
 
 ### --------------------------------------------
 ### Miscellaneous configuration section
