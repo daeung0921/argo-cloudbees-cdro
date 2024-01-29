@@ -491,7 +491,7 @@ repository:
 dois:
 
   ## Flag that dictates the cbflow-dois workload and its accompanying services are installed.
-  enabled: false
+  enabled: true
   ## The `imageRepository` in the `images.registry` to pull component image from.
   imageRepository: cbflow-dois
   ## Number replicas of Elasticsearch nodes to create.
@@ -499,7 +499,7 @@ dois:
 
   ## `expose: true` allows cbflow-dois service ingress ports `9200`
   ## to be accessed from outside the cluster.
-  expose: false
+  expose: true
 
   ## The DOIS service endpoint configured on the remote CloudBees CD/RO server.
   ## It is assumed the remote CloudBees CD/RO server is located in the same
@@ -649,7 +649,7 @@ dois:
   ## Requires `dois.expose.enable: true` and ports `9200`  to be open and externally exposed.
   ## Creates extra Kubernetes service with type LoadBalancer.
   externalService:
-    enabled: false
+    enabled: true
     ## cbflow-dois LoadBalancer service annotations for
     ## creating internal LoadBalancer on GCP or AWS.
     annotations:
