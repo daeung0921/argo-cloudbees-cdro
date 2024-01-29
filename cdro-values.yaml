@@ -1072,6 +1072,13 @@ ingress-nginx:
   controller:
     service:
       externalTrafficPolicy: Local
+    annotations:
+      "service.beta.kubernetes.io/aws-load-balancer-type":  "external"
+      "service.beta.kubernetes.io/aws-load-balancer-nlb-target-type": "instance"
+      "service.beta.kubernetes.io/load-balancer-source-ranges": "0.0.0.0/0"
+      "service.beta.kubernetes.io/aws-load-balancer-scheme": "internet-facing" 
+      "service.beta.kubernetes.io/aws-load-balancer-backend-protocol": "tcp"
+      "external-dns.alpha.kubernetes.io/hostname": "cdro.idtplateer.com"
     ingressClassResource:
       name: flow-ingress
 
