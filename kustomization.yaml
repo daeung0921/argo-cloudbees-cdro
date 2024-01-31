@@ -25,13 +25,13 @@ helmCharts:
   version: 2.28.0
   releaseName: cdro-remote-agent
   IncludeCRDs: true
-- name: kibana
-  namespace: cdro
-  valuesFile : ./kibana-value.yaml
-  repo: https://helm.elastic.co
-  version: 7.17.1
-  releaseName: kibana
-  IncludeCRDs: true
+#- name: kibana
+#  namespace: cdro
+#  valuesFile : ./kibana-value.yaml
+#  repo: https://helm.elastic.co
+#  version: 7.17.1
+#  releaseName: kibana
+#  IncludeCRDs: true
 
 patches:
   - target:
