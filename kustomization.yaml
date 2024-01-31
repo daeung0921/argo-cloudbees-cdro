@@ -32,14 +32,14 @@ helmCharts:
   repo: https://helm.elastic.co
   version: 7.17.1
   releaseName: elasticsearch
-#  IncludeCRDs: true  
-#- name: kibana
-#  namespace: cdro
-#  valuesFile : ./kibana-value.yaml
-#  repo: https://helm.elastic.co
-#  version: 7.17.1
-#  releaseName: kibana
-#  IncludeCRDs: true
+  IncludeCRDs: true  
+- name: kibana
+  namespace: cdro
+  valuesFile : ./kibana-value.yaml
+  repo: https://helm.elastic.co
+  version: 7.17.1
+  releaseName: kibana
+  IncludeCRDs: true
 
 patches:
   - target:
