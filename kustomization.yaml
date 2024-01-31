@@ -28,7 +28,7 @@ helmCharts:
   IncludeCRDs: true
 - name: kibana
   namespace: cdro
-  valuesFile : ./es-value.yaml
+  valuesFile : ./es-values.yaml
   repo: https://helm.elastic.co
   version: 7.17.1
   releaseName: es
