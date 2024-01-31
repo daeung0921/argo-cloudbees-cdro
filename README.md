@@ -12,7 +12,16 @@ CDRO kustomized helm chart 를 ArgoCD 통해 배포하기 위한 예제 Repo 입
 <doSometing>
 ```
 
-### 단계 2 >  CloudBees CDRO 차트 변경 확인 
+### 단계 2 >  Cert Manager 설치
+
+Cert Manager 가 설치되어 있지 않은 경우 설치합니다. (첨부된 파일은 v1.5.4 버전 )
+
+```bash
+$ kubectl apply -f cert-manager.crd.yaml
+$ kubectl apply -f cert-manager.yaml
+```
+
+### 단계 3 >  CloudBees CDRO 차트 변경 확인 
 
 CloudBees CDRO의 최신 버전을 확인합니다.
 
@@ -69,7 +78,7 @@ patches:
 
 ```
 
-### 단계 3 > 변경 분을 확인하고 Tagging 하여 신규 Tag 로 Application 배포
+### 단계 4 > 변경 분을 확인하고 Tagging 하여 신규 Tag 로 Application 배포
 
 kustomization.yaml 에서 chart 버전을 수정합니다.
 
@@ -120,7 +129,7 @@ $ kubectl apply -f application.yaml
 
 업그레이드 후 문제가 없는지 확인합니다.
 
-### 단계 4 > 롤백
+### 단계 5 > 롤백
 
 문제가 있는 경우 ArgoCD 에서 Application.yaml 의 targetRevision 을 이전 Tag 를 사용하여 재배포하여 복구를 시도합니다.
 
