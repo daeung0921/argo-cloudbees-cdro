@@ -5,6 +5,9 @@ resources:
 - cert-manager.yaml
 - additional_resources.yaml
 
+sequence:
+- cert-manager.crds.yaml
+
 helmCharts:
 - name: postgresql
   namespace: cdro
