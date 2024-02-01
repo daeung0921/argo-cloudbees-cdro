@@ -335,10 +335,13 @@ metadata:
 apiVersion: v1
 kind: Service
 metadata:
-  annotations:
+  annotations: #https://repost.aws/ko/knowledge-center/eks-access-kubernetes-services
     service.beta.kubernetes.io/aws-load-balancer-backend-protocol: tcp
     service.beta.kubernetes.io/aws-load-balancer-cross-zone-load-balancing-enabled: "true"
-    service.beta.kubernetes.io/aws-load-balancer-type: nlb
+    #service.beta.kubernetes.io/aws-load-balancer-type: nlb
+    service.beta.kubernetes.io/aws-load-balancer-type: "external"
+    service.beta.kubernetes.io/aws-load-balancer-nlb-target-type: "instance"
+    service.beta.kubernetes.io/aws-load-balancer-scheme: "internet-facing"    
   labels:
     app.kubernetes.io/component: controller
     app.kubernetes.io/instance: ingress-nginx
