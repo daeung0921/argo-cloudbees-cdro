@@ -21,6 +21,12 @@ $ kubectl apply -f cert-manager.crd.yaml
 $ kubectl apply -f cert-manager.yaml
 ```
 
+ingress-nginx 가 설치되어 있지 않은 경우 설치합니다 (첨부된 파일은 v1.8.2 버전)
+
+```bash
+$ kubectl apply -f ingress-nginx.yaml
+```
+
 ### 단계 3 >  CloudBees CDRO 차트 변경 확인 
 
 CloudBees CDRO의 최신 버전을 확인합니다.

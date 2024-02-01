@@ -26,6 +26,14 @@ spec:
     organizations:
       - Qwant
 ---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: basic-auth
+type: Opaque
+data:
+  auth: YWRtaW46JGFwcjEkc09PMTFzWWYkaDVEdS5JWS9xSmcyaGlKd1JvRVJmLwo=
+---
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
