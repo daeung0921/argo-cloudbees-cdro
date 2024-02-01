@@ -559,17 +559,17 @@ dois:
   ## Additional environment variables to set for cbflow-dois.
   extraEnvs: 
    - name: CBF_DOIS_CA_CRT
-     valueFrom:
+     value:
        secretKeyRef:
          key: ca.crt
          name: cdro-ca-cert
    - name: CBF_DOIS_SIGN_CRT
-     valueFrom:
+     value:
        secretKeyRef:
          key: tls.crt
          name: cdro-ca-cert
    - name: CBF_DOIS_SIGN_KEY
-     valueFrom:
+     value:
        secretKeyRef:
          key: tls.key
          name: cdro-ca-cert
