@@ -2,6 +2,7 @@
 # pip install elasticsearch
 
 from kubernetes import client, config
+from elasticsearch import Elasticsearch
 
 # Kubernetes 클러스터 구성 로드 (이 예제에서는 ~/.kube/config를 사용)
 config.load_kube_config()
@@ -21,3 +22,8 @@ events = v1.list_namespaced_event(namespace, field_selector=f'involvedObject.nam
 # 각 이벤트에 대한 출력
 for event in events:
     print("Namespace: %s, Message: %s" % (event.metadata.namespace, event.message))
+
+# 각 이벤트를 Elasticsearch로 전송 (Option)
+#es = Elasticsearch(["your_elasticsearch_host:9200"])  # Elasticsearch 호스트 및 포트 수정
+#for event in events:
+#    es.index(index="kubernetes_events", body=event.to_dict())
