@@ -2069,3 +2069,107 @@ data:
         ; Local Variables:
         ; tab-width: 4
         ; End:
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: flow-agent-health-check
+data:
+  health-check.pl: |
+    #!/opt/cbflow/bin/cb-perl
+
+    use strict;
+    use warnings;
+
+    use IO::Socket::INET;
+    use LWP::UserAgent;
+
+    my $fileNameServiceStarted = '/opt/cbflow/docker-health-check/started';
+    my $fileNameServiceActive = '/opt/cbflow/docker-health-check/active';
+    my $fileNameAgentProperties = '/opt/cbflow/conf/agent/agent.properties';
+    my $healthCheckResultLogFile = '/opt/cbflow/configmap/health-check-result.log';
+    my $timeoutActive = 30;
+    my $timeoutRequest = 5;
+    my $portToCheck = 6800;
+
+    if ( ! -e $fileNameServiceStarted ) {
+        log_health_check_result("Service is not started\n");
+        exit 0;
+    }
+
+    open(IN, "< $fileNameAgentProperties") or die "Error when opening \"$fileNameAgent: $!";
+    while (my $line = <IN>) {
+        $line =~ /^\s*AGENT_PROTOCOL\s*=\s*(.*)\s*$/ or next;
+        if ($1 eq "http") {
+            $portToCheck = 7800;
+        }
+        last;
+    }
+    close(IN) or die "Error when closing \"$fileNameAgentProperties\": $!";
+
+    if ( ! -e $fileNameServiceActive ) {
+        my $timestampStarted = (stat $fileNameServiceStarted)[9];
+        my $timestampCurrent = time();
+
+        if ( ($timestampCurrent - $timestampStarted) >= $timeoutActive ) {
+            log_health_check_result("Service is not running, timeout is reached\n");
+            exit 1;
+        }
+
+        log_health_check_result("Service is not running\n");
+        exit 0;
+    }
+
+    my $socket = IO::Socket::INET->new(
+        PeerAddr => "127.0.0.1",
+        PeerPort => $portToCheck,
+        Timeout  => $timeoutRequest
+    );
+
+    if ( ! $socket ) {
+        log_health_check_result("Service is not running\n");
+        exit 1;
+    }
+
+    close $socket;
+
+    open my $fh, '>', $fileNameServiceActive;
+    close $fh;
+
+    my $req = HTTP::Request->new;
+    $req->method("GET");
+    $req->uri("http://127.0.0.1:$portToCheck/showError?code=999");
+
+    my $ua = LWP::UserAgent->new(
+        timeout => $timeoutRequest
+    );
+
+    my $resp = $ua->request($req);
+
+    my $code = $resp->code();
+    chomp(my $content = $resp->decoded_content());
+    chomp(my $statusLine = $resp->status_line());
+
+    if ( $code != 200 || index($content, 'got error 999') == -1 ) {
+        if ( $statusLine eq $content ) {
+            log_health_check_result("ERROR: " . $statusLine . "\n");
+        } else {
+            log_health_check_result("ERROR: " . $statusLine . "; " . $content . "\n");
+        }
+        exit 1;
+    }
+
+    log_health_check_result("OK\n");
+
+    exit 0;
+
+    sub log_health_check_result {
+        my ($message) = @_;
+        if (!-e $healthCheckResultLogFile) {
+            open my $fh, '>', $healthCheckResultLogFile or die "Error creating file $healthCheckResultLogFile: $!";
+            close $fh;
+        }
+        open my $fh, '>>', $healthCheckResultLogFile or die "Error opening file $healthCheckResultLogFile: $!";
+        print $fh $message;
+        close $fh;
+    }
