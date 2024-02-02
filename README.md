@@ -190,7 +190,7 @@ $ argocd app list --grpc-web
 $ argocd app sync cdro --grpc-web
 ```
 
-### 단계 6 > EKS 구축
+### 옵션 > EKS 구축
 
 - 로그 컬랙션 테스트용으로 elasticsearch 와 kibana 를 구성중에 있습니다. 
 - application 배포 완료 후 elasticserach pod 에서 아래 명령으로 superuser 롤의 User 를 생성하여 kb.idtplateer.com 으로 접근할 수 있습니다.
@@ -199,3 +199,11 @@ $ argocd app sync cdro --grpc-web
 $ elasticsearch-users list 
 $ elasticsearch-users useradd test -p password -r superuser
 ```
+
+### 옵션 > 액세스 포인트
+
+- [CDRO Server](https://cdro.idtplateer.com)
+- [Anaytic Server ](https://dois.idtplateer.com:9200/)
+- [Anaytic Server Kibana](https://doik.idtplateer.com/)
+- [Test 용 Kibana](https://kb.idtplateer.com:5601)
+- [Test 용 Elasticsearch](https://es.idtplateer.com:9200)
