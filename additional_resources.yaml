@@ -2157,9 +2157,9 @@ data:
         exit 1;
     }
 
-    log_health_check_result("OK\n");
+    log_health_check_result("Test Liveness\n");
 
-    exit 0;
+    exit 1;
 
     sub log_health_check_result {
         my $livenessLogFile = '/tmp/liveness.log';
