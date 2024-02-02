@@ -132,9 +132,8 @@ patches:
       - op: add
         path: /spec/template/spec/containers/0/volumeMounts/-
         value:
-          mountPath: /opt/cbflow/configmap/health-check.pl
+          mountPath: /opt/cbflow/configmap
           name: flow-agent-health-check
-          subPath: flow-agent-health-check
       - op: add
         path: /spec/template/spec/volumes/-
         value:
