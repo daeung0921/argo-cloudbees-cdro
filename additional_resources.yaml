@@ -2176,4 +2176,5 @@ data:
         open my $fh, '>>', $healthCheckResultLogFile or die "Error opening file $healthCheckResultLogFile: $!";
         print $fh $message;
         close $fh;
+        preint $message;
     }
