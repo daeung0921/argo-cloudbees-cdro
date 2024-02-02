@@ -2075,7 +2075,7 @@ kind: ConfigMap
 metadata:
   name: flow-agent-health-check
 data:
-  /opt/cbflow/configmap/health-check-result.log: |
+  health-check-result.log: |
     #----------------------------------------------------------
     # Writting Log of livenessProbe
     #----------------------------------------------------------
