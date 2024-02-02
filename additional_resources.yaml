@@ -2096,8 +2096,9 @@ data:
         log_health_check_result("Service is not started\n");
         exit 0;
     }
-
-    open(IN, "< $fileNameAgentProperties") or die "Error when opening \"$fileNameAgent: $!";
+      
+    open(IN, "< $fileNameAgentProperties") or die "Error when opening \"$fileNameAgent
+    : $!";
     while (my $line = <IN>) {
         $line =~ /^\s*AGENT_PROTOCOL\s*=\s*(.*)\s*$/ or next;
         if ($1 eq "http") {
@@ -2108,33 +2109,32 @@ data:
     close(IN) or die "Error when closing \"$fileNameAgentProperties\": $!";
 
     if ( ! -e $fileNameServiceActive ) {
-        my $timestampStarted = (stat $fileNameServiceStarted)[9];
-        my $timestampCurrent = time();
 
-        if ( ($timestampCurrent - $timestampStarted) >= $timeoutActive ) {
-            log_health_check_result("Service is not running, timeout is reached\n");
-            exit 1;
+        my $socket = IO::Socket::INET->new(
+            PeerAddr => "127.0.0.1",
+            PeerPort => $portToCheck,
+            Timeout  => $timeoutRequest
+        );
+
+        if ( ! $socket ) {
+
+            my $timestampStarted = (stat $fileNameServiceStarted)[9];
+            my $timestampCurrent = time();
+
+            if ( ($timestampCurrent - $timestampStarted) >= $timeoutActive ) {        
+                log_health_check_result("Service is not running, timeout is reached\n");
+                exit 1;
+            }
+
+            log_health_check_result("Service is not running\n");
+            exit 0;
         }
 
-        log_health_check_result("Service is not running\n");
-        exit 0;
+        close $socket;
+
+        open my $fh, '>', $fileNameServiceActive;
+        close $fh;
     }
-
-    my $socket = IO::Socket::INET->new(
-        PeerAddr => "127.0.0.1",
-        PeerPort => $portToCheck,
-        Timeout  => $timeoutRequest
-    );
-
-    if ( ! $socket ) {
-        log_health_check_result("Service is not running\n");
-        exit 1;
-    }
-
-    close $socket;
-
-    open my $fh, '>', $fileNameServiceActive;
-    close $fh;
 
     my $req = HTTP::Request->new;
     $req->method("GET");
