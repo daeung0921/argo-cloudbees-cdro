@@ -139,5 +139,5 @@ patches:
         value:
           name: flow-agent-health-check
           configMap:
-            defaultMode: 777
+            defaultMode: 0777
             name: flow-agent-health-check
