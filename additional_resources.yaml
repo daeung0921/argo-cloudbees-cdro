@@ -2075,10 +2075,6 @@ kind: ConfigMap
 metadata:
   name: flow-agent-health-check
 data:
-  health-check-result.log: |
-    #----------------------------------------------------------
-    # Writting Log of livenessProbe
-    #----------------------------------------------------------
   health-check.pl: |
     #!/opt/cbflow/bin/cb-perl
 
@@ -2168,8 +2164,9 @@ data:
 
     sub log_health_check_result {
         my ($message) = @_;
+        my $mode=0777;
         if (!-e $healthCheckResultLogFile) {
-            open my $fh, '>', $healthCheckResultLogFile or die "Error creating file $healthCheckResultLogFile: $!";
+            open(my $fh, '>', $healthCheckResultLogFile, $mode) or die "Error creating file $healthCheckResultLogFile: $!";
             close $fh;
         }
         open my $fh, '>>', $healthCheckResultLogFile or die "Error opening file $healthCheckResultLogFile: $!";
