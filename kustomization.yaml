@@ -1,6 +1,9 @@
 namespace: cdro
 
 resources:
+- cert-manager.crds.yaml
+- cert-manager.yaml
+- ingress-nginx.yaml
 - additional_resources.yaml
  
 
@@ -39,6 +42,13 @@ helmCharts:
   repo: https://helm.elastic.co
   version: 7.17.1
   releaseName: kibana
+  IncludeCRDs: true
+- name: eskibana
+  namespace: cdro
+  valuesFile : ./es-kibana-value.yaml
+  repo: https://helm.elastic.co
+  version: 7.17.1
+  releaseName: eskibana
   IncludeCRDs: true
 
 patches:
