@@ -2087,7 +2087,6 @@ data:
     my $fileNameServiceStarted = '/opt/cbflow/docker-health-check/started';
     my $fileNameServiceActive = '/opt/cbflow/docker-health-check/active';
     my $fileNameAgentProperties = '/opt/cbflow/conf/agent/agent.properties';
-    my $healthCheckResultLogFile = '/opt/cbflow/configmap/health-check-result.log';
     my $timeoutActive = 30;
     my $timeoutRequest = 5;
     my $portToCheck = 6800;
@@ -2163,13 +2162,13 @@ data:
     exit 0;
 
     sub log_health_check_result {
+        my $livenessLogFile = '/tmp/liveness.log';
         my ($message) = @_;
-        my $mode=0777;
-        if (!-e $healthCheckResultLogFile) {
-            open(my $fh, '>', $healthCheckResultLogFile, $mode) or die "Error creating file $healthCheckResultLogFile: $!";
+        if (!-e $livenessLogFile) {
+            open(my $fh, '>', $livenessLogFile) or die "Error creating file $livenessLogFile: $!";
             close $fh;
         }
-        open my $fh, '>>', $healthCheckResultLogFile or die "Error opening file $healthCheckResultLogFile: $!";
+        open my $fh, '>>', $livenessLogFile or die "Error opening file $livenessLogFile: $!";
         print $fh $message;
         close $fh;
         print $message;

@@ -126,7 +126,7 @@ patches:
         value:
           exec:
             command: [/opt/cbflow/configmap/health-check.pl]
-          initialDelaySeconds: 120
+          initialDelaySeconds: 60
           periodSeconds: 10
           timeoutSeconds: 5    
       - op: add
