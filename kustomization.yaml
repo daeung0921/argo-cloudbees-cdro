@@ -1,8 +1,6 @@
 namespace: cdro
 
 resources:
-- cert-manager.yaml
-- ingress-nginx.yaml
 - additional_resources.yaml
 
 helmCharts:
