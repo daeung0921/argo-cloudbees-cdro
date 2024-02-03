@@ -207,3 +207,11 @@ $ elasticsearch-users useradd test -p password -r superuser
 - [Anaytic Server Kibana](https://doik.idtplateer.com/)
 - [Test 용 Kibana](https://kb.idtplateer.com:5601)
 - [Test 용 Elasticsearch](https://es.idtplateer.com:9200)
+
+### 옵션 > 리소스 정리
+
+```bash
+$ kubectl delete -f application.yaml 
+$ kubectl apply -f cert-manager.yaml 
+$ kubectl apply -f ingress-nginx.yaml
+```
