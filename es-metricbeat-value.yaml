@@ -78,7 +78,7 @@ daemonset:
       output.elasticsearch:
         hosts: ["es-test:9200"]
         protocol: "https"
-        username: "elastic"
+        username: "test"
         password: "password"
         ssl.enable: "true"
         ssl.certificate_authorities: ["/usr/share/metricbeat/config/certs/ca.crt"]
