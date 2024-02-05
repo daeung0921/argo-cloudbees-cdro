@@ -78,8 +78,8 @@ daemonset:
       output.elasticsearch:
         hosts: ["es-test:9200"]
         protocol: "https"
-        username: "${ES_USERNAME}"
-        password: "${ES_PASSWORD}"
+        username: "test"
+        password: "password"
         ssl.enable: "true"
         ssl.certificate_authorities: ["/usr/share/metricbeat/config/certs/ca.crt"]
         ssl.verification_mode: "none"
@@ -163,8 +163,8 @@ deployment:
       output.elasticsearch:
         hosts: ["es-test:9200"]
         protocol: "https"
-        username: "${ES_USERNAME}"
-        password: "${ES_PASSWORD}"
+        username: "test"
+        password: "password"
         ssl.enable: "true"
         ssl.certificate_authorities: ["/usr/share/metricbeat/config/certs/ca.crt"]
         ssl.verification_mode: "none"
@@ -331,17 +331,17 @@ secrets: []
 # DEPRECATED
 affinity: {}
 envFrom: []
-extraEnvs: 
-  - name: ES_USERNAME
-    valueFrom:
-      secretKeyRef:
-        name: elastic-config-credentials
-        key: username
-  - name: ES_PASSWORD
-    valueFrom:
-      secretKeyRef:
-        name: elastic-config-credentials
-        key: password
+extraEnvs: []
+#  - name: ES_USERNAME
+#    valueFrom:
+#      secretKeyRef:
+#        name: elastic-config-credentials
+#        key: username
+#  - name: ES_PASSWORD
+#    valueFrom:
+#      secretKeyRef:
+#        name: elastic-config-credentials
+#        key: password
 extraVolumes: []
 extraVolumeMounts: []
 
