@@ -21,7 +21,7 @@ $ kubectl apply -f cert-manager.crd.yaml
 $ kubectl apply -f cert-manager.yaml
 ```
 
-ingress-nginx 가 설치되어 있지 않은 경우 설치합니다 (첨부된 파일은 v1.8.2 버전)
+ingress-nginx 가 설치되어 있지 않은 경우 설치합니다 (첨부된 파일은 v1.8.2 버전). 설치 완료후 LB 프로비저닝까지 확인합니다.
 
 ```bash
 $ kubectl apply -f ingress-nginx.yaml
