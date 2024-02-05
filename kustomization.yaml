@@ -51,21 +51,21 @@ helmCharts:
   namespace: cdro
   valuesFile : ./es-values.yaml
   repo: https://helm.elastic.co
-  version: 8.5.1
+  version: 7.17.1
   releaseName: elasticsearch
   IncludeCRDs: true
 - name: kibana
   namespace: cdro
   valuesFile : ./es-kibana-value.yaml
   repo: https://helm.elastic.co
-  version: 8.5.1
+  version: 7.17.1
   releaseName: eskibana
   IncludeCRDs: true
 - name: metricbeat
   namespace: cdro
   valuesFile : ./es-metricbeat-value.yaml
   repo: https://helm.elastic.co
-  version: 8.5.1
+  version: 7.17.1
   releaseName: esmetricbeat
   IncludeCRDs: true
 
