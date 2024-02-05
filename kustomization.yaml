@@ -4,6 +4,9 @@ resources:
 - additional_resources.yaml
 
 helmCharts:
+  #------------------------------------------
+  # CDRO DB
+  #------------------------------------------  
 - name: postgresql
   namespace: cdro
   valuesFile : ./postgre-values.yaml
@@ -11,6 +14,9 @@ helmCharts:
   version: 13.2.24
   releaseName: postgre 
   IncludeCRDs: true
+  #------------------------------------------
+  # CDRO 
+  #------------------------------------------    
 - name: cloudbees-flow
   namespace: cdro
   valuesFile : ./cdro-values.yaml
@@ -18,6 +24,9 @@ helmCharts:
   version: 2.28.0
   releaseName: cdro 
   IncludeCRDs: true
+  #------------------------------------------
+  # CDRO Agent
+  #------------------------------------------  
 - name: cloudbees-flow-agent
   namespace: cdro
   valuesFile : ./cdro-agent-values.yaml
@@ -25,13 +34,9 @@ helmCharts:
   version: 2.28.0
   releaseName: cdro-remote-agent
   IncludeCRDs: true
-- name: elasticsearch
-  namespace: cdro
-  valuesFile : ./es-values.yaml
-  repo: https://helm.elastic.co
-  version: 7.17.1
-  releaseName: elasticsearch
-  IncludeCRDs: true  
+  #------------------------------------------
+  # Devops Insight Only Kibana
+  #------------------------------------------
 - name: kibana
   namespace: cdro
   valuesFile : ./dois-kibana-value.yaml
@@ -39,18 +44,28 @@ helmCharts:
   version: 7.17.1
   releaseName: kibana
   IncludeCRDs: true
+  #------------------------------------------
+  # Monitoring 
+  #------------------------------------------
+- name: elasticsearch
+  namespace: cdro
+  valuesFile : ./es-values.yaml
+  repo: https://helm.elastic.co
+  version: 8.5.1
+  releaseName: elasticsearch
+  IncludeCRDs: true
 - name: kibana
   namespace: cdro
   valuesFile : ./es-kibana-value.yaml
   repo: https://helm.elastic.co
-  version: 7.17.1
+  version: 8.5.1
   releaseName: eskibana
   IncludeCRDs: true
 - name: metricbeat
   namespace: cdro
   valuesFile : ./es-metricbeat-value.yaml
   repo: https://helm.elastic.co
-  version: 7.17.1
+  version: 8.5.1
   releaseName: esmetricbeat
   IncludeCRDs: true
 
