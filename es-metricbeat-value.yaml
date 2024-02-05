@@ -309,6 +309,3 @@ resources: {}
 secretMounts: []
 tolerations: []
 labels: {}
-
-collectors
-
