@@ -55,6 +55,7 @@ metadata:
   name: elastic-config-credentials
 type: Opaque
 data:
+  username: test
   password: password
 
 ---
