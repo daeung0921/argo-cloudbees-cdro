@@ -12,7 +12,7 @@ CDRO kustomized helm chart 를 ArgoCD 통해 배포하기 위한 예제 Repo 입
 <doSometing>
 ```
 
-### 단계 2 >  Cert Manager , Ingress nginx, 설치 및 Storage class 의 filesystemid 확인
+### 단계 2 >  Cert Manager , Ingress nginx, kube state metrics 설치 및 Storage class 의 filesystemid 확인
 
 Cert Manager 가 설치되어 있지 않은 경우 설치합니다. (첨부된 파일은 v1.5.4 버전 )
 
@@ -25,6 +25,12 @@ ingress-nginx 가 설치되어 있지 않은 경우 설치합니다 (첨부된 �
 
 ```bash
 $ kubectl apply -f ingress-nginx.yaml
+```
+
+kubernetes 상태 모니터링을 위해서 [kube-state-metrics.yaml](https://github.com/kubernetes/kube-state-metrics/tree/main) 을 설치합니다.
+
+```bash
+$ kubectl apply -f kube-state-metrics.yaml
 ```
 
 eks 를 사용하는 경우 additional_resources.yaml 의 storage class 의 fileSystemID 가 올바른지 확인합니다.

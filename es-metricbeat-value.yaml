@@ -29,7 +29,7 @@ daemonset:
   hostNetworking: false
   # Allows you to add any config files in /usr/share/metricbeat
   # such as metricbeat.yml for daemonset
-  metricbeatConfig:
+  metricbeatConfig: # https://www.elastic.co/guide/en/beats/metricbeat/current/metricbeat-module-kubernetes.html#_proxy
     metricbeat.yml: |
       metricbeat.modules:
       - module: kubernetes
@@ -154,10 +154,19 @@ deployment:
         enabled: true
         metricsets:
           - state_node
+          - state_daemonset
           - state_deployment
           - state_replicaset
+          - state_statefulset
           - state_pod
           - state_container
+          - state_job
+          - state_cronjob
+          - state_resourcequota
+          - state_service
+          - state_persistentvolume
+          - state_persistentvolumeclaim
+          - state_storageclass
         period: 10s
         hosts: ["${KUBE_STATE_METRICS_HOSTS}"]
       output.elasticsearch:

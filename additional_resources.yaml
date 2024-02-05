@@ -83,7 +83,6 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: "cdro-server-pvc"
-  namespace: "cdro"
 spec:
   accessModes:
     - ReadWriteMany
@@ -145,7 +144,6 @@ apiVersion: v1
 kind: Secret
 metadata:
   name: "cdro-dois-cred"
-  namespace: "cdro"
 type: Opaque
 data:
   #CBF_SERVER_USER: YWRtaW4=        # Base64-encoded "admin"
@@ -282,7 +280,6 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: server-wrapper-config
-  namespace: cdro
   labels:
     app: cloudbees-flow
     chart: cloudbees-flow
@@ -653,7 +650,6 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: php-ini-config
-  namespace: cdro
   labels:
     app: cloudbees-flow
     chart: cloudbees-flow
