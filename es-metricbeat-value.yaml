@@ -78,8 +78,8 @@ daemonset:
       output.elasticsearch:
         hosts: ["es-test:9200"]
         protocol: "https"
-        username: "test"
-        password: "password"
+        username: "admin"
+        password: "changeme"
         ssl.enable: "true"
         ssl.certificate_authorities: ["/usr/share/metricbeat/config/certs/ca.crt"]
         ssl.verification_mode: "none"
@@ -172,8 +172,8 @@ deployment:
       output.elasticsearch:
         hosts: ["es-test:9200"]
         protocol: "https"
-        username: "test"
-        password: "password"
+        username: "admin"
+        password: "changeme"
         ssl.enable: "true"
         ssl.certificate_authorities: ["/usr/share/metricbeat/config/certs/ca.crt"]
         ssl.verification_mode: "none"
