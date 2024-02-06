@@ -60,9 +60,6 @@ daemonset:
         providers:
           - type: kubernetes    
             templates: 
-              #---------------------------------------------------------------------------------------------------------------------
-              # flow-server
-              #---------------------------------------------------------------------------------------------------------------------
               - condition:
                   equals:
                     kubernetes.labels.app: "flow-server"
@@ -70,11 +67,11 @@ daemonset:
                   - type: container
                     paths: 
                       - /var/log/containers/*-${data.kubernetes.container.id}.log
-                    tail_files: true
+                    #tail_files: true
                     containers:
                       ids:
                         - ${data.kubernetes.container.id}
-                    multiline.pattern: '^\d\d\d\d(-\d\d){2}T\d\d(:\d\d){2}\.\d\d\d'
+                    multiline.pattern: '^\d\d\d\d(-\d\d){2}T\d\d(:\d\d){2}\.\d\d\d|^[A-Z]+ +\| (wrapper|jvm \d+) +\| \d\d\d\d(/\d\d){2} \d\d(:\d\d){2}\.\d\d\d'
                     multiline.negate: true
                     multiline.match: after
                     timeout: 10s
@@ -164,9 +161,6 @@ daemonset:
                           test:
                             - '2019-09-05T13:25:42.317'
                             - '2019/09/05 13:25:31.469'
-              #---------------------------------------------------------------------------------------------------------------------
-              # flow-web
-              #---------------------------------------------------------------------------------------------------------------------
               - condition:
                   equals:
                     kubernetes.labels.app: "flow-web"
