@@ -61,6 +61,29 @@ daemonset:
           - type: kubernetes    
             templates: 
               - condition:
+                  and:
+                    - equals:
+                        kubernetes.namespace: "cdro"
+                    - not:
+                        or:
+                          - equals:
+                              kubernetes.labels.app: "flow-web" 
+                          - equals:
+                              kubernetes.labels.app: "flow-server"
+                config:
+                  - type: container
+                    paths: 
+                      - /var/log/containers/*-${data.kubernetes.container.id}.log                  
+                    containers.ids:
+                      - ${data.kubernetes.container.id}
+                    fields_under_root: true
+                    fields:
+                      cbflow.component: "other"
+                    processors:
+                      - convert:
+                          fields:
+                            - {from: "message", to: "log.message"}
+              - condition:
                   equals:
                     kubernetes.labels.app: "flow-server"
                 config:
