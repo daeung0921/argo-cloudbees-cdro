@@ -105,20 +105,11 @@ daemonset:
                       - if:
                           regexp:
                             message: '^\d\d\d\d'
-                        then:
-                          - if:
-                              regexp:
-                                message: '^\d\d\d\d'
-                            then:
-                              - dissect:
-                                  tokenizer: "%{timestamp} | %{level} | %{thread} | %{context} | %{job} | %{ndc} | %{class} | %{message}"
-                                  field: "message"
-                                  target_prefix: "log"
-                            else:
-                              - dissect:
-                                  tokenizer: "%{timestamp} | %{node} | %{level} | %{thread} | %{context} | %{job} | %{ndc} | %{class} | %{message}"
-                                  field: "message"
-                                  target_prefix: "log"
+                        then: 
+                          - dissect:
+                                tokenizer: "%{timestamp} | %{level} | %{thread} | %{context} | %{job} | %{ndc} | %{class} | %{message}"
+                                field: "message"
+                                target_prefix: "log"
                         else:
                          - dissect:
                               tokenizer: "%{level} | %{thread} | %{timestamp} | %{message}"
