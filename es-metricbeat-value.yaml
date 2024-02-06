@@ -80,7 +80,7 @@ daemonset:
         protocol: "https"
         username: "admin"
         password: "changeme"
-        ssl.enable: "true"
+        ssl.enabled: "true"
         ssl.certificate_authorities: ["/usr/share/metricbeat/config/certs/ca.crt"]
         ssl.verification_mode: "none"
       setup.kibana:
@@ -174,7 +174,7 @@ deployment:
         protocol: "https"
         username: "admin"
         password: "changeme"
-        ssl.enable: "true"
+        ssl.enabled: "true"
         ssl.certificate_authorities: ["/usr/share/metricbeat/config/certs/ca.crt"]
         ssl.verification_mode: "none"
       setup.kibana:

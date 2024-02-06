@@ -68,6 +68,13 @@ helmCharts:
   version: 7.17.1
   releaseName: esmetricbeat
   IncludeCRDs: true
+- name: filebeat
+  namespace: cdro
+  valuesFile : ./es-filebeat-value.yaml
+  repo: https://helm.elastic.co
+  version: 7.17.1
+  releaseName: esfilebeat
+  IncludeCRDs: true
 
 patches:
   - target:
