@@ -61,7 +61,7 @@ daemonset:
           - type: kubernetes    
             templates: 
               #------------------------------------------------------------------------------------------------------------------------------
-              # 처리 안된것들..
+              # 아직 처리 안된 것 -> Zookeeper, DevOps Insight
               #------------------------------------------------------------------------------------------------------------------------------
               - condition:
                   and:
@@ -75,6 +75,8 @@ daemonset:
                               kubernetes.labels.app: "flow-server"
                           - equals:
                               kubernetes.labels.app: "flow-repository"
+                          - equals:
+                              kubernetes.labels.app: "cdro-remote-agent-flow-agent"
                 config:
                   - type: container
                     paths: 
@@ -88,6 +90,109 @@ daemonset:
                       - convert:
                           fields:
                             - {from: "message", to: "log.message"}
+              #------------------------------------------------------------------------------------------------------------------------------
+              # Agent
+              #------------------------------------------------------------------------------------------------------------------------------
+              - condition:
+                  equals:
+                    kubernetes.labels.app: "cdro-remote-agent-flow-agent"
+                config:
+                  - type: container
+                    paths: 
+                      - /var/log/containers/*-${data.kubernetes.container.id}.log
+                    tail_files: true
+                    containers:
+                      ids:
+                        - ${data.kubernetes.container.id}
+                    multiline.pattern:  '^\d\d\d\d(-\d\d){2}T\d\d(:\d\d){2}\.\d\d\d' #2018-07-11T21:09:52.360
+                    multiline.negate: true
+                    multiline.match: after
+                    timeout: 10s
+                    fields_under_root: true
+                    fields:
+                      cbflow.component: "agent"
+                    processors:
+                      - if:
+                          regexp:
+                            message: '^\d\d\d\d(-\d\d){2}T\d\d(:\d\d){2}\.\d\d\d \* '
+                        then:
+                          - dissect:
+                              tokenizer: "%{timestamp} * %{message}"
+                              field: "message"
+                              target_prefix: "log"
+                          - if:
+                              regexp:
+                                log.message: '^ERROR:'
+                            then:
+                              - add_fields:
+                                  target: ''
+                                  fields:
+                                    log.level: "ERROR"
+                            else:
+                              - if:
+                                  regexp:
+                                    log.message: '^WARNING:'
+                                then:
+                                  - add_fields:
+                                      target: ''
+                                      fields:
+                                        log.level: "WARN"
+                                else:
+                                  - add_fields:
+                                      target: ''
+                                      fields:
+                                        log.level: "STATUS"
+                        else:
+                          - if:
+                              regexp:
+                                message: '^\d\d\d\d(-\d\d){2}T\d\d(:\d\d){2}\.\d\d\d \| [A-Z]+ +\| 0x[0-9a-f]+ \| '
+                            then:
+                              #------------------------------------------------------------------------------------------------------------------------------
+                              # 2024-02-07T20:51:22.275 | DEBUG | 0x7f3f1c5ea700 | Handling ping message for request-id: ping-1-flow-bound-agent:7800
+                              #------------------------------------------------------------------------------------------------------------------------------
+                              - dissect:
+                                  tokenizer: "%{timestamp} | %{level} | %{thread} | %{message}"
+                                  field: "message"
+                                  target_prefix: "log"
+                            else:
+                              #------------------------------------------------------------------------------------------------------------------------------
+                              # 2024-02-07T18:56:31.993 | DEBUG | pool-001-005                   |          |            |                      | MasterAgentHandler        | No certificates found: javax.net.ssl.SSLPeerUnverifiedException: peer not authenticated
+                              #------------------------------------------------------------------------------------------------------------------------------
+                              - dissect:
+                                  tokenizer: "%{timestamp} | %{level} | %{thread} | %{context} | %{job} | %{ndc} | %{class} | %{message}"
+                                  field: "message"
+                                  target_prefix: "log"
+                          - script:
+                              lang: javascript
+                              source: >
+                                  function process(ev) {
+                                      var field;
+                                      field = ev.Get("log.level");
+                                      if (field !== null) {
+                                          ev.Put("log.level", field.trim());
+                                      }
+                                      return ev;
+                                  };
+                                  function test() {
+                                      var ev;
+                                      // check not parsed event
+                                      ev = process(new Event({}));
+                                      // check trim
+                                      ev = process(new Event({log: {level: "  INFO  "}}));
+                                      if (ev.Get("log.level") !== "INFO") {
+                                          throw "expected log.level === 'INFO'";
+                                      }
+                                  };
+                      - timestamp:
+                          field: "log.timestamp"
+                          layouts:
+                            - '2006-01-02T15:04:05Z'
+                            - '2006-01-02T15:04:05.999Z'
+                            - '2006-01-02T15:04:05.999-07:00'
+                          test:
+                            - '2019-06-22T16:33:51Z'
+                            - '2019-11-18T04:59:51.123Z'
+                            - '2020-08-03T07:10:20.123456+02:00'
 
               #------------------------------------------------------------------------------------------------------------------------------
               # Server
@@ -152,7 +257,7 @@ daemonset:
                                 then:
                                   #------------------------------------------------------------------------------------------------------------------------------
                                   # server logs (cluster 미 구성시)
-                                  # 2019-09-16T14:28:52.249 | INFO  | Thread-1   |          |        |    | ServerStatus    | serverStatusManager is running
+                                  # 2024-02-07T14:28:52.249 | INFO  | Thread-1   |          |        |    | ServerStatus    | serverStatusManager is running
                                   #------------------------------------------------------------------------------------------------------------------------------
                                   - dissect:
                                       tokenizer: "%{timestamp} | %{level} | %{thread} | %{context} | %{job} | %{ndc} | %{class} | %{message}"
@@ -161,7 +266,7 @@ daemonset:
                                 else:
                                   #------------------------------------------------------------------------------------------------------------------------------
                                   # server logs (cluster 구성시)
-                                  # 2019-09-05T13:25:42.317 | flow-server-7d9d8d844b-4x5xw | INFO  | Thread-1    |    |    |     | Bootstrap     | Initializing
+                                  # 2024-02-07T13:25:42.317 | flow-server-7d9d8d844b-4x5xw | INFO  | Thread-1    |    |    |     | Bootstrap     | Initializing
                                   #------------------------------------------------------------------------------------------------------------------------------
                                   - dissect:
                                       tokenizer: "%{timestamp} | %{node} | %{level} | %{thread} | %{context} | %{job} | %{ndc} | %{class} | %{message}"
@@ -270,7 +375,7 @@ daemonset:
                             then:
                               #------------------------------------------------------------------------------------------------------------------------------
                               # repository logs
-                              # 2019-09-15T20:29:08.350 | INFO  | StatisticsTimer   |    |    |    | RepositoryServerImpl           | All timers by name:
+                              # 2024-02-07T20:29:08.350 | INFO  | StatisticsTimer   |    |    |    | RepositoryServerImpl           | All timers by name:
                               #------------------------------------------------------------------------------------------------------------------------------
                               - dissect:
                                   tokenizer: "%{timestamp} | %{level} | %{thread} | %{context} | %{job} | %{ndc} | %{class} | %{message}"
