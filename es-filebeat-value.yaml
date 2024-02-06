@@ -214,7 +214,7 @@ daemonset:
         - add_kubernetes_metadata:
             in_cluster: "true"
       output.elasticsearch: 
-        index: "cbf-%{[cbflow.component]}-%{+yyyy.MM.dd}"
+        index: "cbf-data-%{[cbflow.component]}-%{+yyyy.MM.dd}"
         hosts: ["es-test:9200"]
         protocol: "https"
         username: "admin"
@@ -228,12 +228,10 @@ daemonset:
         ssl.certificate_authorities: ["/usr/share/filebeat/config/certs/ca.crt"]
         ssl.verification_mode: "none"
       setup.template: 
-        name: "cbf"
-        pattern: "cbf-*"
-        settings:
-          index.number_of_shards: 1
+        name: "cbf-data"
+        pattern: "cbf-data-*"
         overwrite: "true"
-        enabled: "true"
+        enabled: "false"
   # Only used when updateStrategy is set to "RollingUpdate"
   maxUnavailable: 1
   nodeSelector: {}
