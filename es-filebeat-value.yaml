@@ -35,6 +35,13 @@ daemonset:
 # error logs
 # 2019-09-13 21:35:49.470053 | php7:error | pid 402 | [client 192.168.37.161:22840] script '/opt/cbflow/apache/htdocs/elrekt.php' not found or unable to stat
 
+#---------------------------------------------------------------------------------------------------------------------
+# flow-server
+#---------------------------------------------------------------------------------------------------------------------
+# 2019-09-16T14:28:52.249 | INFO  | Thread-1   |  |  |   | ServerStatus                   | serverStatusManager is running
+# 2019-09-05T13:25:42.317 | flow-server-7d9d8d844b-4x5xw | INFO  | Thread-1    |          |   |    | Bootstrap                      | Initializing
+# INFO   | jvm 1    | 2019/09/05 13:25:31.469 | WrapperManager: Initializing...
+
   filebeatConfig:
     filebeat.yml: |
       setup.ilm.enabled: false
@@ -53,11 +60,117 @@ daemonset:
         providers:
           - type: kubernetes    
             templates: 
+              #---------------------------------------------------------------------------------------------------------------------
+              # flow-server
+              #---------------------------------------------------------------------------------------------------------------------
+              - condition:
+                  equals:
+                    kubernetes.labels.app: "flow-server"
+                config:
+                  - type: container
+                    paths: 
+                      - /var/log/containers/*-${data.kubernetes.container.id}.log
+                    tail_files: true
+                    containers:
+                      ids:
+                        - ${data.kubernetes.container.id}
+                    multiline.pattern: '^\d\d\d\d(-\d\d){2}T\d\d(:\d\d){2}\.\d\d\d|^[A-Z]+ +\| (wrapper|jvm \d+) +\| \d\d\d\d(/\d\d){2} \d\d(:\d\d){2}\.\d\d\d'
+                    multiline.negate: true
+                    multiline.match: after
+                    timeout: 10s
+                    fields_under_root: true
+                    fields:
+                      cbflow.component: "server"
+                    processors:
+                      - if:
+                          regexp:
+                            message: '^\d\d\d\d(-\d\d){2}T\d\d(:\d\d){2}\.\d\d\d \* '
+                        then:
+                          - dissect:
+                              tokenizer: "%{timestamp} * %{message}"
+                              field: "message"
+                              target_prefix: "log"
+                          - if:
+                              regexp:
+                                log.message: '^ERROR:'
+                            then:
+                              - add_fields:
+                                  target: ''
+                                  fields:
+                                    log.level: "ERROR"
+                            else:
+                              - if:
+                                  regexp:
+                                    log.message: '^WARNING:'
+                                then:
+                                  - add_fields:
+                                      target: ''
+                                      fields:
+                                        log.level: "WARN"
+                                else:
+                                  - add_fields:
+                                      target: ''
+                                      fields:
+                                        log.level: "STATUS"
+                        else:
+                          - if:
+                              regexp:
+                                message: '^\d\d\d\d(-\d\d){2}T\d\d(:\d\d){2}\.\d\d\d \| '
+                            then:
+                              - if:
+                                  regexp:
+                                    message: '^\d\d\d\d(-\d\d){2}T\d\d(:\d\d){2}\.\d\d\d \| [A-Z]+ +\|'
+                                then:
+                                  - dissect:
+                                      tokenizer: "%{timestamp} | %{level} | %{thread} | %{context} | %{job} | %{ndc} | %{class} | %{message}"
+                                      field: "message"
+                                      target_prefix: "log"
+                                else:
+                                  - dissect:
+                                      tokenizer: "%{timestamp} | %{node} | %{level} | %{thread} | %{context} | %{job} | %{ndc} | %{class} | %{message}"
+                                      field: "message"
+                                      target_prefix: "log"
+                            else:
+                             - dissect:
+                                  tokenizer: "%{level} | %{thread} | %{timestamp} | %{message}"
+                                  field: "message"
+                                  target_prefix: "log"
+                          - script:
+                              lang: javascript
+                              source: >
+                                  function process(ev) {
+                                      var field;
+                                      field = ev.Get("log.level");
+                                      if (field !== null) {
+                                          ev.Put("log.level", field.trim());
+                                      }
+                                      return ev;
+                                  };
+                                  function test() {
+                                      var ev;
+                                      // check not parsed event
+                                      ev = process(new Event({}));
+                                      // check trim
+                                      ev = process(new Event({log: {level: "  INFO  "}}));
+                                      if (ev.Get("log.level") !== "INFO") {
+                                          throw "expected log.level === 'INFO'";
+                                      }
+                                  };
+                      - timestamp:
+                          field: "log.timestamp"
+                          layouts:
+                            - '2006-01-02T15:04:05.999'
+                            - '2006/01/02 15:04:05.999'
+                          test:
+                            - '2019-09-05T13:25:42.317'
+                            - '2019/09/05 13:25:31.469'
+              #---------------------------------------------------------------------------------------------------------------------
+              # flow-web
+              #---------------------------------------------------------------------------------------------------------------------
               - condition:
                   equals:
                     kubernetes.labels.app: "flow-web"
                 config:
-                  #input:
                   - type: container
                     paths: 
                       - /var/log/containers/*-${data.kubernetes.container.id}.log
