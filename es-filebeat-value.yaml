@@ -227,7 +227,7 @@ daemonset:
                     timeout: 10s
                     fields_under_root: true
                     fields:
-                      cbflow.component: "server"
+                      cbflow.component: "repo"
                     processors:
                       - if:
                           regexp:
