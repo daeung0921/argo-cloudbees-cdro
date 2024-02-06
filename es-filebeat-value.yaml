@@ -67,7 +67,7 @@ daemonset:
                   - type: container
                     paths: 
                       - /var/log/containers/*-${data.kubernetes.container.id}.log
-                    #tail_files: true
+                    tail_files: true
                     containers:
                       ids:
                         - ${data.kubernetes.container.id}
@@ -287,11 +287,6 @@ daemonset:
       processors:
         - add_kubernetes_metadata:
             in_cluster: "true"
-
-      output.console:
-        enabled: true
-        codec.json:
-          pretty: true
 
       output.elasticsearch: 
         index: "cbf-%{[cbflow.component]}-%{+yyyy.MM.dd}"
