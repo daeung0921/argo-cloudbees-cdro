@@ -236,7 +236,7 @@ daemonset:
         host: "https://es-kibana:5601"
         ssl.enabled: true
         ssl.certificate_authorities: ["/usr/share/filebeat/config/certs/ca.crt"]
-        ssl.verification_mode: "none"\
+        ssl.verification_mode: "none"
       setup.template:
         enabled: true
         name: "cbf-template"
