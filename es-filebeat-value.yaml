@@ -51,8 +51,8 @@ daemonset:
         providers:
           - type: kubernetes
             templates:
-              - condition.equals:
-                  kubernetes.container.name: "flow-web"
+              - condition.regexp:
+                  kubernetes.container.name: "^flow-web-*"
                 config:
                   - type: docker
                     containers.ids:
@@ -202,8 +202,8 @@ daemonset:
                             - '2019-09-13 21:35:43.177728'
               - condition.not:
                   or:
-                    - equals:
-                        kubernetes.container.name: "flow-web"
+                    - regexp:
+                        kubernetes.container.name: "^flow-web-*"
                 config:
                   - type: docker
                     containers.ids:
