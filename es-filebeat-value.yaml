@@ -285,9 +285,14 @@ daemonset:
                           test:
                             - '2019-09-13 21:35:43.177728'
       processors:
-        - add_cloud_metadata: ~
         - add_kubernetes_metadata:
             in_cluster: "true"
+
+      output.console:
+        enabled: true
+        codec.json:
+          pretty: true
+
       output.elasticsearch: 
         index: "cbf-%{[cbflow.component]}-%{+yyyy.MM.dd}"
         hosts: ["es-test:9200"]
