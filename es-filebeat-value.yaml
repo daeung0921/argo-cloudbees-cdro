@@ -209,7 +209,7 @@ daemonset:
         - add_kubernetes_metadata:
             in_cluster: "true"
       output.elasticsearch: 
-        index: "cbf-data-%{[cbflow.component]}-%{+yyyy.MM.dd}"
+        index: "cbf-%{[cbflow.component]}-%{+yyyy.MM.dd}"
         hosts: ["es-test:9200"]
         protocol: "https"
         username: "admin"
@@ -223,8 +223,8 @@ daemonset:
         ssl.certificate_authorities: ["/usr/share/filebeat/config/certs/ca.crt"]
         ssl.verification_mode: "none"
       setup.template: 
-        name: "cbf-data"
-        pattern: "cbf-data-*"
+        name: "cbf"
+        pattern: "cbf-*"
         overwrite: "true"
         enabled: "true"
       setup.ilm.enabled: false
