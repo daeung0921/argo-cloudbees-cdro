@@ -27,21 +27,6 @@ daemonset:
   # Allows you to add any config files in /usr/share/filebeat
   # such as filebeat.yml for daemonset
 
-#---------------------------------------------------------------------------------------------------------------------
-# flow-web
-#---------------------------------------------------------------------------------------------------------------------
-# access logs
-# 2019-09-13 21:35:43.177728 | 127.0.0.1 | - | "GET /commander/favicon.ico HTTP/1.1" 200 1446 199 - 140562223949632
-# error logs
-# 2019-09-13 21:35:49.470053 | php7:error | pid 402 | [client 192.168.37.161:22840] script '/opt/cbflow/apache/htdocs/elrekt.php' not found or unable to stat
-
-#---------------------------------------------------------------------------------------------------------------------
-# flow-server
-#---------------------------------------------------------------------------------------------------------------------
-# 2019-09-16T14:28:52.249 | INFO  | Thread-1   |  |  |   | ServerStatus                   | serverStatusManager is running
-# 2019-09-05T13:25:42.317 | flow-server-7d9d8d844b-4x5xw | INFO  | Thread-1    |          |   |    | Bootstrap                      | Initializing
-# INFO   | jvm 1    | 2019/09/05 13:25:31.469 | WrapperManager: Initializing...
-
   filebeatConfig:
     filebeat.yml: |
       setup.ilm.enabled: false
