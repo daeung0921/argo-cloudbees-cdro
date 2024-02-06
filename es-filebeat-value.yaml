@@ -28,17 +28,196 @@ daemonset:
   # such as filebeat.yml for daemonset
   filebeatConfig:
     filebeat.yml: |
-      filebeat.inputs:
-      - type: container
-        paths:
-          - /var/log/containers/*.log
-        processors:
+      #filebeat.inputs:
+      #- type: container
+      #  paths:
+      #    - /var/log/containers/*.log
+      #  processors:
+      #  - add_kubernetes_metadata:
+      #      host: ${NODE_NAME}
+      #      matchers:
+      #      - logs_path:
+      #          logs_path: "/var/log/containers/"
+      filebeat.autodiscover:
+        providers:
+          - type: kubernetes
+            templates:
+              - condition.equals:
+                  kubernetes.container.name: "flow-web"
+                config:
+                  - type: docker
+                    containers.ids:
+                      - ${data.kubernetes.container.id}
+                    multiline.pattern: '^\d\d\d\d(-\d\d){2} \d\d(:\d\d){2}\.\d+' #2019-09-13 21:34:43.179571
+                    multiline.negate: true
+                    multiline.match: after
+                    timeout: 10s
+                    fields_under_root: true
+                    fields:
+                      cbflow.component: "web"
+                    processors:
+                      - if:
+                          regexp:
+                            message: '^\d\d\d\d(-\d\d){2} \d\d(:\d\d){2}\.\d+ \* '
+                        then:
+                          - dissect:
+                              tokenizer: "%{timestamp} * %{message}"
+                              field: "message"
+                              target_prefix: "log"
+                          - if:
+                              regexp:
+                                log.message: '^ERROR:'
+                            then:
+                              - add_fields:
+                                  target: ''
+                                  fields:
+                                    log.level: "ERROR"
+                            else:
+                              - if:
+                                  regexp:
+                                    log.message: '^WARNING:'
+                                then:
+                                  - add_fields:
+                                      target: ''
+                                      fields:
+                                        log.level: "WARN"
+                                else:
+                                  - add_fields:
+                                      target: ''
+                                      fields:
+                                        log.level: "STATUS"
+                        else:
+                          - if:
+                              regexp:
+                                message: '^\d\d\d\d(-\d\d){2} \d\d(:\d\d){2}\.\d+ \| [a-z0-9_-]+:[a-z]+ \| pid \d+ \|'
+                            then:
+                              # error logs
+                              # 2019-09-13 21:35:49.470053 | php7:error | pid 402 | [client 192.168.37.161:22840] script '/opt/cbflow/apache/htdocs/elrekt.php' not found or unable to stat
+                              - dissect:
+                                  tokenizer: "%{timestamp} | %{level} | %{thread} | %{message}"
+                                  field: "message"
+                                  target_prefix: "log"
+                              - script:
+                                  lang: javascript
+                                  source: >
+                                      function process(ev) {
+                                          var level = ev.Get("log.level");
+                                          if (level !== null) {
+                                              var ar = level.split(':');
+                                              if (ar.length !== 2) {
+                                                  throw "wrong array length for log.level: " + level;
+                                              }
+                                              ev.Put("log.module", ar[0]);
+                                              if (ar[1] === 'error') {
+                                                  ev.Put("log.level", "ERROR");
+                                              } else if (ar[1] === 'warning') {
+                                                  ev.Put("log.level", "WARN");
+                                              } else if (ar[1] === 'debug') {
+                                                  ev.Put("log.level", "DEBUG");
+                                              } else if (ar[1] === 'notice') {
+                                                  ev.Put("log.level", "INFO");
+                                              } else if (ar[1] === 'info') {
+                                                  ev.Put("log.level", "INFO");
+                                              } else if (ar[1] === 'alert') {
+                                                  ev.Put("log.level", "ALERT");
+                                              } else if (ar[1] === 'emerg') {
+                                                  ev.Put("log.level", "CRIT");
+                                              } else if (ar[1] === 'crit') {
+                                                  ev.Put("log.level", "CRIT");
+                                              } else if (ar[1].indexOf('trace') === 0) {
+                                                  ev.Put("log.level", "TRACE");
+                                              } else {
+                                                  ev.Put("log.level", ar[1]);
+                                              }
+                                          }
+                                          return ev;
+                                      };
+                                      function test() {
+                                          var ev;
+                                          ev = process(new Event({log: {level: "php7:error"}}));
+                                          if (ev.Get("log.module") !== "php7") {
+                                              throw "expected log.module === php7";
+                                          }
+                                          if (ev.Get("log.level") !== "ERROR") {
+                                              throw "expected log.level === ERROR";
+                                          }
+                                          ev = process(new Event({log: {level: "php7:warning"}}));
+                                          if (ev.Get("log.level") !== "WARN") {
+                                              throw "expected log.level === WARN";
+                                          }
+                                          ev = process(new Event({log: {level: "php7:debug"}}));
+                                          if (ev.Get("log.level") !== "DEBUG") {
+                                              throw "expected log.level === DEBUG";
+                                          }
+                                          ev = process(new Event({log: {level: "php7:notice"}}));
+                                          if (ev.Get("log.level") !== "INFO") {
+                                              throw "expected log.level === INFO";
+                                          }
+                                          ev = process(new Event({log: {level: "php7:info"}}));
+                                          if (ev.Get("log.level") !== "INFO") {
+                                              throw "expected log.level === INFO";
+                                          }
+                                          ev = process(new Event({log: {level: "php7:alert"}}));
+                                          if (ev.Get("log.level") !== "ALERT") {
+                                              throw "expected log.level === ALERT";
+                                          }
+                                          ev = process(new Event({log: {level: "php7:emerg"}}));
+                                          if (ev.Get("log.level") !== "CRIT") {
+                                              throw "expected log.level === CRIT";
+                                          }
+                                          ev = process(new Event({log: {level: "php7:crit"}}));
+                                          if (ev.Get("log.level") !== "CRIT") {
+                                              throw "expected log.level === CRIT";
+                                          }
+                                          ev = process(new Event({log: {level: "php7:trace"}}));
+                                          if (ev.Get("log.level") !== "TRACE") {
+                                              throw "expected log.level === TRACE";
+                                          }
+                                          ev = process(new Event({log: {level: "php7:trace8"}}));
+                                          if (ev.Get("log.level") !== "TRACE") {
+                                              throw "expected log.level === TRACE";
+                                          }
+                                      };
+                            else:
+                                # access logs
+                                # 2019-09-13 21:35:43.177728 | 127.0.0.1 | - | "GET /commander/favicon.ico HTTP/1.1" 200 1446 199 - 140562223949632
+                              - dissect:
+                                  tokenizer: "%{timestamp} | %{address} | %{user} | %{message}"
+                                  field: "message"
+                                  target_prefix: "log"
+                              - add_fields:
+                                  target: ''
+                                  fields:
+                                    log.level: "INFO"
+                      - timestamp:
+                          field: "log.timestamp"
+                          layouts:
+                            - '2006-01-02 15:04:05.999999'
+                          test:
+                            - '2019-09-13 21:35:43.177728'
+              - condition.not:
+                  or:
+                    - equals:
+                        kubernetes.container.name: "flow-web"
+                config:
+                  - type: docker
+                    containers.ids:
+                      - ${data.kubernetes.container.id}
+                    fields_under_root: true
+                    fields:
+                      cbflow.component: "other"
+                    processors:
+                      - convert:
+                          fields:
+                            - {from: "message", to: "log.message"}
+      processors:
+        - add_cloud_metadata:
         - add_kubernetes_metadata:
-            host: ${NODE_NAME}
-            matchers:
-            - logs_path:
-                logs_path: "/var/log/containers/"
+            in_cluster: true
 
+      output.file:
+        enabled: false
+      
       output.elasticsearch:
         hosts: ["es-test:9200"]
         protocol: "https"
@@ -51,7 +230,11 @@ daemonset:
         host: "https://es-kibana:5601"
         ssl.enabled: true
         ssl.certificate_authorities: ["/usr/share/filebeat/config/certs/ca.crt"]
-        ssl.verification_mode: "none" 
+        ssl.verification_mode: "none"\
+      setup.template:
+        enabled: true
+        name: "cbf-template"
+        pattern: "cbf-*"
       logging.level: info
       logging.to_files: true
       logging.files:
