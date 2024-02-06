@@ -212,9 +212,8 @@ daemonset:
       processors:
         - add_cloud_metadata: ~
         - add_kubernetes_metadata:
-            in_cluster: true
-      output.elasticsearch:
-        ilm.enabled: false
+            in_cluster: "true"
+      output.elasticsearch: 
         index: "cbf-%{[cbflow.component]}-%{+yyyy.MM.dd}"
         hosts: ["es-test:9200"]
         protocol: "https"
@@ -225,7 +224,7 @@ daemonset:
         ssl.verification_mode: "none"
       setup.kibana:
         host: "https://es-kibana:5601"
-        ssl.enabled: true
+        ssl.enabled: "true"
         ssl.certificate_authorities: ["/usr/share/filebeat/config/certs/ca.crt"]
         ssl.verification_mode: "none"
       setup.template: 
@@ -233,17 +232,8 @@ daemonset:
         pattern: "cbf-*"
         settings:
           index.number_of_shards: 1
-        overwrite: true
-        enabled: false
-      setup.ilm:
-        enabled: false
-      logging.level: info
-      logging.to_files: true
-      logging.files:
-        path: /var/log/filebeat
-        name: filebeat
-        keepfiles: 7
-        permissions: 0640      
+        overwrite: "true"
+        enabled: "true"
   # Only used when updateStrategy is set to "RollingUpdate"
   maxUnavailable: 1
   nodeSelector: {}
