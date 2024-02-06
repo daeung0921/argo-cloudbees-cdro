@@ -52,13 +52,8 @@ daemonset:
           - type: kubernetes
             hints.enabled: true      
             templates:
-              - condition.and:
-                  - equals:
-                      kubernetes.namespace: cdro         
-                  - contains:
-                      kubernetes.container.name: flow-web
-                  - contains:
-                      kubernetes.labels.app: flow-web                
+              - condition.equals:   
+                  kubernetes.labels.app: flow-web              
                 config:
                   input:
                     type: container
