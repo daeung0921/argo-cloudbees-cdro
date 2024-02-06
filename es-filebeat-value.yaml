@@ -39,6 +39,12 @@ daemonset:
       #      - logs_path:
       #          logs_path: "/var/log/containers/"
       filebeat.autodiscover:
+        processors:
+        - add_kubernetes_metadata:
+            host: ${NODE_NAME}
+            matchers:
+            - logs_path:
+                logs_path: "/var/log/containers/"
         providers:
           - type: kubernetes
             templates:
@@ -210,10 +216,6 @@ daemonset:
                       - convert:
                           fields:
                             - {from: "message", to: "log.message"}
-      processors:
-        - add_cloud_metadata:
-        - add_kubernetes_metadata:
-            in_cluster: true
 
       output.file:
         enabled: false
