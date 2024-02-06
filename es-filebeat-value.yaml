@@ -74,7 +74,7 @@ daemonset:
                     containers:
                       ids:
                         - ${data.kubernetes.container.id}
-                    multiline.pattern: '^\d\d\d\d(-\d\d){2}T\d\d(:\d\d){2}\.\d\d\d|^[A-Z]+ +\| (wrapper|jvm \d+) +\| \d\d\d\d(/\d\d){2} \d\d(:\d\d){2}\.\d\d\d'
+                    multiline.pattern: '^\d\d\d\d(-\d\d){2}T\d\d(:\d\d){2}\.\d\d\d'
                     multiline.negate: true
                     multiline.match: after
                     timeout: 10s
