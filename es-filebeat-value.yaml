@@ -54,7 +54,7 @@ daemonset:
               - condition.regexp:
                   kubernetes.container.name: "^flow-web-*"
                 config:
-                  - type: docker
+                  - type: container
                     containers.ids:
                       - ${data.kubernetes.container.id}
                     multiline.pattern: '^\d\d\d\d(-\d\d){2} \d\d(:\d\d){2}\.\d+' #2019-09-13 21:34:43.179571
@@ -205,7 +205,7 @@ daemonset:
                     - regexp:
                         kubernetes.container.name: "^flow-web-*"
                 config:
-                  - type: docker
+                  - type: container
                     containers.ids:
                       - ${data.kubernetes.container.id}
                     fields_under_root: true
