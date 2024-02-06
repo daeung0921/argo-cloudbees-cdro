@@ -26,9 +26,18 @@ daemonset:
   hostNetworking: false
   # Allows you to add any config files in /usr/share/filebeat
   # such as filebeat.yml for daemonset
+
+#---------------------------------------------------------------------------------------------------------------------
+# flow-web
+#---------------------------------------------------------------------------------------------------------------------
+# access logs
+# 2019-09-13 21:35:43.177728 | 127.0.0.1 | - | "GET /commander/favicon.ico HTTP/1.1" 200 1446 199 - 140562223949632
+# error logs
+# 2019-09-13 21:35:49.470053 | php7:error | pid 402 | [client 192.168.37.161:22840] script '/opt/cbflow/apache/htdocs/elrekt.php' not found or unable to stat
+
   filebeatConfig:
     filebeat.yml: |
-      #filebeat.inputs:
+      filebeat.inputs: {}
       #- type: container
       #  paths:
       #    - /var/log/containers/*.log
@@ -39,12 +48,6 @@ daemonset:
       #      - logs_path:
       #          logs_path: "/var/log/containers/"
       filebeat.autodiscover:
-        processors:
-        - add_kubernetes_metadata:
-            host: ${NODE_NAME}
-            matchers:
-            - logs_path:
-                logs_path: "/var/log/containers/"
         providers:
           - type: kubernetes
             templates:
@@ -97,8 +100,6 @@ daemonset:
                               regexp:
                                 message: '^\d\d\d\d(-\d\d){2} \d\d(:\d\d){2}\.\d+ \| [a-z0-9_-]+:[a-z]+ \| pid \d+ \|'
                             then:
-                              # error logs
-                              # 2019-09-13 21:35:49.470053 | php7:error | pid 402 | [client 192.168.37.161:22840] script '/opt/cbflow/apache/htdocs/elrekt.php' not found or unable to stat
                               - dissect:
                                   tokenizer: "%{timestamp} | %{level} | %{thread} | %{message}"
                                   field: "message"
@@ -185,8 +186,6 @@ daemonset:
                                           }
                                       };
                             else:
-                                # access logs
-                                # 2019-09-13 21:35:43.177728 | 127.0.0.1 | - | "GET /commander/favicon.ico HTTP/1.1" 200 1446 199 - 140562223949632
                               - dissect:
                                   tokenizer: "%{timestamp} | %{address} | %{user} | %{message}"
                                   field: "message"
@@ -216,6 +215,11 @@ daemonset:
                       - convert:
                           fields:
                             - {from: "message", to: "log.message"}
+
+      processors:
+        - add_cloud_metadata:
+        - add_kubernetes_metadata:
+            in_cluster: true
 
       output.file:
         enabled: false
