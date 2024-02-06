@@ -207,6 +207,7 @@ daemonset:
                             - '2019-06-22T16:33:51Z'
                             - '2019-11-18T04:59:51.123Z'
                             - '2020-08-03T07:10:20.123456+02:00'
+
               #------------------------------------------------------------------------------------------------------------------------------
               # Repository (Server 와 거의 유사함)
               #------------------------------------------------------------------------------------------------------------------------------
@@ -221,16 +222,19 @@ daemonset:
                     containers:
                       ids:
                         - ${data.kubernetes.container.id}
-                    multiline.pattern:  '^\d\d\d\d(-\d\d){2}T\d\d(:\d\d){2}\.\d\d\d|^[A-Z]+ +\| (wrapper|jvm \d+) +\| \d\d\d\d(/\d\d){2} \d\d(:\d\d){2}\.\d\d\d'
+                    multiline.pattern: '^\d\d\d\d(-\d\d){2}T\d\d(:\d\d){2}\.\d\d\d|^[A-Z]+ +\| (wrapper|jvm|jetty-bootstrap \d+) +\| \d\d\d\d(/\d\d){2} \d\d(:\d\d){2}\.\d\d\d'
                     multiline.negate: true
                     multiline.match: after
                     timeout: 10s
                     fields_under_root: true
                     fields:
-                      cbflow.component: "repo"
+                      cbflow.component: "repository"
                     processors:
                       - if:
                           regexp:
+                            #--------------------------------------------------------------------
+                            # 2024-02-05T17:56:27.265 * Login on CloudBees Flow server...
+                            #--------------------------------------------------------------------
                             message: '^\d\d\d\d(-\d\d){2}T\d\d(:\d\d){2}\.\d\d\d \* '
                         then:
                           - dissect:
