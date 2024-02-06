@@ -226,7 +226,8 @@ daemonset:
         name: "cbf-data"
         pattern: "cbf-data-*"
         overwrite: "true"
-        enabled: "false"
+        enabled: "true"
+      setup.ilm.enabled: false
   # Only used when updateStrategy is set to "RollingUpdate"
   maxUnavailable: 1
   nodeSelector: {}
