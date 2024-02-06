@@ -37,6 +37,8 @@ daemonset:
 
   filebeatConfig:
     filebeat.yml: |
+      setup.ilm.enabled: false
+      filebeat.modules: {}
       filebeat.inputs: {}
       #- type: container
       #  paths:
@@ -49,14 +51,16 @@ daemonset:
       #          logs_path: "/var/log/containers/"
       filebeat.autodiscover:
         providers:
-          - type: kubernetes
-            #hints.enabled: true      
-            templates:
-              - condition.equals:   
-                  kubernetes.labels.app: flow-web              
+          - type: kubernetes    
+            templates: 
+              - condition:
+                  equals:
+                    kubernetes.labels.app: "flow-web"
                 config:
-                  input:
-                    type: container
+                  #input:
+                  - type: container
+                    paths: 
+                      - /var/log/containers/*-${data.kubernetes.container.id}.log
                     tail_files: true
                     containers:
                       ids:
@@ -227,7 +231,6 @@ daemonset:
         pattern: "cbf-*"
         overwrite: "true"
         enabled: "true"
-      setup.ilm.enabled: false
   # Only used when updateStrategy is set to "RollingUpdate"
   maxUnavailable: 1
   nodeSelector: {}
@@ -254,7 +257,78 @@ daemonset:
   tolerations: []
 
 deployment:
+  # Annotations to apply to the deployment
+  annotations: {}
+  # additionals labels
+  labels: {}
+  affinity: {}
+  # Include the deployment
   enabled: false
+  # Extra environment variables for Filebeat container.
+  envFrom: []
+  # - configMapRef:
+  #     name: config-secret
+  extraEnvs: []
+  #  - name: MY_ENVIRONMENT_VAR
+  #    value: the_value_goes_here
+  # Allows you to add any config files in /usr/share/filebeat
+  extraVolumes: []
+  # - name: extras
+  #   emptyDir: {}
+  extraVolumeMounts: []
+  # - name: extras
+  #   mountPath: /usr/share/extras
+  #   readOnly: true
+  # such as filebeat.yml for deployment
+  filebeatConfig:
+    filebeat.yml: |
+      filebeat.inputs:
+      - type: tcp
+        max_message_size: 10MiB
+        host: "localhost:9000"
+
+      output.elasticsearch:
+        hosts: ["es-test:9200"]
+        protocol: "https"
+        username: "admin"
+        password: "changeme"
+        ssl.enabled: "true"
+        ssl.certificate_authorities: ["/usr/share/filebeat/config/certs/ca.crt"]
+        ssl.verification_mode: "none"
+      setup.kibana:
+        host: "https://es-kibana:5601"
+        ssl.enabled: true
+        ssl.certificate_authorities: ["/usr/share/filebeat/config/certs/ca.crt"]
+        ssl.verification_mode: "none" 
+      logging.level: info
+      logging.to_files: true
+      logging.files:
+        path: /var/log/filebeat
+        name: filebeat
+        keepfiles: 7
+        permissions: 0640             
+  nodeSelector: {}
+  # A list of secrets and their paths to mount inside the pod
+  # This is useful for mounting certificates for security other sensitive values
+  secretMounts: []
+  #  - name: filebeat-certificates
+  #    secretName: filebeat-certificates
+  #    path: /usr/share/filebeat/certs
+  #
+  # - User that the container will execute as.
+  # Not necessary to run as root (0) as the Filebeat Deployment use cases do not need access to Kubernetes Node internals
+  # - Typically not necessarily unless running within environments such as OpenShift.
+  securityContext:
+    runAsUser: 0
+    privileged: false
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "100Mi"
+    limits:
+      cpu: "1000m"
+      memory: "200Mi"
+  tolerations: []
 
 # Replicas being used for the filebeat deployment
 replicas: 1
