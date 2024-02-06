@@ -50,7 +50,7 @@ daemonset:
       filebeat.autodiscover:
         providers:
           - type: kubernetes
-            hints.enabled: true      
+            #hints.enabled: true      
             templates:
               - condition.equals:   
                   kubernetes.labels.app: flow-web              
