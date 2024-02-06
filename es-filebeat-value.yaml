@@ -275,7 +275,7 @@ resources: {}
 secretMounts:
   - name: elastic-certificates
     secretName: cdro-ca-cert
-    path: /usr/share/metricbeat/config/certs
+    path: /usr/share/filebeat/config/certs
     defaultMode: "0755"
 tolerations: []
 labels: {}
