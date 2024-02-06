@@ -79,80 +79,49 @@ daemonset:
                     fields:
                       cbflow.component: "server"
                     processors:
-                      - if:
-                          regexp:
-                            message: '^\d\d\d\d(-\d\d){2}T\d\d(:\d\d){2}\.\d\d\d \* '
-                        then:
-                          - dissect:
-                              tokenizer: "%{timestamp} * %{message}"
-                              field: "message"
-                              target_prefix: "log"
-                          - if:
-                              regexp:
-                                log.message: '^ERROR:'
-                            then:
-                              - add_fields:
-                                  target: ''
-                                  fields:
-                                    log.level: "ERROR"
-                            else:
-                              - if:
-                                  regexp:
-                                    log.message: '^WARNING:'
-                                then:
-                                  - add_fields:
-                                      target: ''
-                                      fields:
-                                        log.level: "WARN"
-                                else:
-                                  - add_fields:
-                                      target: ''
-                                      fields:
-                                        log.level: "STATUS"
-                        else:
-                          - if:
-                              regexp:
-                                message: '^\d\d\d\d(-\d\d){2}T\d\d(:\d\d){2}\.\d\d\d \| '
-                            then:
-                              - if:
-                                  regexp:
-                                    message: '^\d\d\d\d(-\d\d){2}T\d\d(:\d\d){2}\.\d\d\d \| [A-Z]+ +\|'
-                                then:
-                                  - dissect:
-                                      tokenizer: "%{timestamp} | %{level} | %{thread} | %{context} | %{job} | %{ndc} | %{class} | %{message}"
-                                      field: "message"
-                                      target_prefix: "log"
-                                else:
-                                  - dissect:
-                                      tokenizer: "%{timestamp} | %{node} | %{level} | %{thread} | %{context} | %{job} | %{ndc} | %{class} | %{message}"
-                                      field: "message"
-                                      target_prefix: "log"
-                            else:
-                             - dissect:
-                                  tokenizer: "%{level} | %{thread} | %{timestamp} | %{message}"
-                                  field: "message"
-                                  target_prefix: "log"
-                          - script:
-                              lang: javascript
-                              source: >
-                                  function process(ev) {
-                                      var field;
-                                      field = ev.Get("log.level");
-                                      if (field !== null) {
-                                          ev.Put("log.level", field.trim());
-                                      }
-                                      return ev;
-                                  };
-                                  function test() {
-                                      var ev;
-                                      // check not parsed event
-                                      ev = process(new Event({}));
-                                      // check trim
-                                      ev = process(new Event({log: {level: "  INFO  "}}));
-                                      if (ev.Get("log.level") !== "INFO") {
-                                          throw "expected log.level === 'INFO'";
-                                      }
-                                  };
+                        - if:
+                            regexp:
+                              message: '^\d\d\d\d(-\d\d){2}T\d\d(:\d\d){2}\.\d\d\d \| '
+                          then:
+                            - if:
+                                regexp:
+                                  message: '^\d\d\d\d(-\d\d){2}T\d\d(:\d\d){2}\.\d\d\d \| [A-Z]+ +\|'
+                              then:
+                                - dissect:
+                                    tokenizer: "%{timestamp} | %{level} | %{thread} | %{context} | %{job} | %{ndc} | %{class} | %{message}"
+                                    field: "message"
+                                    target_prefix: "log"
+                              else:
+                                - dissect:
+                                    tokenizer: "%{timestamp} | %{node} | %{level} | %{thread} | %{context} | %{job} | %{ndc} | %{class} | %{message}"
+                                    field: "message"
+                                    target_prefix: "log"
+                          else:
+                           - dissect:
+                                tokenizer: "%{level} | %{thread} | %{timestamp} | %{message}"
+                                field: "message"
+                                target_prefix: "log"
+                        - script:
+                            lang: javascript
+                            source: >
+                                function process(ev) {
+                                    var field;
+                                    field = ev.Get("log.level");
+                                    if (field !== null) {
+                                        ev.Put("log.level", field.trim());
+                                    }
+                                    return ev;
+                                };
+                                function test() {
+                                    var ev;
+                                    // check not parsed event
+                                    ev = process(new Event({}));
+                                    // check trim
+                                    ev = process(new Event({log: {level: "  INFO  "}}));
+                                    if (ev.Get("log.level") !== "INFO") {
+                                       throw "expected log.level === 'INFO'";
+                                    }
+                                };
                       - timestamp:
                           field: "log.timestamp"
                           layouts:
