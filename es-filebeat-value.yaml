@@ -228,10 +228,13 @@ daemonset:
         ssl.enabled: true
         ssl.certificate_authorities: ["/usr/share/filebeat/config/certs/ca.crt"]
         ssl.verification_mode: "none"
-      setup.template:
-        enabled: true
-        name: "cbf-template"
+      setup.template: 
+        name: "cbf"
         pattern: "cbf-*"
+        settings:
+          index.number_of_shards: 1
+        overwrite: true
+        enabled: false
       setup.ilm:
         enabled: false
       logging.level: info
