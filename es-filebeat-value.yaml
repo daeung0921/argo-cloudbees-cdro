@@ -52,12 +52,18 @@ daemonset:
           - type: kubernetes
             hints.enabled: true      
             templates:
-              - condition.contains:
-                  kubernetes.container.name: "flow-web"
+              - condition.and:
+                  - contains:
+                      kubernetes.container.name: flow-web
+                  - contains:
+                      kubernetes.labels.app: flow-web                
                 config:
-                  - type: container
-                    containers.ids:
-                      - ${data.kubernetes.container.id}
+                  input:
+                    type: container
+                    tail_files: true
+                    containers:
+                      ids:
+                        - ${data.kubernetes.container.id}
                     multiline.pattern: '^\d\d\d\d(-\d\d){2} \d\d(:\d\d){2}\.\d+' #2019-09-13 21:34:43.179571
                     multiline.negate: true
                     multiline.match: after
@@ -65,7 +71,6 @@ daemonset:
                     fields_under_root: true
                     fields:
                       cbflow.component: "web"
-                    paths.logs: ["/var/lib/docker/containers/*/*.log"]
                     processors:
                       - if:
                           regexp:
