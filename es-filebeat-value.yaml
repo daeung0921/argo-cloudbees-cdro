@@ -60,6 +60,9 @@ daemonset:
         providers:
           - type: kubernetes    
             templates: 
+              #------------------------------------------------------------------------------------------------------------------------------
+              # 처리 안된것들..
+              #------------------------------------------------------------------------------------------------------------------------------
               - condition:
                   and:
                     - equals:
@@ -83,6 +86,9 @@ daemonset:
                       - convert:
                           fields:
                             - {from: "message", to: "log.message"}
+              #------------------------------------------------------------------------------------------------------------------------------
+              # Server
+              #------------------------------------------------------------------------------------------------------------------------------
               - condition:
                   equals:
                     kubernetes.labels.app: "flow-server"
@@ -104,26 +110,69 @@ daemonset:
                     processors:
                       - if:
                           regexp:
-                            message: '.*'   #'^\d\d\d\d(-\d\d){2}T\d\d(:\d\d){2}\.\d\d\d \|'
+                            message: '^\d\d\d\d(-\d\d){2}T\d\d(:\d\d){2}\.\d\d\d \* ' # 2019-09-16T14:28:52.249 * xxxx
                         then:
-                          - if:
-                              regexp:
-                                message: '^\d\d\d\d(-\d\d){2}T\d\d(:\d\d){2}\.\d\d\d \|'
-                            then:
-                              - dissect:
-                                  tokenizer: "%{timestamp} | %{level} | %{thread} | %{context} | %{job} | %{ndc} | %{class} | %{message}"
-                                  field: "message"
-                                  target_prefix: "log"
-                            else:
-                              - dissect:
-                                  tokenizer: "%{timestamp} | %{node} | %{level} | %{thread} | %{context} | %{job} | %{ndc} | %{class} | %{message}"
-                                  field: "message"
-                                  target_prefix: "log"
-                        else:
-                         - dissect:
-                              tokenizer: "%{level} | %{thread} | %{timestamp} | %{message}"
+                          - dissect:
+                              tokenizer: "%{timestamp} * %{message}"
                               field: "message"
                               target_prefix: "log"
+                          - if:
+                              regexp:
+                                log.message: '^ERROR:'
+                            then:
+                              - add_fields:
+                                  target: ''
+                                  fields:
+                                    log.level: "ERROR"
+                            else:
+                              - if:
+                                  regexp:
+                                    log.message: '^WARNING:'
+                                then:
+                                  - add_fields:
+                                      target: ''
+                                      fields:
+                                        log.level: "WARN"
+                                else:
+                                  - add_fields:
+                                      target: ''
+                                      fields:
+                                        log.level: "STATUS"
+                        else:
+                          - if:
+                              regexp:
+                                message: '^\d\d\d\d(-\d\d){2}T\d\d(:\d\d){2}\.\d\d\d \| '
+                            then:
+                              - if:
+                                  regexp:
+                                    message: '^\d\d\d\d(-\d\d){2}T\d\d(:\d\d){2}\.\d\d\d \| [A-Z]+ +\|'  # 2019-09-16T14:28:52.249 | INFO |
+                                then:
+                                  #------------------------------------------------------------------------------------------------------------------------------
+                                  # server logs (cluster 미 구성시)
+                                  # 2019-09-16T14:28:52.249 | INFO  | Thread-1   |          |        |    | ServerStatus    | serverStatusManager is running
+                                  #------------------------------------------------------------------------------------------------------------------------------
+                                  - dissect:
+                                      tokenizer: "%{timestamp} | %{level} | %{thread} | %{context} | %{job} | %{ndc} | %{class} | %{message}"
+                                      field: "message"
+                                      target_prefix: "log"
+                                else:
+                                  #------------------------------------------------------------------------------------------------------------------------------
+                                  # server logs (cluster 구성시)
+                                  # 2019-09-05T13:25:42.317 | flow-server-7d9d8d844b-4x5xw | INFO  | Thread-1    |    |    |     | Bootstrap     | Initializing
+                                  #------------------------------------------------------------------------------------------------------------------------------
+                                  - dissect:
+                                      tokenizer: "%{timestamp} | %{node} | %{level} | %{thread} | %{context} | %{job} | %{ndc} | %{class} | %{message}"
+                                      field: "message"
+                                      target_prefix: "log"
+                            else:
+                              #------------------------------------------------------------------------------------------------------------------------------
+                              # service logs
+                              # INFO   | jvm 1    | 2019/09/05 13:25:31.469 | WrapperManager: Initializing...
+                              #------------------------------------------------------------------------------------------------------------------------------
+                              - dissect:
+                                  tokenizer: "%{level} | %{thread} | %{timestamp} | %{message}"
+                                  field: "message"
+                                  target_prefix: "log"
                       - script:
                           lang: javascript
                           source: >
@@ -155,6 +204,9 @@ daemonset:
                             - '2019-06-22T16:33:51Z'
                             - '2019-11-18T04:59:51.123Z'
                             - '2020-08-03T07:10:20.123456+02:00'
+              #------------------------------------------------------------------------------------------------------------------------------
+              # Web
+              #------------------------------------------------------------------------------------------------------------------------------
               - condition:
                   equals:
                     kubernetes.labels.app: "flow-web"
