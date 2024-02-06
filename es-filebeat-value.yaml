@@ -64,6 +64,7 @@ daemonset:
                     fields_under_root: true
                     fields:
                       cbflow.component: "web"
+                    paths.logs: ["/var/lib/docker/containers/*/*.log"]
                     processors:
                       - if:
                           regexp:
