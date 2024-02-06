@@ -50,9 +50,10 @@ daemonset:
       filebeat.autodiscover:
         providers:
           - type: kubernetes
+            hints.enabled: true      
             templates:
-              - condition.regexp:
-                  kubernetes.container.name: "^flow-web-*"
+              - condition.contains:
+                  kubernetes.container.name: "flow-web"
                 config:
                   - type: container
                     containers.ids:
@@ -201,16 +202,12 @@ daemonset:
                             - '2006-01-02 15:04:05.999999'
                           test:
                             - '2019-09-13 21:35:43.177728'
-      #processors:
-      #  - add_cloud_metadata:
-      #  - add_kubernetes_metadata:
-      #      in_cluster: true
       processors:
+        - add_cloud_metadata: ~
+        - add_host_metadata: ~
         - add_kubernetes_metadata:
-            host: ${NODE_NAME}
-            matchers:
-            - logs_path:
-                logs_path: "/var/log/containers/"
+            in_cluster: true
+        - add_docker_metadata:
       output.elasticsearch:
         hosts: ["es-test:9200"]
         protocol: "https"
