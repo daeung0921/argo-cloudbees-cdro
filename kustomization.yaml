@@ -2,6 +2,7 @@ namespace: cdro
 
 resources:
 - additional_resources.yaml
+- metricbeat-kubernetes.yaml
 
 helmCharts:
   #------------------------------------------
@@ -61,13 +62,13 @@ helmCharts:
   version: 7.17.1
   releaseName: eskibana
   IncludeCRDs: true
-- name: metricbeat
-  namespace: cdro
-  valuesFile : ./es-metricbeat-value.yaml
-  repo: https://helm.elastic.co
-  version: 7.17.1
-  releaseName: esmetricbeat
-  IncludeCRDs: true
+#- name: metricbeat
+#  namespace: cdro
+#  valuesFile : ./es-metricbeat-value.yaml
+#  repo: https://helm.elastic.co
+#  version: 7.17.1
+#  releaseName: esmetricbeat
+#  IncludeCRDs: true
 - name: filebeat
   namespace: cdro
   valuesFile : ./es-filebeat-value.yaml

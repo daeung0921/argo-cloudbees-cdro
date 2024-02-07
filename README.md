@@ -12,28 +12,21 @@ CDRO kustomized helm chart 를 ArgoCD 통해 배포하기 위한 예제 Repo 입
 <doSometing>
 ```
 
-### 단계 2 >  Cert Manager , Ingress nginx, kube state metrics 설치 및 Storage class 의 filesystemid 확인
+### 단계 2 >  테스트 전 준비사항
 
-Cert Manager 가 설치되어 있지 않은 경우 설치합니다. (첨부된 파일은 v1.5.4 버전 )
+- Cert Manager (첨부된 파일은 v1.5.4 버전 ) 
+- ingress-nginx  (첨부된 파일은 v1.8.2 버전)
+- kube-state-metrics (https://github.com/kubernetes/kube-state-metrics/tree/main) 
+- metricbeat-kubernetes.yaml (https://www.elastic.co/guide/en/beats/metricbeat/7.17/running-on-kubernetes.html)
+- additional_resources.yaml 의 storage class 의 fileSystemID 변경
 
-```bash
+```bash 
 $ kubectl apply -f cert-manager.crd.yaml
 $ kubectl apply -f cert-manager.yaml
-```
-
-ingress-nginx 가 설치되어 있지 않은 경우 설치합니다 (첨부된 파일은 v1.8.2 버전). 설치 완료후 LB 프로비저닝까지 확인합니다.
-
-```bash
 $ kubectl apply -f ingress-nginx.yaml
+$ kubectl apply -f kube-state-metrics.yaml 
+$ kubectl apply -f metricbeat-kubernetes.yaml
 ```
-
-kubernetes 상태 모니터링을 위해서 [kube-state-metrics.yaml](https://github.com/kubernetes/kube-state-metrics/tree/main) 을 설치합니다.
-
-```bash
-$ kubectl apply -f kube-state-metrics.yaml
-```
-
-eks 를 사용하는 경우 additional_resources.yaml 의 storage class 의 fileSystemID 가 올바른지 확인합니다.
 
 ### 단계 3 >  CloudBees CDRO 차트 변경 확인 
 

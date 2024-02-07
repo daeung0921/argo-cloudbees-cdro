@@ -4,6 +4,20 @@ kind: Namespace
 metadata:
   name: cdro
 ---
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: "sc-cdro" 
+provisioner: efs.csi.aws.com
+reclaimPolicy: Delete
+volumeBindingMode: Immediate
+parameters:
+  provisioningMode: efs-ap
+  fileSystemId: "fs-03f81a4e4cc8fecd2" # EKS 새로 배포시 바뀜 
+  directoryPerms: "777"
+  gid: "0"
+  uid: "0"
+---
 apiVersion: cert-manager.io/v1
 kind: Issuer
 metadata:
@@ -57,20 +71,6 @@ data:
 #data:
 #  username: test
 #  password: password
----
-apiVersion: storage.k8s.io/v1
-kind: StorageClass
-metadata:
-  name: "sc-cdro" 
-provisioner: efs.csi.aws.com
-reclaimPolicy: Delete
-volumeBindingMode: Immediate
-parameters:
-  provisioningMode: efs-ap
-  fileSystemId: "fs-01e02dbcdc664c4ac" # EKS 새로 배포시 바뀜 
-  directoryPerms: "777"
-  gid: "0"
-  uid: "0"
 ---
 apiVersion: networking.k8s.io/v1
 kind: IngressClass

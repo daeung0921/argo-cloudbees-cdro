@@ -32,6 +32,9 @@ daemonset:
   metricbeatConfig: # https://www.elastic.co/guide/en/beats/metricbeat/current/metricbeat-module-kubernetes.html#_proxy
     metricbeat.yml: |
       metricbeat.modules:
+      #----------------------------------------------------------------------------------------------
+      # Node metrics, from kubelet
+      #----------------------------------------------------------------------------------------------
       - module: kubernetes
         enabled: true
         metricsets:
@@ -40,22 +43,53 @@ daemonset:
           - pod
           - system
           - volume
-          - event
         period: 10s
         host: "${NODE_NAME}"
         hosts: ["https://${NODE_NAME}:10250"]
         bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
         ssl.verification_mode: "none"
-        # If using Red Hat OpenShift remove ssl.verification_mode entry and
-        # uncomment these settings:
-        #ssl.certificate_authorities:
-          #- /var/run/secrets/kubernetes.io/serviceaccount/service-ca.crt
-        processors:
-        - add_kubernetes_metadata: ~
-      #- module: kubernetes
-      #  enabled: true
-      #  metricsets:
-      #    - event
+        add_metadata: true
+      #----------------------------------------------------------------------------------------------
+      # Kubernetes API server
+      #----------------------------------------------------------------------------------------------
+      - module: kubernetes
+        metricsets:
+          - apiserver
+        hosts: ["https://${KUBERNETES_SERVICE_HOST}:${KUBERNETES_SERVICE_PORT}"]
+        bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
+        ssl.certificate_authorities:
+          - /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+        period: 30s
+      #----------------------------------------------------------------------------------------------
+      # Kubernetes proxy server
+      #----------------------------------------------------------------------------------------------
+      - module: kubernetes
+        enabled: true
+        metricsets:
+          - proxy
+        hosts: ["localhost:10249"]
+        period: 10s
+      #----------------------------------------------------------------------------------------------
+      # Kubernetes controller manager
+      #----------------------------------------------------------------------------------------------
+      - module: kubernetes
+        enabled: true
+        metricsets:
+          - controllermanager
+        hosts: ["http://localhost:10252"]
+        period: 10s
+      #----------------------------------------------------------------------------------------------
+      # Kubernetes scheduler
+      #----------------------------------------------------------------------------------------------
+      - module: kubernetes
+        enabled: true
+        metricsets:
+          - scheduler
+        hosts: ["localhost:10251"]
+        period: 10s
+      #----------------------------------------------------------------------------------------------
+      # System
+      #----------------------------------------------------------------------------------------------
       - module: system
         period: 10s
         metricsets:
@@ -69,6 +103,7 @@ daemonset:
         process.include_top_n:
           by_cpu: 5
           by_memory: 5
+
       - module: system
         period: 1m
         metricsets:
@@ -77,6 +112,7 @@ daemonset:
         processors:
         - drop_event.when.regexp:
             system.filesystem.mount_point: '^/(sys|cgroup|proc|dev|etc|host|lib)($|/)'
+
       output.elasticsearch:
         hosts: ["es-test:9200"]
         protocol: "https"
@@ -120,6 +156,8 @@ daemonset:
       memory: "200Mi"
   tolerations: []
 
+
+# State metrics from kube-state-metrics service:
 deployment:
   # Annotations to apply to the deployment
   annotations: {}
@@ -127,7 +165,7 @@ deployment:
   labels: {}
   affinity: {}
   # Include the deployment
-  enabled: false
+  enabled: true
   # Extra environment variables for Metricbeat container.
   envFrom: []
   # - configMapRef:
@@ -152,6 +190,9 @@ deployment:
   metricbeatConfig:
     metricbeat.yml: |
       metricbeat.modules:
+      #----------------------------------------------------------------------------------------------
+      # State metrics from kube-state-metrics service
+      #----------------------------------------------------------------------------------------------
       - module: kubernetes
         enabled: true
         metricsets:
@@ -170,7 +211,9 @@ deployment:
           - state_persistentvolumeclaim
           - state_storageclass
         period: 10s
-        hosts: ["${KUBE_STATE_METRICS_HOSTS}"]
+        hosts: ["kube-state-metrics:8080"] 
+        add_metadata: true
+
       output.elasticsearch:
         hosts: ["es-test:9200"]
         protocol: "https"
