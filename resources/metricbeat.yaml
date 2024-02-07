@@ -66,12 +66,12 @@ data:
       username: ${ELASTICSEARCH_USERNAME}
       password: ${ELASTICSEARCH_PASSWORD}
       ssl.enabled: "true"
-      #ssl.certificate_authorities: ["/usr/share/metricbeat/config/certs/ca.crt"]
+      ssl.certificate_authorities: ["/usr/share/metricbeat/config/certs/ca.crt"]
       ssl.verification_mode: "none"
     setup.kibana:
       host: "${KIBANA_HOST}:${KIBANA_PORT}"
       ssl.enabled: true
-      #ssl.certificate_authorities: ["/usr/share/metricbeat/config/certs/ca.crt"]
+      ssl.certificate_authorities: ["/usr/share/metricbeat/config/certs/ca.crt"]
       ssl.verification_mode: "none" 
     logging.level: info
     logging.to_files: true
