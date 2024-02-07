@@ -218,6 +218,6 @@ $ elasticsearch-users useradd test -p password -r superuser
 
 ```bash
 $ kubectl delete -f application.yaml 
-$ kubectl apply -f cert-manager.yaml 
-$ kubectl apply -f ingress-nginx.yaml
+$ kubectl delete -f cert-manager.yaml 
+$ kubectl delete -f ingress-nginx.yaml
 ```
