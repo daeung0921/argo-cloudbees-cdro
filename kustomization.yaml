@@ -1,7 +1,13 @@
 namespace: cdro
 
 resources:
-- ./resources/additional_resources.yaml
+- ./resources/namespaces.yaml
+- ./resources/storageclasses.yaml
+- ./resources/cert-manager.yaml
+- ./resources/secrets.yaml
+- ./resources/ingressclasses.yaml
+- ./resources/pvcs.yaml
+- ./resources/configmaps.yaml
 - ./resources/metricbeat.yaml
 
 helmCharts:

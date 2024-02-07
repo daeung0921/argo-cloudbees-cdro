@@ -1,0 +1,51 @@
+--- 
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: "cdro-server-pvc"
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: "sc-cdro"
+  resources:
+    requests:
+      storage: "20Gi"
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: "cdro-repo-pvc"
+  namespace: "cdro"
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: "sc-cdro"
+  resources:
+    requests:
+      storage: "20Gi"
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: "cdro-agent-pvc"
+  namespace: "cdro"
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: "sc-cdro"
+  resources:
+    requests:
+      storage: "5Gi"
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: "cdro-remote-agent-pvc"
+  namespace: "cdro"
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: "sc-cdro"
+  resources:
+    requests:
+      storage: "20Gi"
