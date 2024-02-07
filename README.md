@@ -1,6 +1,7 @@
 ## Kustomized Helm Chart - Cloudbees CD Ro
 
-CDRO kustomized helm chart 를 ArgoCD 통해 EKS 에 배포하기 위한 예제 Repo 입니다.
+- CDRO kustomized helm chart 를 ArgoCD 통해 EKS 에 배포하기 위한 예제 Repo 입니다.
+- [아키텍처](https://docs.cloudbees.com/docs/cloudbees-cd/latest/horizontal-scalability/architecture)
 
 ### 단계 1 > 백업
 
