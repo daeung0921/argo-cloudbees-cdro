@@ -1021,18 +1021,29 @@ flowLicense:
 ### --------------------------------------------
 ### Pods security context
 ### ---------------------------------------------
-
 securityContext:
   enabled: true
-  fsGroup: 1000
-  allowPrivilegeEscalation: false
-  runAsUser: 1000
-  readOnlyRootFilesystem: true
-  runAsNonRoot: true
+  fsGroup: 0
+  allowPrivilegeEscalation: true
+  runAsUser: 0
+  readOnlyRootFilesystem: false
+  runAsNonRoot: false
   capabilities:
-    drop: ["ALL"]
+    drop: []
   seccompProfile:
-    type: "RuntimeDefault"
+    type: "Unconfined"
+
+#securityContext:
+#  enabled: false
+#  fsGroup: 1000
+#  allowPrivilegeEscalation: false
+#  runAsUser: 1000
+#  readOnlyRootFilesystem: true
+#  runAsNonRoot: true
+#  capabilities:
+#    drop: ["ALL"]
+#  seccompProfile:
+#    type: "RuntimeDefault"
 
 volumePermissions:
   enabled: true
