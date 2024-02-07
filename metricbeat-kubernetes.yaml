@@ -65,6 +65,28 @@ data:
       hosts: ['${ELASTICSEARCH_HOST:elasticsearch}:${ELASTICSEARCH_PORT:9200}']
       username: ${ELASTICSEARCH_USERNAME}
       password: ${ELASTICSEARCH_PASSWORD}
+
+      output.elasticsearch:
+        hosts: ["es-test:9200"]
+        protocol: "https"
+        username: "admin"
+        password: "changeme"
+        ssl.enabled: "true"
+        ssl.certificate_authorities: ["/usr/share/metricbeat/config/certs/ca.crt"]
+        ssl.verification_mode: "none"
+      setup.kibana:
+        host: "https://es-kibana:5601"
+        ssl.enabled: true
+        ssl.certificate_authorities: ["/usr/share/metricbeat/config/certs/ca.crt"]
+        ssl.verification_mode: "none" 
+      logging.level: info
+      logging.to_files: true
+      logging.files:
+        path: /var/log/metricbeat
+        name: metricbeat
+        keepfiles: 7
+        permissions: 0640
+
 ---
 apiVersion: v1
 kind: ConfigMap

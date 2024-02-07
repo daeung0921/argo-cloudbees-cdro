@@ -140,7 +140,7 @@ server:
   ## The `imageRepository` in the `images.registry` to pull component image from.
   imageRepository: cbflow-server
   ## Number of replicas of this component to create.
-  replicas: 2
+  replicas: 1
 
   ## `expose: true` allows cbflow-server service ingress ports `8443` and `61613`
   ## to be accessed from outside the cluster.
@@ -1104,10 +1104,10 @@ zookeeper:
 
   image:
     ## Container repository to pull ZooKeeper image from.
-    #repository: docker.io/cloudbees/cbflow-tools 
-    #tag: "2023.12.0.171596_3.2.64_20231207"
-    repository: zookeeper 
-    tag: 3.5.5
+    repository: docker.io/cloudbees/cbflow-tools
+    ## Zookeeper image tag to pull.
+    tag: "2023.12.0.171596_3.2.64_20231207"
+
   fullnameOverride: zookeeper
   replicaCount: 3
 
@@ -1199,7 +1199,7 @@ ingress-nginx:
 ### Miscellaneous configuration section
 ### ---------------------------------------------
 
-clusteredMode: true
+clusteredMode: false
 
 ## Flag used to configure the cloudbees-sda chart.
 ## Should not be used from a standalone CloudBees CD/RO installation.
