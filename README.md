@@ -20,7 +20,8 @@
 - kube-state-metrics (https://github.com/kubernetes/kube-state-metrics/tree/main)  
 - EKS 를 사용하는 경우 additional_resources.yaml 의 storage class 의 fileSystemID 변경
 
-```bash 
+```bash
+$ cd prep-resources
 $ kubectl apply -f cert-manager.crds.yaml
 $ kubectl apply -f cert-manager.yaml
 $ kubectl apply -f ingress-nginx.yaml
@@ -188,16 +189,6 @@ $ argocd app list --grpc-web
 $ argocd app sync cdro --grpc-web
 ```
 
-### 옵션 > EKS 구축
-
-- 로그 컬랙션 테스트용으로 elasticsearch 와 kibana 를 구성중에 있습니다. 
-- application 배포 완료 후 elasticserach pod 에서 아래 명령으로 superuser 롤의 User 를 생성하여 kb.idtplateer.com 으로 접근할 수 있습니다.
-
-```bash
-$ elasticsearch-users list 
-$ elasticsearch-users useradd test -p password -r superuser
-```
-
 ### 옵션 > 액세스 포인트
 
 - [CDRO Server](https://cdro.idtplateer.com)
@@ -208,8 +199,4 @@ $ elasticsearch-users useradd test -p password -r superuser
 
 ### 옵션 > 리소스 정리
 
-```bash
-$ kubectl delete -f application.yaml 
-$ kubectl delete -f cert-manager.yaml 
-$ kubectl delete -f ingress-nginx.yaml
-```
+설치 방법의 역순으로 정리합니다.
