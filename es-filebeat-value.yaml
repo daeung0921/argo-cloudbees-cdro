@@ -76,11 +76,39 @@ daemonset:
                           fields:
                             - {from: "message", to: "log.message"}
               #------------------------------------------------------------------------------------------------------------------------------
+              # Zookeeper
+              #------------------------------------------------------------------------------------------------------------------------------
+              #- condition:
+              #    and:
+              #      - equals:
+              #          kubernetes.namespace: "cdro" 
+              #      - equals:
+              #          kubernetes.labels.app: "zookeeper"
+              #  config:
+              #    - type: container
+              #      paths: 
+              #        - /var/log/containers/*-${data.kubernetes.container.id}.log
+              #      tail_files: true
+              #      containers:
+              #        ids:
+              #          - ${data.kubernetes.container.id}
+              #      multiline.pattern:  '^\d\d\d\d(-\d\d){2}T\d\d(:\d\d){2}\.\d\d\d' #2018-07-11T21:09:52.360
+              #      multiline.negate: true
+              #      multiline.match: after
+              #      timeout: 10s
+              #      fields_under_root: true
+              #      fields:
+              #        cbflow.component: "zookeeper"
+              #      processors:                            
+              #------------------------------------------------------------------------------------------------------------------------------
               # Agent
               #------------------------------------------------------------------------------------------------------------------------------
               - condition:
-                  equals:
-                    kubernetes.labels.app: "cdro-remote-agent-flow-agent"
+                  and:
+                    - equals:
+                        kubernetes.namespace: "cdro" 
+                    - equals:
+                        kubernetes.labels.app: "cdro-remote-agent-flow-agent"
                 config:
                   - type: container
                     paths: 
@@ -183,8 +211,11 @@ daemonset:
               # Server
               #------------------------------------------------------------------------------------------------------------------------------
               - condition:
-                  equals:
-                    kubernetes.labels.app: "flow-server"
+                  and:
+                    - equals:
+                        kubernetes.namespace: "cdro" 
+                    - equals:
+                        kubernetes.labels.app: "flow-server"
                 config:
                   - type: container
                     paths: 
@@ -302,6 +333,13 @@ daemonset:
               # Repository (Server 와 거의 유사함)
               #------------------------------------------------------------------------------------------------------------------------------
               - condition:
+                  and:
+                    - equals:
+                        kubernetes.namespace: "cdro" 
+                    - equals:
+                        kubernetes.labels.app: "flow-repository"
+
+              - condition:
                   equals:
                     kubernetes.labels.app: "flow-repository"
                 config:
@@ -410,8 +448,11 @@ daemonset:
               # Web
               #------------------------------------------------------------------------------------------------------------------------------
               - condition:
-                  equals:
-                    kubernetes.labels.app: "flow-web"
+                  and:
+                    - equals:
+                        kubernetes.namespace: "cdro" 
+                    - equals:
+                        kubernetes.labels.app: "flow-web"
                 config:
                   - type: container
                     paths: 

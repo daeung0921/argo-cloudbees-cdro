@@ -1023,7 +1023,7 @@ flowLicense:
 ### ---------------------------------------------
 
 securityContext:
-  enabled: false
+  enabled: true
   fsGroup: 1000
   allowPrivilegeEscalation: false
   runAsUser: 1000
