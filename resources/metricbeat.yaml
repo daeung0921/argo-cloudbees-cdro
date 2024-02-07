@@ -26,7 +26,7 @@ data:
           templates:
             - config:
                 - module: kubernetes
-                  hosts: ["kube-state-metrics:8080"]
+                  hosts: ["kube-state-metrics.kube-system.svc.cluster.local:8080"]
                   period: 10s
                   add_metadata: true
                   metricsets:
@@ -66,12 +66,12 @@ data:
       username: ${ELASTICSEARCH_USERNAME}
       password: ${ELASTICSEARCH_PASSWORD}
       ssl.enabled: "true"
-      ssl.certificate_authorities: ["/usr/share/metricbeat/config/certs/ca.crt"]
+      #ssl.certificate_authorities: ["/usr/share/metricbeat/config/certs/ca.crt"]
       ssl.verification_mode: "none"
     setup.kibana:
       host: "${KIBANA_HOST}:${KIBANA_PORT}"
       ssl.enabled: true
-      ssl.certificate_authorities: ["/usr/share/metricbeat/config/certs/ca.crt"]
+      #ssl.certificate_authorities: ["/usr/share/metricbeat/config/certs/ca.crt"]
       ssl.verification_mode: "none" 
     logging.level: info
     logging.to_files: true
