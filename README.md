@@ -14,11 +14,9 @@
 ```
 
 ### 단계 2 >  테스트 전 준비사항
-
 - Cert Manager (첨부된 파일은 v1.5.4 버전 ) 
 - ingress-nginx  (첨부된 파일은 v1.8.2 버전)
 - kube-state-metrics (https://github.com/kubernetes/kube-state-metrics/tree/main)  
-- EKS 를 사용하는 경우 additional_resources.yaml 의 storage class 의 fileSystemID 변경
 
 ```bash
 $ cd prep-resources
