@@ -30,7 +30,7 @@ Agent 죽는 현상 , Server 관련 Job Pending 현상 관련하여 원인 규�
 - kube_state_metrics 설치 참고 →  [소스](https://github.com/daeung0921/argo-cloudbees-cdro/blob/main/kube-state-metrics.yaml)
 - metricbeat 의 values.yaml 참고 → [소스](https://github.com/daeung0921/argo-cloudbees-cdro/blob/main/es-metricbeat-value.yaml)
 
-`**결과확인`** 
+**`결과확인`**
 
 Observability →  Metrics
 
