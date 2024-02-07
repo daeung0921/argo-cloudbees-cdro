@@ -65,14 +65,14 @@ data:
       protocol: "https"
       username: ${ELASTICSEARCH_USERNAME}
       password: ${ELASTICSEARCH_PASSWORD}
-      ssl.enabled: "true"
-      #ssl.certificate_authorities: ["/usr/share/metricbeat/config/certs/ca.crt"]
+      ssl.enabled: true
       ssl.verification_mode: "none"
+      #ssl.certificate_authorities: ["/usr/share/metricbeat/config/certs/ca.crt"]
     setup.kibana:
       host: "${KIBANA_HOST}:${KIBANA_PORT}"
       ssl.enabled: true
-      #ssl.certificate_authorities: ["/usr/share/metricbeat/config/certs/ca.crt"]
       ssl.verification_mode: "none" 
+      #ssl.certificate_authorities: ["/usr/share/metricbeat/config/certs/ca.crt"]
     logging.level: info
     logging.to_files: true
     logging.files:
@@ -196,8 +196,8 @@ spec:
             cpu: 100m
             memory: 100Mi
         volumeMounts:
-        - mountPath: /usr/share/metricbeat/config/certs
-          name: elastic-certificates
+        #- mountPath: /usr/share/metricbeat/config/certs
+        #  name: elastic-certificates
         - name: config
           mountPath: /etc/metricbeat.yml
           readOnly: true
@@ -214,9 +214,9 @@ spec:
           mountPath: /hostfs/sys/fs/cgroup
           readOnly: true
       volumes:
-      - name: elastic-certificates
-        secret:
-          secretName: cdro-ca-cert      
+      #- name: elastic-certificates
+      #  secret:
+      #    secretName: cdro-ca-cert      
       - name: proc
         hostPath:
           path: /proc
