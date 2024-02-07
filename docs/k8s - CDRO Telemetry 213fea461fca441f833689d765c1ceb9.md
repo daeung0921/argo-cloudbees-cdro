@@ -1,8 +1,5 @@
 # k8s - CDRO Telemetry
 
-Created: February 6, 2024 10:34 PM
-Updated: February 7, 2024 1:34 PM
-
 Agent 죽는 현상 , Server 관련 Job Pending 현상 관련하여 원인 규명을 위하여 K8S 환경에서 추적을 위한 환경 구성이 필요합니다. 관련 이슈는 아래와 같습니다.
 
 - cd-flow-agent replica 2 개 이상일 때 job abort
