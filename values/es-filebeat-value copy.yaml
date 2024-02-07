@@ -15,15 +15,15 @@ daemonset:
     - name: ELASTICSEARCH_HOST
       value: "es-test"
     - name: ELASTICSEARCH_PORT
-      value: "9200"       
+      value: "9200"
+    - name: KIBANA_HOST
+      value: "https://es-kibana"
+    - name: KIBANA_PORT
+      value: "5601"          
     - name: ELASTICSEARCH_USERNAME
       value: "admin"
     - name: ELASTICSEARCH_PASSWORD
       value: "changeme"
-    - name: KIBANA_HOST
-      value: "https://es-kibana"
-    - name: KIBANA_PORT
-      value: "5601"   
   extraVolumes:
     []
     # - name: extras
@@ -625,17 +625,17 @@ daemonset:
 
       output.elasticsearch: 
         index: "cbf-%{[cbflow.component]}-%{+yyyy.MM.dd}"
-        hosts: ["${ELASTICSEARCH_HOST}:${ELASTICSEARCH_PORT}"]
+        hosts: ["es-test:9200"]
         protocol: "https"
-        username: "${ELASTICSEARCH_USERNAME}"
-        password: "${ELASTICSEARCH_PASSWORD}"
+        username: "admin"
+        password: "changeme"
         ssl.enabled: "true"
-        #ssl.certificate_authorities: ["/usr/share/filebeat/config/certs/ca.crt"]
+        ssl.certificate_authorities: ["/usr/share/filebeat/config/certs/ca.crt"]
         ssl.verification_mode: "none"
       setup.kibana:
-        host: "https://${KIBANA_HOST}:${KIBANA_PORT}"
+        host: "https://es-kibana:5601"
         ssl.enabled: "true"
-        #ssl.certificate_authorities: ["/usr/share/filebeat/config/certs/ca.crt"]
+        ssl.certificate_authorities: ["/usr/share/filebeat/config/certs/ca.crt"]
         ssl.verification_mode: "none"
       setup.template: 
         name: "cbf"
@@ -784,10 +784,10 @@ filebeatConfig: {}
 nodeSelector: {}
 podSecurityContext: {}
 resources: {}
-secretMounts: []
-#  - name: elastic-certificates
-#    secretName: cdro-ca-cert
-#    path: /usr/share/filebeat/config/certs
-#    defaultMode: "0755"
+secretMounts:
+  - name: elastic-certificates
+    secretName: cdro-ca-cert
+    path: /usr/share/filebeat/config/certs
+    defaultMode: "0755"
 tolerations: []
 labels: {}
