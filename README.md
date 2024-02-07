@@ -1,6 +1,6 @@
 ## Kustomized Helm Chart - Cloudbees CD Ro
 
-CDRO kustomized helm chart 를 ArgoCD 통해 배포하기 위한 예제 Repo 입니다.
+CDRO kustomized helm chart 를 ArgoCD 통해 EKS 에 배포하기 위한 예제 Repo 입니다.
 
 ### 단계 1 > 백업
 
@@ -16,16 +16,14 @@ CDRO kustomized helm chart 를 ArgoCD 통해 배포하기 위한 예제 Repo 입
 
 - Cert Manager (첨부된 파일은 v1.5.4 버전 ) 
 - ingress-nginx  (첨부된 파일은 v1.8.2 버전)
-- kube-state-metrics (https://github.com/kubernetes/kube-state-metrics/tree/main) 
-- metricbeat-kubernetes.yaml (https://www.elastic.co/guide/en/beats/metricbeat/7.17/running-on-kubernetes.html)
-- additional_resources.yaml 의 storage class 의 fileSystemID 변경
+- kube-state-metrics (https://github.com/kubernetes/kube-state-metrics/tree/main)  
+- EKS 를 사용하는 경우 additional_resources.yaml 의 storage class 의 fileSystemID 변경
 
 ```bash 
-$ kubectl apply -f cert-manager.crd.yaml
+$ kubectl apply -f cert-manager.crds.yaml
 $ kubectl apply -f cert-manager.yaml
 $ kubectl apply -f ingress-nginx.yaml
-$ kubectl apply -f kube-state-metrics.yaml 
-$ kubectl apply -f metricbeat-kubernetes.yaml
+$ kubectl apply -f kube-state-metrics.yaml  
 ```
 
 ### 단계 3 >  CloudBees CDRO 차트 변경 확인 
