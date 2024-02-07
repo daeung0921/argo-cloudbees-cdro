@@ -31,7 +31,18 @@ daemonset:
     - name: KIBANA_PROTOCOL
       value: "https"
     - name: KIBANA_SSL_ENABLED
-      value: "true"   
+      value: "true"
+    - name: KUBE_LABLES_APP_FOR_SERVER
+      value: "flow-server"
+    - name: KUBE_LABLES_APP_FOR_WEB
+      value: "flow-web"
+    - name: KUBE_LABLES_APP_FOR_REPO
+      value: "flow-repository"
+    - name: KUBE_LABLES_APP_FOR_AGENT
+      value: "cdro-remote-agent-flow-agent"
+    - name: KUBE_TARGET_NAMESPACE
+      value: "cdro"
+
   extraVolumes:
     []
     # - name: extras
@@ -69,17 +80,17 @@ daemonset:
               - condition:
                   and:
                     - equals:
-                        kubernetes.namespace: "cdro"
+                        kubernetes.namespace: "${KUBE_TARGET_NAMESPACE}"
                     - not:
                         or:
                           - equals:
-                              kubernetes.labels.app: "flow-web" 
+                              kubernetes.labels.app: "${KUBE_LABLES_APP_FOR_WEB}" 
                           - equals:
-                              kubernetes.labels.app: "flow-server"
+                              kubernetes.labels.app: "${KUBE_LABLES_APP_FOR_SERVER}"
                           - equals:
-                              kubernetes.labels.app: "flow-repository"
+                              kubernetes.labels.app: "${KUBE_LABLES_APP_FOR_REPO}"
                           - equals:
-                              kubernetes.labels.app: "cdro-remote-agent-flow-agent"
+                              kubernetes.labels.app: "${KUBE_LABLES_APP_FOR_AGENT}"
                 config:
                   - type: container
                     paths: 
@@ -99,7 +110,7 @@ daemonset:
               #- condition:
               #    and:
               #      - equals:
-              #          kubernetes.namespace: "cdro" 
+              #          kubernetes.namespace: "${KUBE_TARGET_NAMESPACE}" 
               #      - equals:
               #          kubernetes.labels.app: "zookeeper"
               #  config:
@@ -124,9 +135,9 @@ daemonset:
               - condition:
                   and:
                     - equals:
-                        kubernetes.namespace: "cdro" 
+                        kubernetes.namespace: "${KUBE_TARGET_NAMESPACE}" 
                     - equals:
-                        kubernetes.labels.app: "cdro-remote-agent-flow-agent"
+                        kubernetes.labels.app: "${KUBE_LABLES_APP_FOR_AGENT}"
                 config:
                   - type: container
                     paths: 
@@ -231,9 +242,9 @@ daemonset:
               - condition:
                   and:
                     - equals:
-                        kubernetes.namespace: "cdro" 
+                        kubernetes.namespace: "${KUBE_TARGET_NAMESPACE}" 
                     - equals:
-                        kubernetes.labels.app: "flow-server"
+                        kubernetes.labels.app: "${KUBE_LABLES_APP_FOR_SERVER}"
                 config:
                   - type: container
                     paths: 
@@ -353,13 +364,9 @@ daemonset:
               - condition:
                   and:
                     - equals:
-                        kubernetes.namespace: "cdro" 
+                        kubernetes.namespace: "${KUBE_TARGET_NAMESPACE}" 
                     - equals:
-                        kubernetes.labels.app: "flow-repository"
-
-              - condition:
-                  equals:
-                    kubernetes.labels.app: "flow-repository"
+                        kubernetes.labels.app: "${KUBE_LABLES_APP_FOR_REPO}"
                 config:
                   - type: container
                     paths: 
@@ -468,9 +475,9 @@ daemonset:
               - condition:
                   and:
                     - equals:
-                        kubernetes.namespace: "cdro" 
+                        kubernetes.namespace: "${KUBE_TARGET_NAMESPACE}" 
                     - equals:
-                        kubernetes.labels.app: "flow-web"
+                        kubernetes.labels.app: "${KUBE_LABLES_APP_FOR_WEB}"
                 config:
                   - type: container
                     paths: 
