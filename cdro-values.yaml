@@ -1013,7 +1013,7 @@ flowCredentials:
 flowLicense:
   ## Provide your existing secret name with license data.
   ## For `existingSecret`, must have `CBF_LICENSE` field with value of license file contents.
-  existingSecret:
+  existingSecret: flow-lic
   ## TIP: Your `licenseData` can be passed as an XML file path or
   ## passed with the `helm --set-file` option.
   licenseData:

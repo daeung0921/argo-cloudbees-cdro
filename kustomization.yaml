@@ -1,8 +1,8 @@
 namespace: cdro
 
 resources:
-- additional_resources.yaml
-- metricbeat-kubernetes.yaml
+- ./resources/additional_resources.yaml
+- ./resources/metricbeat.yaml
 
 helmCharts:
   #------------------------------------------
