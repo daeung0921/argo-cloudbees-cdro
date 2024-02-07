@@ -60,22 +60,18 @@ data:
     processors:
       - add_cloud_metadata: 
 
-    #output.elasticsearch:
-    #  hosts: ['${ELASTICSEARCH_HOST:elasticsearch}:${ELASTICSEARCH_PORT:9200}']
-    #  username: ${ELASTICSEARCH_USERNAME}
-    #  password: ${ELASTICSEARCH_PASSWORD}
     output.elasticsearch:
       hosts: ['${ELASTICSEARCH_HOST}:${ELASTICSEARCH_PORT}']
       protocol: "https"
       username: ${ELASTICSEARCH_USERNAME}
       password: ${ELASTICSEARCH_PASSWORD}
       ssl.enabled: "true"
-      ssl.certificate_authorities: ["/usr/share/metricbeat/config/certs/ca.crt"]
+      #ssl.certificate_authorities: ["/usr/share/metricbeat/config/certs/ca.crt"]
       ssl.verification_mode: "none"
     setup.kibana:
-      host: "https://es-kibana:5601"
+      host: "${KIBANA_HOST}:${KIBANA_PORT}"
       ssl.enabled: true
-      ssl.certificate_authorities: ["/usr/share/metricbeat/config/certs/ca.crt"]
+      #ssl.certificate_authorities: ["/usr/share/metricbeat/config/certs/ca.crt"]
       ssl.verification_mode: "none" 
     logging.level: info
     logging.to_files: true
@@ -177,6 +173,10 @@ spec:
           value: "es-test"
         - name: ELASTICSEARCH_PORT
           value: "9200"
+        - name: KIBANA_HOST
+          value: "https://es-kibana"
+        - name: KIBANA_PORT
+          value: "5601"          
         - name: ELASTICSEARCH_USERNAME
           value: "admin"
         - name: ELASTICSEARCH_PASSWORD
