@@ -155,7 +155,7 @@ data:
     #
     # COMMANDER_ZK_CONNECTION is required for clustered mode
 
-    wrapper.java.additional.600=-DCOMMANDER_ZK_CONNECTION=zookeeper-0.zookeeper-headless.cdro.svc.cluster.local:2888,zookeeper-1.zookeeper-headless.cdro.svc.cluster.local:2888,zookeeper-2.zookeeper-headless.cdro.svc.cluster.local:2888
+    wrapper.java.additional.600=-DCOMMANDER_ZK_CONNECTION=zookeeper-0.zookeeper-headless.cdro.svc.cluster.local:2181,zookeeper-1.zookeeper-headless.cdro.svc.cluster.local:2181,zookeeper-2.zookeeper-headless.cdro.svc.cluster.local:2181
     wrapper.java.additional.602=-Dcurator-dont-log-connection-problems=true
     #wrapper.java.additional.603=-DCLUSTER_CERTIFICATE_SERVICE_USE_ZOOKEEPER=false
 
