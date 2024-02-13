@@ -155,8 +155,8 @@ data:
     #
     # COMMANDER_ZK_CONNECTION is required for clustered mode
 
-    #wrapper.java.additional.600=-DCOMMANDER_ZK_CONNECTION=<HOST_ZOOKEEPER1>:2181,<HOST_ZOOKEEPER2>:2181,<HOST_ZOOKEEPER3>:2181
-    #wrapper.java.additional.602=-Dcurator-dont-log-connection-problems=true
+    wrapper.java.additional.600=-DCOMMANDER_ZK_CONNECTION=zookeeper-0:2181,zookeeper-1:2181,zookeeper-2:2181
+    wrapper.java.additional.602=-Dcurator-dont-log-connection-problems=true
     #wrapper.java.additional.603=-DCLUSTER_CERTIFICATE_SERVICE_USE_ZOOKEEPER=false
 
     # Support old CD agents < v10.6 with broken ec-groovy

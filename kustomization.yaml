@@ -135,23 +135,23 @@ patches:
           configMap:
             defaultMode: 420
             name: php-ini-config
-  #- target:
-  #    kind: Deployment
-  #    name: flow-server
-  #  patch: |
-  #    - op: add
-  #      path: /spec/template/spec/containers/0/volumeMounts/-
-  #      value:
-  #        mountPath: /custom-config/wrapper.conf
-  #        name: server-wrapper-config
-  #        subPath: server-wrapper-config
-  #    - op: add
-  #      path: /spec/template/spec/volumes/-
-  #      value:
-  #        name: server-wrapper-config
-  #        configMap:
-  #          defaultMode: 420
-  #          name: server-wrapper-config
+  - target:
+      kind: Deployment
+      name: flow-server
+    patch: |
+      - op: add
+        path: /spec/template/spec/containers/0/volumeMounts/-
+        value:
+          mountPath: /custom-config/wrapper.conf
+          name: server-wrapper-config
+          subPath: server-wrapper-config
+      - op: add
+        path: /spec/template/spec/volumes/-
+        value:
+          name: server-wrapper-config
+          configMap:
+            defaultMode: 420
+            name: server-wrapper-config
   - target:
       kind: StatefulSet
       name: cdro-remote-agent-flow-agent
