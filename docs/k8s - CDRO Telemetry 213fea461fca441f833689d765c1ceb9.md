@@ -254,6 +254,8 @@ false   </responses>
 false
 ```
 
+---
+
 **로깅 확인**
 
 결과는 간단히 Devtools 에서 조회하실수 있습니다.
