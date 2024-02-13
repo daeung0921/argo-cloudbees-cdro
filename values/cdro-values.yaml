@@ -140,7 +140,7 @@ server:
   ## The `imageRepository` in the `images.registry` to pull component image from.
   imageRepository: cbflow-server
   ## Number of replicas of this component to create.
-  replicas: 1
+  replicas: 2
 
   ## `expose: true` allows cbflow-server service ingress ports `8443` and `61613`
   ## to be accessed from outside the cluster.
