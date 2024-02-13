@@ -253,9 +253,6 @@ false     </response>
 false   </responses>
 false
 ```
-```
-
----
 
 **로깅 확인**
 
