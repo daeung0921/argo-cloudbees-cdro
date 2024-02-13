@@ -1,5 +1,8 @@
 # k8s - CDRO Telemetry
 
+Created: February 6, 2024 10:34 PM
+Updated: February 13, 2024 12:39 PM
+
 Agent 죽는 현상 , Server 관련 Job Pending 현상 관련하여 원인 규명을 위하여 K8S 환경에서 추적을 위한 환경 구성이 필요합니다. 관련 이슈는 아래와 같습니다.
 
 - cd-flow-agent replica 2 개 이상일 때 job abort
@@ -21,72 +24,133 @@ Agent 죽는 현상 , Server 관련 Job Pending 현상 관련하여 원인 규�
 
 ---
 
-**k8s 메트릭 확인 및 이벤트 로깅**
+**테스트 서버**
 
- 
-
-저는 테스트로 metricbeat 를 사용하여 구성할 예정이고 구성을 위해 관련 도큐먼트를 확인중에 있습니다.  현재 구성은 아래와 같고 아직 kubernetes module 사용 방법에 대해 파악중입니다.
-
-- kube_state_metrics 설치 참고 →  [소스](https://github.com/daeung0921/argo-cloudbees-cdro/blob/main/kube-state-metrics.yaml)
-- metricbeat 의 values.yaml 참고 → [소스](https://github.com/daeung0921/argo-cloudbees-cdro/blob/main/es-metricbeat-value.yaml)
-
-**`결과확인`**
-
-Observability →  Metrics
-
-![Untitled](k8s%20-%20CDRO%20Telemetry%20213fea461fca441f833689d765c1ceb9/Untitled%201.png)
-
-![Untitled](k8s%20-%20CDRO%20Telemetry%20213fea461fca441f833689d765c1ceb9/Untitled%202.png)
-
-![Untitled](k8s%20-%20CDRO%20Telemetry%20213fea461fca441f833689d765c1ceb9/Untitled%203.png)
+- [https://kb.idtplateer.com:5601/](https://kb.idtplateer.com:5601/)
+    - ID : admin
+    - PW: changeme
+- 소스
+    - https://github.com/daeung0921/argo-cloudbees-cdro
 
 ---
 
-**cdro 로깅** 
+**filebeat**
 
- ****
+cdro server,agent,repository,web 을 한통에서 관리합니다. 
 
-제가 작성한 filebeat 의 values.yaml 은 [소스](https://github.com/daeung0921/argo-cloudbees-cdro/blob/main/es-filebeat-value.yaml)와 같고 아직 zookeeper 와 insight 서버 로깅은 부분은 아직 작업 진행중입니다.
+`**설치`** 
 
-[https://kb.idtplateer.com:5601/](https://kb.idtplateer.com:5601/)  (admin/changeme) 로 접근 가능합니다.
+```yaml
+$ helm repo add es  https://helm.elastic.co
+$ helm repo update es
+$ helm search repo es/filebeat  --versions 
+ 
+#-------------------------------------------------------------------
+# values/es-filebeat-value.yaml 파일에서 아래 부분에 모비스에 맞게 기입 
+#-------------------------------------------------------------------
+  extraEnvs:
+    - name: ELASTICSEARCH_HOST # Elasticsearch 내부 서비스명
+      value: "es-test"
+    - name: ELASTICSEARCH_PORT # Elasticsearch 내부 사용포트
+      value: "9200"       
+    - name: ELASTICSEARCH_USERNAME # Elasticsearch 유저명
+      value: "admin"
+    - name: ELASTICSEARCH_PASSWORD # Elasticsearch 패스워드
+      value: "changeme"
+    - name: ELASTICSEARCH_PROTOCOL # Elasticsearch 내부 서비스 프로토콜
+      value: "https"
+    - name: ELASTICSEARCH_SSL_ENABLED # Elasticsearch 내부 서비스에 SSL 활성화 여부
+      value: "true"            
+    - name: KIBANA_HOST
+      value: "es-kibana"
+    - name: KIBANA_PORT
+      value: "5601"
+    - name: KIBANA_PROTOCOL
+      value: "https"
+    - name: KIBANA_SSL_ENABLED
+      value: "true"
+    - name: KUBE_LABLES_APP_FOR_SERVER # server 의 metadata.labels.app 에 설정한 값
+      value: "flow-server"
+    - name: KUBE_LABLES_APP_FOR_WEB # web server 의 metadata.labels.app 에 설정한 값
+      value: "flow-web"
+    - name: KUBE_LABLES_APP_FOR_REPO  # repository server 의 metadata.labels.app 에 설정한 값
+      value: "flow-repository"
+    - name: KUBE_LABLES_APP_FOR_AGENT # agent server 의 metadata.labels.app 에 설정한 값
+      value: "cdro-remote-agent-flow-agent"
+    - name: KUBE_TARGET_NAMESPACE
+      value: "cdro"
 
-**`로그형태`** 
-
-Flow 에서 관리되는 로그 형태 관련하여 확인할 수 있는 [레퍼런스](https://docs.cloudbees.com/docs/cloudbees-cd-kb/latest/cloudbees-cd-kb/kbec-00173-default-locations-and-use-scenarios-for-flow-log-files) 문서의 하단에 로그 형태를 확인하실 수 있습니다.
-
-**`로그파싱`** 
-
-[autodiscover 의 kubernetes provider](https://www.elastic.co/guide/en/beats/filebeat/7.17/configuration-autodiscover.html) 를 사용하면 컨테이너 로그를 검색하여 정규 표현식으로 필터링한 결과를 Elasticsearch 로 인덱스를 만들어 보낼 수 있습니다. 
-
-**`멀티라인`** 
-
-autodiscover 멀티라인 관련하여 사용하는 옵션은 `negate=true, match=after` 인데 이 옵션을 사용하면 아래와 같이 메시지를 파싱합니다.
-
-```go
-true   2024-02-06T21:58:25.282 | INFO  | qtp1444930323-2474             |  ...
-
-**true   2024-02-06T21:58:25.282 | DEBUG | qtp1444930323-2474             |          |                                      |                                                                             | ApiServletImpl                 | servletRequestContext[id=5535,on 127.0.0.1:8443,from 10.0.2.84:48398,bytes=214]:
-false   <?xml version="1.0" encoding="UTF-8"?>
-false   <requests version="2.2" timeout="5">
-false     <request requestId="1">
-false       <getServerStatus>
-false         <serverStateOnly>1</serverStateOnly>
-false       </getServerStatus>
-false     </request>
-false   </requests>**
-
-true   2024-02-06T21:58:25.282 | DEBUG | qtp1444930323-2474             |      
+#-------------------------------------------------------------------
+# 설치
+#-------------------------------------------------------------------
+$ kubectl create ns cdro
+$ helm install esfilebeat es/filebeat --namespace cdro --values  es-filebeat-value.yaml  --version 7.17.1
 ```
 
-관련하여 Elasic 메뉴얼에서 [멀티라인 처리](https://www.elastic.co/guide/en/beats/filebeat/current/multiline-examples.html) 정보를 확인해 보실수 있습니다.
+`**결과 : 생성된 인덱스 확인**`
+
+생성된 인덱스
+
+![Untitled](k8s%20-%20CDRO%20Telemetry%20213fea461fca441f833689d765c1ceb9/Untitled%201.png)
+
+`**결과 : discover 에서 log.message 로 필터링`**  
+
+![Untitled](k8s%20-%20CDRO%20Telemetry%20213fea461fca441f833689d765c1ceb9/Untitled%202.png)
+
+---
+
+**metricbeat**
+
+k8s 매트릭을 수집하며 추가로 kubernetes 모듈에서 이벤트를 수집해줘서 특정 시간대의 이벤트를 확인할 수 있습니다.
+
+[kube-state-metrics](https://github.com/kubernetes/kube-state-metrics) 가 필요합니다.
+
+  
+
+`**설치**` 
+
+```yaml
+# values/metricbeat.yaml 에서 아래 부분에 모비스에 맞게 수정
+      env:
+        - name: ELASTICSEARCH_HOST
+          value: "es-test"
+        - name: ELASTICSEARCH_PORT
+          value: "9200"       
+        - name: ELASTICSEARCH_USERNAME
+          value: "admin"
+        - name: ELASTICSEARCH_PASSWORD
+          value: "changeme"
+        - name: ELASTICSEARCH_PROTOCOL
+          value: "https"
+        - name: ELASTICSEARCH_SSL_ENABLED
+          value: "true"            
+        - name: KIBANA_HOST
+          value: "es-kibana"
+        - name: KIBANA_PORT
+          value: "5601"
+        - name: KIBANA_PROTOCOL
+          value: "https"
+        - name: KIBANA_SSL_ENABLED
+          value: "true"
+
+$ kubectl apply -f kube-state-metrics.yaml
+$ kubectl create ns cdro
+$ kubectl apply -f metricbeat.yaml -n cdro
+```
+
+**`결과 : 매트릭 수집`** 
+
+![Untitled](k8s%20-%20CDRO%20Telemetry%20213fea461fca441f833689d765c1ceb9/Untitled%203.png)
+
+`**결과 : 메트릭중 이벤트`**  
 
 ![Untitled](k8s%20-%20CDRO%20Telemetry%20213fea461fca441f833689d765c1ceb9/Untitled%204.png)
 
-**`로그 파싱 테스트`** 
+---
 
-filebeat 를 통해 로그 파싱시에는 go 의 정규 표현식를 사용하게 되는데 [https://go.dev/play/](https://go.dev/play/) 에서 간단히 코드를 통해 사전 테스트 가능합니다. 
+**정규표현식 테스트** 
 
-단순히 정규 표현식만 테스트 하는 경우는 [https://www.regextester.com/97259](https://www.regextester.com/97259) 사이트에서 테스트 할 수 있습니다.
+filebeat 를 통해 로그 파싱시에는 go 의 정규 표현식를 사용하게 되는데 [https://go.dev/play/](https://go.dev/play/](https://go.dev/play/](https://go.dev/play/) 에서 간단히 코드를 통해 사전 테스트 가능합니다.  단순히 정규 표현식만 테스트 하는 경우는 [https://www.regextester.com/97259](https://www.regextester.com/97259)  사이트에서 테스트 할 수 있습니다.
 
 ```go
 package main
@@ -153,10 +217,11 @@ func main() {
 		fmt.Printf("%v   %v\n", matches, line)
 	}
 }
+```
 
-// ----------------------------------------------------------------
-// 응답 
-// ----------------------------------------------------------------
+결과는 아래와 같습니다.
+
+```bash
 matches 
 true   2024-02-06T21:57:56.073 | INFO  | messageTrigger                 |          |                                      | messageTrigger                                                              | HibernateStatistics            | 1 queries executed in 1 (ms)
 true   2024-02-06T21:57:56.073 | INFO  | messageTrigger                 |          |                                      | messageTrigger                                                              | HibernateStatistics            | Longest running query: FROM     Message WHERE    completed = :completed          AND processed = :processed ORDER BY createDate.time ASC; executed in 1 (ms)
@@ -196,14 +261,18 @@ false     </response>
 false   </responses>
 false
 ```
+```
 
-**`Logging 처리 확인`** 
+---
+
+**로깅 확인**
 
 결과는 간단히 Devtools 에서 조회하실수 있습니다.
 
 ```bash
 GET _cat/indices
  
+# 서버 로그 매치
 GET /cbf-server-*/_search
 {
   "query": {
@@ -212,7 +281,7 @@ GET /cbf-server-*/_search
   "_source": ["log"]  
 }
 
-# log 구성부 확인
+# 웹서버 로그 매치
 GET /cbf-web-*/_search
 {
   "query": {
@@ -221,44 +290,7 @@ GET /cbf-web-*/_search
   "_source": ["log"]  
 }
 
-# GET /cbf-web-*/_search 응답
-{
-  "took" : 1,
-  "timed_out" : false,
-  "_shards" : {
-    "total" : 1,
-    "successful" : 1,
-    "skipped" : 0,
-    "failed" : 0
-  },
-  "hits" : {
-    "total" : {
-      "value" : 8864,
-      "relation" : "eq"
-    },
-    "max_score" : 1.0,
-    "hits" : [
-      {
-        "_index" : "cbf-web-2024.02.06",
-        "_type" : "_doc",
-        "_id" : "UZ_Ff40BtGY2GINZZc_o",
-        "_score" : 1.0,
-        "_source" : {
-          "log" : {
-            "file" : {
-              "path" : "/var/log/containers/flow-web-57fc95f855-zb94t_cdro_flow-web-dd2a367d6bcf26e289010d31330c1a7570b46617bcb5c152f6363c499a9e21ef.log"
-            },
-            "address" : "10.0.102.200",
-            "offset" : 2220240,
-            "level" : "INFO",
-            "message" : "\"GET /auth/ HTTP/1.1\" 200 178556 24937 - 7f89d8005b80",
-            "user" : "-",
-            "timestamp" : "2024-02-06 18:54:13.511262"
-          }
-        }
-      },
-...
-
+# 레포지토리 로그 매치 
 GET /cbf-repository-*/_search
 {
   "query": {
@@ -266,22 +298,14 @@ GET /cbf-repository-*/_search
   },
   "_source": ["log"]  
 }
+```
 
- 
-# 맵핑정보 확인
+ 맵핑정보 확인은 아래와 같습니다.
+
+```bash
 GET /cbf-server-*/_mapping
 GET /cbf-web-*/_mapping
 GET /cbf-repository-*/_mapping
 ```
 
-구성후 Kibana 에서 Index Pattern 을 만들어 결과를 Anlytics→Discover 를 통해 확인하실수 있습니다. 
-
-![Untitled](k8s%20-%20CDRO%20Telemetry%20213fea461fca441f833689d765c1ceb9/Untitled%205.png)
-
-Management→Index managements 에서 인덱스 맵핑이나 설정 정보를 확인할 수 있습니다.
-
-![Untitled](k8s%20-%20CDRO%20Telemetry%20213fea461fca441f833689d765c1ceb9/Untitled%206.png)
-
----
-
-![Untitled](k8s%20-%20CDRO%20Telemetry%20213fea461fca441f833689d765c1ceb9/Untitled%207.png)
+ 생성이 잘 된 것을 확인 하고 이후 Kibana 에서 Index Pattern 을 만들어 결과를 Anlytics→Discover 를 통해 확인하실수 있습니다.
