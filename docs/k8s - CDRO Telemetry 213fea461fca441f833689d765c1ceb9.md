@@ -36,9 +36,7 @@ Agent 죽는 현상 , Server 관련 Job Pending 현상 관련하여 원인 규�
 
 **filebeat**
 
-cdro server,agent,repository,web 을 한통에서 관리합니다. 
-
-`**설치`** 
+cdro server,agent,repository,web 을 한통에서 관리합니다.  
 
 ```yaml
 $ helm repo add es  https://helm.elastic.co
@@ -87,13 +85,11 @@ $ kubectl create ns cdro
 $ helm install esfilebeat es/filebeat --namespace cdro --values  es-filebeat-value.yaml  --version 7.17.1
 ```
 
-`**결과 : 생성된 인덱스 확인**`
-
-생성된 인덱스
+생성된 인덱스를 아래와 같이 확인할 수 있습니다.
 
 ![Untitled](k8s%20-%20CDRO%20Telemetry%20213fea461fca441f833689d765c1ceb9/Untitled%201.png)
 
-`**결과 : discover 에서 log.message 로 필터링`**  
+ discover 에서 log.message 로 필터링한 결과는 아래와 같습니다.
 
 ![Untitled](k8s%20-%20CDRO%20Telemetry%20213fea461fca441f833689d765c1ceb9/Untitled%202.png)
 
@@ -104,10 +100,6 @@ $ helm install esfilebeat es/filebeat --namespace cdro --values  es-filebeat-val
 k8s 매트릭을 수집하며 추가로 kubernetes 모듈에서 이벤트를 수집해줘서 특정 시간대의 이벤트를 확인할 수 있습니다.
 
 [kube-state-metrics](https://github.com/kubernetes/kube-state-metrics) 가 필요합니다.
-
-  
-
-`**설치**` 
 
 ```yaml
 # values/metricbeat.yaml 에서 아래 부분에 모비스에 맞게 수정
@@ -138,11 +130,11 @@ $ kubectl create ns cdro
 $ kubectl apply -f metricbeat.yaml -n cdro
 ```
 
-**`결과 : 매트릭 수집`** 
+매트릭 수집 결과는 아래와 같습니다.
 
 ![Untitled](k8s%20-%20CDRO%20Telemetry%20213fea461fca441f833689d765c1ceb9/Untitled%203.png)
 
-`**결과 : 메트릭중 이벤트`**  
+메트릭중 이벤트만 필터링해 보면 아래와 같습니다.
 
 ![Untitled](k8s%20-%20CDRO%20Telemetry%20213fea461fca441f833689d765c1ceb9/Untitled%204.png)
 
