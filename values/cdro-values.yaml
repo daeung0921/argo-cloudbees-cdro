@@ -1081,61 +1081,7 @@ networkIsolation:
   dois:
     additionalIngressSelector: []
 
-### --------------------------------------------
-### Zookeeper configuration section
-### ---------------------------------------------
-
-## CloudBees CD/RO includes a bundled ZooKeeper installation.
-## If you already have an available ZooKeeper installation, or
-## your security policy demands, you can disable this ZooKeeper.
-## If you disable the bundled ZooKeeper, enter your ZooKeeper endpoint
-## address into `workloads.server.zk.host` and `workloads.server.zk.port`.
-##
-## IMPORTANT: Currently, CloudBees CD/RO *can not* share a ZooKeeper
-## with any other application.
-zookeeper:
-
-  image:
-    ## Container repository to pull ZooKeeper image from.
-    repository: docker.io/cloudbees/cbflow-tools
-    ## Zookeeper image tag to pull.
-    tag: "2023.12.0.171596_3.2.64_20231207"
-
-  fullnameOverride: zookeeper
-  replicaCount: 3
-
-  podLabels:
-    ownerApp: "cloudbees-flow"
-    role: "cluster-coordinator"
-    mode: "private"
-
-  ## Specify the resources to request for this component.
-  resources:
-    limits:
-      cpu: "250m"
-      memory: "1Gi"
-    requests:
-      memory: "512Mi"
-      cpu: "250m"
-  livenessProbe:
-    initialDelaySeconds: 20
-    periodSeconds: 30
-    timeoutSeconds: 5
-    failureThreshold: 2
-    successThreshold: 1
-
-  readinessProbe:
-    initialDelaySeconds: 10
-    periodSeconds: 10
-    timeoutSeconds: 5
-    failureThreshold: 6
-    successThreshold: 1
-
-  securityContext:
-    enabled: false
-    fsGroup: 1000
-    runAsUser: 1000
-
+ 
 
 ### --------------------------------------------
 ### Flow ingress configuration section

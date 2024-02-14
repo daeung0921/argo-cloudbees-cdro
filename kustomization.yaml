@@ -11,6 +11,13 @@ resources:
 - ./resources/metricbeat.yaml
 
 helmCharts:
+- name: zookeeper
+  namespace: cdro
+  valuesFile : ./values/zookeeper-values.yaml
+  repo: https://charts.bitnami.com/bitnami
+  version: 13.2.24
+  releaseName: zookeeper 
+  IncludeCRDs: true
   #------------------------------------------
   # CDRO DB
   #------------------------------------------  
