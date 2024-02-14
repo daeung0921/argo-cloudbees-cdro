@@ -107,28 +107,74 @@ daemonset:
               #------------------------------------------------------------------------------------------------------------------------------
               # Zookeeper
               #------------------------------------------------------------------------------------------------------------------------------
-              #- condition:
-              #    and:
-              #      - equals:
-              #          kubernetes.namespace: "${KUBE_TARGET_NAMESPACE}" 
-              #      - equals:
-              #          kubernetes.labels.app: "zookeeper"
-              #  config:
-              #    - type: container
-              #      paths: 
-              #        - /var/log/containers/*-${data.kubernetes.container.id}.log
-              #      tail_files: true
-              #      containers:
-              #        ids:
-              #          - ${data.kubernetes.container.id}
-              #      multiline.pattern:  '^\d\d\d\d(-\d\d){2}T\d\d(:\d\d){2}\.\d\d\d' #2018-07-11T21:09:52.360
-              #      multiline.negate: true
-              #      multiline.match: after
-              #      timeout: 10s
-              #      fields_under_root: true
-              #      fields:
-              #        cbflow.component: "zookeeper"
-              #      processors:                            
+              - condition:
+                  and:
+                    - equals:
+                        kubernetes.namespace: "${KUBE_TARGET_NAMESPACE}" 
+                    - equals:
+                        kubernetes.labels.app: "zookeeper"
+                config:
+                  - type: container
+                    paths: 
+                      - /var/log/containers/*-${data.kubernetes.container.id}.log
+                    tail_files: true
+                    containers:
+                      ids:
+                        - ${data.kubernetes.container.id}
+                    multiline.pattern:  '^\d\d\d\d(-\d\d){2} \d\d(:\d\d){2},\d\d\d \[' #2018-07-11T21:09:52.360
+                    multiline.negate: true
+                    multiline.match: after
+                    timeout: 10s
+                    fields_under_root: true
+                    fields:
+                      cbflow.component: "zookeeper"
+                    processors:
+                      # 2019-09-10 22:58:12,503 [myid:1] - INFO  [NIOWorkerThread-1:NIOServerCnxn@518] - Processing ruok command from /127.0.0.1:56682
+                      - dissect:
+                          tokenizer: "%{timestamp} [%{thread}] - %{level} [%{class}] - %{message}"
+                          field: "message"
+                          target_prefix: "log"
+                      - script:
+                          lang: javascript
+                          source: >
+                              function process(ev) {
+                                  var field;
+                                  field = ev.Get("log.level");
+                                  if (field !== null) {
+                                      ev.Put("log.level", field.trim());
+                                  }
+                                  return ev;
+                              };
+                              function test() {
+                                  var ev;
+                                  // check not parsed event
+                                  ev = process(new Event({}));
+                                  // check trim
+                                  ev = process(new Event({log: {level: "  INFO  "}}));
+                                  if (ev.Get("log.level") !== "INFO") {
+                                      throw "expected log.level === 'INFO'";
+                                  }
+                              };
+                      - script:
+                          lang: javascript
+                          source: >
+                              function process(ev) {
+                                  var ts = ev.Get("log.timestamp");
+                                  if (ts !== null) {
+                                      ev.Put("log.timestamp", ts.replace(/,/g, '.'));
+                                  }
+                                  return ev;
+                              };
+                      - timestamp:
+                          field: "log.timestamp"
+                          layouts:
+                            - '2006-01-02T15:04:05Z'
+                            - '2006-01-02T15:04:05.999Z'
+                            - '2006-01-02T15:04:05.999-07:00'
+                          test:
+                            - '2019-06-22T16:33:51Z'
+                            - '2019-11-18T04:59:51.123Z'
+                            - '2020-08-03T07:10:20.123456+02:00'
               #------------------------------------------------------------------------------------------------------------------------------
               # Agent
               #------------------------------------------------------------------------------------------------------------------------------
