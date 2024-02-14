@@ -140,7 +140,7 @@ server:
   ## The `imageRepository` in the `images.registry` to pull component image from.
   imageRepository: cbflow-server
   ## Number of replicas of this component to create.
-  replicas: 2
+  replicas: 1
 
   ## `expose: true` allows cbflow-server service ingress ports `8443` and `61613`
   ## to be accessed from outside the cluster.
@@ -1023,9 +1023,16 @@ flowLicense:
 ### ---------------------------------------------
 
 securityContext:
-  enabled: true
-  fsGroup: 1000 
+  enabled: false
+  fsGroup: 1000
+  allowPrivilegeEscalation: false
   runAsUser: 1000
+  readOnlyRootFilesystem: true
+  runAsNonRoot: true
+  capabilities:
+    drop: ["ALL"]
+  seccompProfile:
+    type: "RuntimeDefault"
 
 volumePermissions:
   enabled: true
@@ -1131,10 +1138,10 @@ zookeeper:
     failureThreshold: 6
     successThreshold: 1
 
-  securityContext:
-    enabled: true
-    fsGroup: 1000
-    runAsUser: 1000
+  #securityContext:
+  #  enabled: true
+  #  fsGroup: 1000
+  #  runAsUser: 1000
 
 
 ### --------------------------------------------
@@ -1198,7 +1205,7 @@ ingress-nginx:
 ### Miscellaneous configuration section
 ### ---------------------------------------------
 
-clusteredMode: true
+clusteredMode: false
 
 ## Flag used to configure the cloudbees-sda chart.
 ## Should not be used from a standalone CloudBees CD/RO installation.
