@@ -1023,7 +1023,7 @@ flowLicense:
 ### ---------------------------------------------
 
 securityContext:
-  enabled: true
+  enabled: false
   fsGroup: 1000 
   runAsUser: 1000
 
@@ -1132,7 +1132,7 @@ zookeeper:
     successThreshold: 1
 
   securityContext:
-    enabled: true
+    enabled: false
     fsGroup: 1000
     runAsUser: 1000
 
