@@ -150,7 +150,7 @@ server:
   logLevel: DEBUG
 
   zk:
-    host: zk
+    host: zookeeper
     port: 2181
 
   ## Interpreted as if passed to the CloudBees ecconfigure utility within the container.
@@ -341,7 +341,7 @@ web:
   ## Horizontal Pod Autoscaling configuration for cbflow-web.
   ## This is only supported when `clusteredMode: true`.
   autoscaling:
-    enabled: false
+    enabled: true
     minReplicas: 1
     maxReplicas: 3
     targetCPUUtilizationPercentage: 80
@@ -1024,8 +1024,15 @@ flowLicense:
 
 securityContext:
   enabled: false
-  fsGroup: 1000 
+  fsGroup: 1000
+  allowPrivilegeEscalation: false
   runAsUser: 1000
+  readOnlyRootFilesystem: true
+  runAsNonRoot: true
+  capabilities:
+    drop: ["ALL"]
+  seccompProfile:
+    type: "RuntimeDefault"
 
 volumePermissions:
   enabled: true
@@ -1094,6 +1101,7 @@ networkIsolation:
 ## IMPORTANT: Currently, CloudBees CD/RO *can not* share a ZooKeeper
 ## with any other application.
 zookeeper:
+
   image:
     ## Container repository to pull ZooKeeper image from.
     repository: docker.io/cloudbees/cbflow-tools
@@ -1130,10 +1138,10 @@ zookeeper:
     failureThreshold: 6
     successThreshold: 1
 
-  securityContext:
-    enabled: false
-    fsGroup: 1000
-    runAsUser: 1000
+  #securityContext:
+  #  enabled: true
+  #  fsGroup: 1000
+  #  runAsUser: 1000
 
 
 ### --------------------------------------------
