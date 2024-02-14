@@ -15,7 +15,7 @@ helmCharts:
   namespace: cdro
   valuesFile : ./values/zookeeper-values.yaml
   repo: https://charts.bitnami.com/bitnami
-  version: 13.2.24
+  version: 12.8.1
   releaseName: zookeeper 
   IncludeCRDs: true
   #------------------------------------------
