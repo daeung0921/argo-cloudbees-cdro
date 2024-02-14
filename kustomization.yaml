@@ -133,7 +133,7 @@ patches:
         value:
           name: php-ini-config        
           configMap:
-            defaultMode: 420
+            defaultMode: 0777
             name: php-ini-config
   - target:
       kind: Deployment
@@ -150,7 +150,7 @@ patches:
         value:
           name: server-wrapper-config
           configMap:
-            defaultMode: 420
+            defaultMode: 0777
             name: server-wrapper-config
   - target:
       kind: StatefulSet
