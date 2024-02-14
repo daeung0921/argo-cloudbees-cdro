@@ -31,7 +31,7 @@ kubeVersion: ""
 nameOverride: ""
 ## @param fullnameOverride String to fully override common.names.fullname template
 ##
-fullnameOverride: "zookeeper"
+fullnameOverride: "zk"
 ## @param clusterDomain Kubernetes Cluster Domain
 ##
 clusterDomain: cluster.local

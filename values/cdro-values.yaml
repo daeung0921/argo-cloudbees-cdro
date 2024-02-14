@@ -150,7 +150,7 @@ server:
   logLevel: DEBUG
 
   zk:
-    host: zookeeper
+    host: zk
     port: 2181
 
   ## Interpreted as if passed to the CloudBees ecconfigure utility within the container.
@@ -1094,7 +1094,6 @@ networkIsolation:
 ## IMPORTANT: Currently, CloudBees CD/RO *can not* share a ZooKeeper
 ## with any other application.
 zookeeper:
-  enabled: false
   image:
     ## Container repository to pull ZooKeeper image from.
     repository: docker.io/cloudbees/cbflow-tools
