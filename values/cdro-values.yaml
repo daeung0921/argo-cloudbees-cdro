@@ -1023,9 +1023,9 @@ flowLicense:
 ### ---------------------------------------------
 
 securityContext:
-  enabled: false
+  enabled: true
   fsGroup: 1000
-  allowPrivilegeEscalation: false
+  #allowPrivilegeEscalation: false
   runAsUser: 1000
   readOnlyRootFilesystem: true
   runAsNonRoot: true
@@ -1331,7 +1331,7 @@ gitops:
 
 cdsidecarinjector:
   ## `cdsidecarinjector.enabled: true` installs sidecar injector.
-  enabled: false
+  enabled: true
   caBundleName: ca-bundles
   injectionCaCertificates:
     - /etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem
