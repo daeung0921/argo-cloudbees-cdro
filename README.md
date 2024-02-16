@@ -20,10 +20,7 @@
 
 ```bash
 $ cd prep-resources
-$ kubectl apply -f cert-manager.crds.yaml
-$ kubectl apply -f cert-manager.yaml
-$ kubectl apply -f ingress-nginx.yaml
-$ kubectl apply -f kube-state-metrics.yaml  
+$ kubectl apply -f .
 ```
 
 ### 단계 3 >  CloudBees CDRO 차트 변경 확인 
