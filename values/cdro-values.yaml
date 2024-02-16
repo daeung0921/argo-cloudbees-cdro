@@ -1026,7 +1026,6 @@ flowLicense:
 securityContext:
   enabled: false
   fsGroup: 1000
-								 
   runAsUser: 1000
 ## Configure pod security context, which applied to pod spec.
 ## Ref: https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#podsecuritycontext-v1-core
