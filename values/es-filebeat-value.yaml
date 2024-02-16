@@ -40,6 +40,8 @@ daemonset:
       value: "flow-repository"
     - name: KUBE_LABLES_APP_FOR_AGENT
       value: "cdro-remote-agent-flow-agent"
+    - name: KUBE_LABLES_APP_FOR_ZOOKEEPER
+      value: "zookeeper"      
     - name: KUBE_TARGET_NAMESPACE
       value: "cdro"
 
@@ -90,7 +92,7 @@ daemonset:
                           - equals:
                               kubernetes.labels.app: "${KUBE_LABLES_APP_FOR_REPO}"
                           - equals:
-                              kubernetes.labels.app: "${KUBE_LABLES_APP_FOR_AGENT}"
+                              kubernetes.labels.app: "${KUBE_LABLES_APP_FOR_ZOOKEEPER}"
                 config:
                   - type: container
                     paths: 
@@ -112,7 +114,7 @@ daemonset:
                     - equals:
                         kubernetes.namespace: "${KUBE_TARGET_NAMESPACE}" 
                     - equals:
-                        kubernetes.labels.app: "zookeeper"
+                        kubernetes.labels.app:  "${KUBE_LABLES_APP_FOR_ZOOKEEPER}"
                 config:
                   - type: container
                     paths: 
