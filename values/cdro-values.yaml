@@ -705,41 +705,8 @@ boundAgent:
     enabled: true
   ## Specify additional volumes to mount in the cbflow-agent container.
   additionalVolumes: []
-							   
-			 
-				 
-					 
-				  
-						  
-						 
-							 
-						  
-									
-							
-						  
-								   
-						  
-						  
-								 
-							
-						  
-								   
-
   ## Specify where your additional volumes are mounted in the cbflow-agent container.
   additionalVolumeMounts: []
-						
-				  
-											   
-							 
-					
-							   
-							 
-							
-						   
-						  
-							
-							
-
   ## Specify additional containers.
   additionalContainers:
 #   - name: container-name
@@ -747,18 +714,11 @@ boundAgent:
 #     command:
 #       - "/container-command"
 
-
-
-
-
 ### --------------------------------------------
 ### Flow storage configuration section
 ### ---------------------------------------------
-
 storage:
-
   volumes:
-
     ## Storage configuration for plugins directory, which:
     ## * Is shared across all cbflow-server and cbflow-web replicas.
     ## * *Must be* `ReadWriteMany` accessible.
@@ -795,14 +755,11 @@ storage:
       storageClass: ""
       existingClaim: false
 
-
 ### --------------------------------------------
 ### Flow server database configuration section
 ### ---------------------------------------------
-
 ## Db endpoint, `database` or `schema`, principal with full privileges on
 ## that schema (rw access) - `dbUser` and `dbPassword`.
-
 database:
    ## URL of you external Db.
 #  externalEndpoint: "my.db.somewhere.com"
@@ -846,8 +803,6 @@ database:
   ## for more information on supported configuration, refer to
   ## https://docs.cloudbees.com/docs/cloudbees-cd/latest/install-k8s/k8s-platform-specific-configurations#_using_cloudbees_cdro_with_google_cloud_sql
 #  customDatabaseUrl:
-
-
 
 ### --------------------------------------------
 ### Flow server credentials configuration section
@@ -1008,93 +963,9 @@ zookeeper:
 
 ### --------------------------------------------
 ### Flow ingress configuration section
-### ---------------------------------------------
+### --------------------------------------------
 
-																 
-																				  
-													  
-							   
-									   
-									
-  
-																			  
-															   
-
-																			
-															
-																		 
-													  
-													   
-																																			   
-			  
-
-				
-
-				 
-			
-																   
-						 
-
-			 
-							  
-																	
-										 
-				   
-				   
-		  
-				   
-
-			   
-																  
-																			 
-		   
-																			 
-															  
-		   
-									   
-		   
-
-		   
-																					 
-																					   
-																				 
-											   
-								   
-																					
-									 
-							 
-
-																				   
-																					
-																				
-												
-			
-				  
-																				  
-						 
-
-	  
-														 
-													 
-													   
-
-																				
-																			 
-															 
-															 
-
-																		   
-													  
-
-
-																		  
-															
-																		 
-													  
-													   
-																																			   
 ingress-nginx:
-
   ## `ingress-nginx.enabled: true` installs the following ingress-nginx controller:
   ## https://github.com/kubernetes/ingress-nginx/tree/master/charts/ingress-nginx
   ## (OPTIONAL) Enable this section if you don't have an existing ingress-nginx controller installation.
@@ -1124,8 +995,6 @@ ingress-nginx:
 #      v: 3
       ## Configures NGINX in debug mode
 #      v: 5
-				 
-			  
     config:
       ## Ingress must support long-running requests without resetting the connection.
       ## By default, AWS ELB resets connections after `60` seconds of inactivity. With
@@ -1182,8 +1051,6 @@ mariadb:
   master:
     nodeSelector:
       kubernetes.io/os: linux
-					
-				
 
 ## cloudbees-flow-agent chart configuration to create
 ## an internal gateway agent.
