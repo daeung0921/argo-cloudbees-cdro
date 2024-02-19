@@ -28,7 +28,7 @@ helmCharts:
   namespace: cdro
   valuesFile : ./values/cdro-values.yaml
   repo: https://public-charts.artifacts.cloudbees.com/repository/public
-  version: 2.28.0
+  version: 2.27.0  #2.28.0
   releaseName: cdro 
   IncludeCRDs: true
   #------------------------------------------
@@ -118,6 +118,40 @@ patches:
           alb.ingress.kubernetes.io/ssl-redirect: "443"
           alb.ingress.kubernetes.io/target-type: "ip"
           external-dns.alpha.kubernetes.io/hostname: "cdro.idtplateer.com"
+  - target:
+      kind: Deployment
+      name: flow-web
+    patch: |
+      - op: add
+        path: /spec/template/spec/containers/0/volumeMounts/-
+        value:
+          mountPath: /custom-config/apache/php.ini
+          name: php-ini-config
+          subPath: php-ini-config    
+      - op: add
+        path: /spec/template/spec/volumes/-
+        value:
+          name: php-ini-config        
+          configMap:
+            defaultMode: 0777
+            name: php-ini-config
+  - target:
+      kind: Deployment
+      name: flow-server
+    patch: |
+      - op: add
+        path: /spec/template/spec/containers/0/volumeMounts/-
+        value:
+          mountPath: /custom-config/wrapper.conf
+          name: server-wrapper-config
+          subPath: server-wrapper-config
+      - op: add
+        path: /spec/template/spec/volumes/-
+        value:
+          name: server-wrapper-config
+          configMap:
+            defaultMode: 0777
+            name: server-wrapper-config
   - target:
       kind: StatefulSet
       name: cdro-remote-agent-flow-agent

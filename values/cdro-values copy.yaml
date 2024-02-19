@@ -1012,7 +1012,7 @@ flowCredentials:
 flowLicense:
   ## Provide your existing secret name with license data.
   ## For `existingSecret`, must have `CBF_LICENSE` field with value of license file contents.
-  existingSecret: flow-lic
+  existingSecret: #flow-lic
   ## TIP: Your `licenseData` can be passed as an XML file path or
   ## passed with the `helm --set-file` option.
   licenseData:
@@ -1229,7 +1229,7 @@ ingress-nginx:
 ### Miscellaneous configuration section
 ### ---------------------------------------------
 
-clusteredMode: true
+clusteredMode: false
 
 ## Flag used to configure the cloudbees-sda chart.
 ## Should not be used from a standalone CloudBees CD/RO installation.
