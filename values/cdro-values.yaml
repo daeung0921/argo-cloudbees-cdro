@@ -164,16 +164,16 @@ server:
 
   ## Specify additional volumes to mount in the cbflow-server container.
   additionalVolumes:
-  - name: server-wrapper-conf
+  - name: server-wrapper-config
     configMap:
       defaultMode: 420
-      name: server-wrapper-conf
+      name: server-wrapper-config
 
   ## Specify where your additional volumes are mounted in the cbflow-server container.
   additionalVolumeMounts:
   - mountPath: /custom-config/wrapper.conf
-    name: server-wrapper-conf
-    subPath: server-wrapper-conf
+    name: server-wrapper-config
+    subPath: server-wrapper-config
 
   ## Specify additional containers to mount for cbflow-server.
   additionalContainers:
