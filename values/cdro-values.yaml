@@ -532,7 +532,7 @@ dois:
     existingSecret: cdro-dois-cred
     adminPassword:
     ## If `reportUserPassword` is an empty string, a random 20 characters password is generated.
-    reportUserPassword: "changeme!@#"
+    reportUserPassword:
 
   ## The heap size in MB for Elasticsearch and Logstash services.
   esRam: 1024
