@@ -45,44 +45,15 @@ serverName: flow-server
 ### Ingress configuration section
 ### ---------------------------------------------
 
-ingress:
-
-																						 
+ingress:						 
   enabled: true
-  host: "cdro.idtplateer.com" 
-												  
-												 
-								  
+  host: "cdro.idtplateer.com"   
   annotations: 
-    "alb.ingress.kubernetes.io/certificate-arn": "arn:aws:acm:ap-northeast-2:960249453675:certificate/5ef7ac4b-8549-480b-ac9b-6efae081ecbf"
-														   
-															
-														   
-													  
-														
-														  
-															
-
-																	 
+    "alb.ingress.kubernetes.io/certificate-arn": "arn:aws:acm:ap-northeast-2:960249453675:certificate/5ef7ac4b-8549-480b-ac9b-6efae081ecbf"										 
     "alb.ingress.kubernetes.io/scheme": "internet-facing"
-    "external-dns.alpha.kubernetes.io/hostname": "cdro.idtplateer.com" 
-
-
-																				 
-																							  
-  class: "cdro-ingress" 
-																								 
-			 
-
-
-												 
-													   
-													
-												
-
-																   
+    "external-dns.alpha.kubernetes.io/hostname": "cdro.idtplateer.com" 															  
+  class: "cdro-ingress" 											   
   certificate:
-				   
     key: |
      -----BEGIN RSA PRIVATE KEY-----
      MIIEpAIBAAKCAQEAy227vwehTiBI4sBBA9hu412dERH2PUq/ygJ//iBf4GW0Kkfc
@@ -149,33 +120,22 @@ platform: eks
 ### ---------------------------------------------
 
 server:
-
   ## Flag that dictates the cbflow-server workload and its accompanying services are installed.
   enabled: true
-
-										  
-				
-					
-
   ## The `imageRepository` in the `images.registry` to pull component image from.
   imageRepository: cbflow-server
   ## Number of replicas of this component to create.
   replicas: 2
-
   ## `expose: true` allows cbflow-server service ingress ports `8443` and `61613`
   ## to be accessed from outside the cluster.
   expose: true
-
   ## The default loglevel for cbflow-server.
   logLevel: DEBUG
-
   zk:
     host: zookeeper
     port: 2181
-
   ## Interpreted as if passed to the CloudBees ecconfigure utility within the container.
   ecconfigure: "--serverInitMemoryMB=4096 --serverMaxMemoryMB=4096"
-
   ## Specify the resources to request for this component.
   resources:
     limits:
@@ -184,10 +144,7 @@ server:
     requests:
       cpu: 2
       memory: 6Gi
-
   nodeSelector: {}
-				  
-			  
   tolerations: []
   affinity: {}
 
@@ -204,7 +161,6 @@ server:
     periodSeconds: 10
     failureThreshold: 10
     timeoutSeconds: 10
-
 
   ## Specify additional volumes to mount in the cbflow-server container.
   additionalVolumes:
@@ -282,30 +238,23 @@ jobInit:
     "helm.sh/hook-weight": "1"
     "helm.sh/hook-delete-policy": hook-succeeded,before-hook-creation
   nodeSelector: {}
-				  
-			  
   tolerations: []
   affinity: {}
 
 ### --------------------------------------------
 ### Flow web server configuration section
 ### ---------------------------------------------
-
 web:
-
   ## Flag that dictates the cbflow-web workload and its accompanying services are installed.
   enabled: true
   ## The `imageRepository` in the `images.registry` to pull component image from.
   imageRepository: cbflow-web
   ## Number of replicas of this component to create.
   replicas: 2
-
   service:
     type: ClusterIP
-
   ## Interpreted as if passed to the CloudBees ecconfigure utility within the container.
   ecconfigure: ""
-
   ## Specify the resources to request for this component.
   resources:
     limits:
@@ -314,13 +263,9 @@ web:
     requests:
       cpu: 0.25
       memory: 256Mi
-
   nodeSelector: {}
-				  
-			  
   tolerations: []
   affinity: {}
-
   ## Additional environment variables to set for cbflow-web.
   extraEnvs: []
 # extraEnvs:
@@ -331,36 +276,26 @@ web:
 #       secretKeyRef:
 #         key: FOO
 #         name: secret-resource
-
   ## Enable shared plugin volume mount (PVC) on flow-web pods.
   ## Mounts empty dir instead if `sharedPluginsEnabled` is false.
   sharedPluginsEnabled: true
-
   ## Specify additional volumes to mount in the cbflow-web container.
-  additionalVolumes:
-							 
-						  
-									
+  additionalVolumes:				
   - name: php-ini-config
     configMap:
       defaultMode: 420
       name: php-ini-config
-
   ## Specify where your additional volumes are mounted in the cbflow-web container.
   additionalVolumeMounts:
-																 
-							 
   - mountPath: /custom-config/apache/php.ini
     name: php-ini-config
     subPath: php-ini-config
-
   ## Specify additional containers to mount for cbflow-web.
   additionalContainers:
 #       - name: container-name
 #         image: image-version
 #         command:
 #           - "/container-command"
-
   ## Horizontal Pod Autoscaling configuration for cbflow-web.
   ## This is only supported when `clusteredMode: true`.
   autoscaling:
@@ -380,29 +315,23 @@ web:
 #           type: AverageValue
 #           averageValue: 10000m
 
-
 ### --------------------------------------------
 ### Flow repository configuration section
 ### ---------------------------------------------
-
 repository:
-
   ## Flag that dictates the cbflow-repository workload and its accompanying services are installed.
   enabled: true
   ## The `imageRepository` in the `images.registry` to pull component image from.
   imageRepository: cbflow-repository
   ## Number of replicas of this component to create.
   replicas: 2
-
   ## `expose: true` allows cbflow-repository service ingress port `8200`
   ## to be accessed from outside the cluster.
   expose: true
-
   ## The zone (must exist in the flow-server instance) assigned
   ## to the repository instance created in the flow-server to represent this
   ## repository instance.
   zoneName:
-
   ## The endpoint for the cbflow-repository service.
   ##
   ## If `cbflow-server.enabled:true` this setting is OPTIONAL, and
@@ -413,13 +342,10 @@ repository:
   ##
   ## Usual helm templates may be used for `serviceEndpoint`.
   serviceEndpoint:
-
   ## The default loglevel for cbflow-repository.
   logLevel: DEBUG
-
   ## Interpreted as if passed to the CloudBees ecconfigure utility within the container.
   ecconfigure: "--repositoryInitMemoryMB=512 --repositoryMaxMemoryMB=1024"
-
   ## Specify the resources to request for this component.
   resources:
     requests:
@@ -428,13 +354,9 @@ repository:
     limits:
       cpu: 0.25
       memory: 2048Mi
-
   nodeSelector: {}
-				  
-			  
   tolerations: []
   affinity: {}
-
   ## Additional environment variables to set for cbflow-repository.
   extraEnvs: []
 #  extraEnvs:
@@ -445,7 +367,6 @@ repository:
 #        secretKeyRef:
 #          key: FOO
 #          name: secret-resource
-
   ## Requires `repository.expose.enable: true` and port `8200` to be open and externally exposed.
   ## Creates extra Kubernetes service with type LoadBalancer.
   externalService:
@@ -455,26 +376,19 @@ repository:
     annotations:
 #      networking.gke.io/load-balancer-type: "Internal"
 #      service.beta.kubernetes.io/aws-load-balancer-internal: "0.0.0.0/0"
-
-
-
   ## Enable or disable creating init container for volume permissions for cbflow-repository.
   volumesPermissionsInitContainer:
     enabled: true
-
   ## Specify additional volumes to mount in the cbflow-repository container.
   additionalVolumes: []
-
   ## Specify where your additional volumes are mounted in the cbflow-repository container.
   additionalVolumeMounts: []
-
   ## Specify additional containers to mount for cbflow-repository.
   additionalContainers:
 #     - name: container-name
 #       image: image-version
 #       command:
 #         - "/container-command"
-
   ## Horizontal Pod Autoscaling configuration for cbflow-repository.
   ## This is only supported when `clusteredMode: true`.
   autoscaling:
@@ -494,29 +408,23 @@ repository:
 #           type: AverageValue
 #           averageValue: 10000m
 
-
 ### --------------------------------------------
 ### Analytics server / Flow DevOps Insight (DOIS/dois) configuration section
 ### ---------------------------------------------
-
 dois:
-
   ## Flag that dictates the cbflow-dois workload and its accompanying services are installed.
   enabled: true
   ## The `imageRepository` in the `images.registry` to pull component image from.
   imageRepository: cbflow-dois
   ## Number replicas of Elasticsearch nodes to create.
   replicas: 1
-
   ## `expose: true` allows cbflow-dois service ingress ports `9200` and `9500`
   ## to be accessed from outside the cluster.
   expose: true
-
   ## The DOIS service endpoint configured on the remote CloudBees CD/RO server.
   ## It is assumed the remote CloudBees CD/RO server is located in the same
   ## Kubernetes cluster.
   serviceEndpoint: "flow-devopsinsight.{{ .Release.Namespace }}"
-
   ## The name of the Elasticsearch cluster.
   esClusterName:
   ## Minimum number of master-eligible nodes that must be visible in order to
@@ -524,7 +432,6 @@ dois:
   esMinMasterNodes: 1
   ## The number of primary shards that an index should have.
   esNumberOfShards:
-
   ## DOIS credentials
   ## Specify either:
   ## * The secret where the report user password and the admin user
@@ -544,10 +451,8 @@ dois:
     adminPassword:
     ## If `reportUserPassword` is an empty string, a random 20 characters password is generated.
     reportUserPassword: "changeme"
-
   ## The heap size in MB for Elasticsearch and Logstash services.
   esRam: 1024
-
   ## Specify the resources to request for this component.
   resources:
     limits:
@@ -556,22 +461,16 @@ dois:
     requests:
       cpu: 0.1
       memory: 2Gi
-
   nodeSelector: {}
-				  
-			  
   tolerations: []
   affinity: {}
-
   ## Adds an OpenShift node tuning label to DOIS pods that
   ## configures the 'vm.max_map_count' value required to run Elasticsearch.
   ## For more information, refer to:
   ## https://developers.redhat.com/blog/2019/11/12/using-the-red-hat-openshift-tuned-operator-for-elasticsearch/
   openshiftNodeTuning: false
-
   ## Additional environment variables to set for cbflow-dois.
   extraEnvs: []
-			 
   # - name: CBF_DOIS_CA_CRT
   #   value:
   #     secretKeyRef:
@@ -587,8 +486,6 @@ dois:
   #     secretKeyRef:
   #       key: tls.key
   #       name: cdro-ca-cert
-
-
   ## DOIS Readiness probe variables:
   healthProbeReadinessPeriodSeconds: 5
   healthProbeReadinessFailureThreshold: 3
@@ -662,7 +559,6 @@ dois:
 
       ## Region of the AWS S3 or GCS bucket. Example: us-east-1
       region:
-
 
   ## Requires `dois.expose.enable: true` and ports `9200`  to be open and externally exposed.
   ## Creates extra Kubernetes service with type LoadBalancer.
@@ -777,10 +673,7 @@ boundAgent:
     requests:
       cpu: 0.25
       memory: 512Mi
-
   nodeSelector: {}
-			
-			  
   tolerations: []
   affinity: {}
   storage:
@@ -798,8 +691,6 @@ boundAgent:
         ## * Set `existingClaim: true`.
         ## If you are using a PVC, it *must be* `ReadWriteMany` accessible.
         existingClaim: true
-
-
   ## Additional environment variables to set for cbflow-agent.
   extraEnvs: []
 #    - name: FOO
@@ -809,11 +700,9 @@ boundAgent:
 #        secretKeyRef:
 #          key: FOO
 #          name: secret-resource
-
   ## Enable or disable creating init container for volume permissions for cbflow-agent.
   volumePermissions:
     enabled: true
-
   ## Specify additional volumes to mount in the cbflow-agent container.
   additionalVolumes: []
 							   
