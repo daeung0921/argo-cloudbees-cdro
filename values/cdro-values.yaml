@@ -529,10 +529,10 @@ dois:
   ## IMPORTANT: If the `adminPassword` is left empty, *no admin user is created*,
   ## and administrative access is *not* granted to any user.
   credentials:
-    existingSecret: cdro-dois-cred
-    adminPassword:
+    existingSecret: #cdro-dois-cred
+    adminPassword: "changedme!@#"
     ## If `reportUserPassword` is an empty string, a random 20 characters password is generated.
-    reportUserPassword:
+    reportUserPassword: "kibanauser"
 
   ## The heap size in MB for Elasticsearch and Logstash services.
   esRam: 1024
