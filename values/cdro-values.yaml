@@ -1,4 +1,4 @@
-																			
+
 ### --------------------------------------------
 ### Common images configurations section
 ### ---------------------------------------------
@@ -45,14 +45,14 @@ serverName: flow-server
 ### Ingress configuration section
 ### ---------------------------------------------
 
-ingress:						 
+ingress:
   enabled: true
   host: "cdro.idtplateer.com"   
   annotations: 
-    "alb.ingress.kubernetes.io/certificate-arn": "arn:aws:acm:ap-northeast-2:960249453675:certificate/5ef7ac4b-8549-480b-ac9b-6efae081ecbf"										 
+    "alb.ingress.kubernetes.io/certificate-arn": "arn:aws:acm:ap-northeast-2:960249453675:certificate/5ef7ac4b-8549-480b-ac9b-6efae081ecbf"
     "alb.ingress.kubernetes.io/scheme": "internet-facing"
-    "external-dns.alpha.kubernetes.io/hostname": "cdro.idtplateer.com" 															  
-  class: "cdro-ingress" 											   
+    "external-dns.alpha.kubernetes.io/hostname": "cdro.idtplateer.com"
+  class: "cdro-ingress"
   certificate:
     key: |
      -----BEGIN RSA PRIVATE KEY-----
@@ -280,7 +280,7 @@ web:
   ## Mounts empty dir instead if `sharedPluginsEnabled` is false.
   sharedPluginsEnabled: true
   ## Specify additional volumes to mount in the cbflow-web container.
-  additionalVolumes:				
+  additionalVolumes:
   - name: php-ini-config
     configMap:
       defaultMode: 420
