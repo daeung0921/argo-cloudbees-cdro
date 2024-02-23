@@ -142,10 +142,10 @@ patches:
           configMap:
             defaultMode: 0777
             name: flow-agent-health-check
-  - target:
-      kind: Deployment
-      name: flow-web
-    patch: |-
-      - op: replace
-        path: /spec/template/spec/initContainers
-        value: []
+  #- target:
+  #    kind: Deployment
+  #    name: flow-web
+  #  patch: |-
+  #    - op: replace
+  #      path: /spec/template/spec/initContainers
+  #      value: []
