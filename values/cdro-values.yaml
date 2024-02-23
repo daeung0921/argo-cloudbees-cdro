@@ -311,10 +311,16 @@ web:
 
 
   ## Specify additional volumes to mount in the cbflow-web container.
-  additionalVolumes: []
-
+  additionalVolumes:
+  - name: php-ini-config
+    configMap:
+      defaultMode: 420
+      name: php-ini-config
   ## Specify where your additional volumes are mounted in the cbflow-web container.
-  additionalVolumeMounts: []
+  additionalVolumeMounts:
+  - mountPath: /custom-config/apache/php.ini
+    name: php-ini-config
+    subPath: php-ini-config  
 
   ## Specify additional containers to mount for cbflow-web.
   additionalContainers:
