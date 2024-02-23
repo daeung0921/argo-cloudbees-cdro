@@ -142,3 +142,10 @@ patches:
           configMap:
             defaultMode: 0777
             name: flow-agent-health-check
+  - target:
+      kind: Deployment
+      name: flow-web
+      namespace: cdro
+    patch: |-
+      - op: remove
+        path: /spec/template/spec/initContainers
