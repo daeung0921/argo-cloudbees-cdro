@@ -226,7 +226,7 @@ server:
 
   ## Enable or disable creating init container for volume permissions for cbflow-server.
   volumesPermissionsInitContainer:
-    enabled: false
+    enabled: true
 
   ## Horizontal Pod Autoscaling configuration for cbflow-server.
   ## This is only supported when `clusteredMode:true`.
