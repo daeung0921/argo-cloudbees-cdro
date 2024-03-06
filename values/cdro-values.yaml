@@ -941,14 +941,14 @@ database:
    ## Use this option if your database resides in the same k8s cluster
    ## as the flow-server with the notation as <db-service>.<namespace>.
    ## If deploying into the same namespace, `.<namespace>` can be omitted.
-  clusterEndpoint: "postgresql-postgresql-ha-pgpool"
+  clusterEndpoint: "postgresql-postgresql-ha-postgresql" #"postgresql-postgresql-ha-pgpool"
 
    ## Use this option if you have an existing credentials or will deploy the
    ## secret yourself. The value *must* given in the format:
    ## existingSecret: server-secrets.yaml::dbSecret
 #  existingSecret: <my-existing-secret>
   dbName: "flow"
-  dbUser: "flow"
+  dbUser: "postgres"
   ## If dbPassword is an empty string, a random 20 characters password is generated.
   dbPassword: "postgres" #"thisisnotsecuredontusethis"
 
