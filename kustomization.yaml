@@ -14,13 +14,20 @@ helmCharts:
   #------------------------------------------
   # CDRO DB
   #------------------------------------------  
-- name: postgresql
+#- name: postgresql
+#  namespace: cdro
+#  valuesFile : ./values/postgre-values.yaml
+#  repo: https://charts.bitnami.com/bitnami
+#  version: 13.2.24
+#  releaseName: postgre 
+#  IncludeCRDs: true
+- name: postgresql-ha
   namespace: cdro
-  valuesFile : ./values/postgre-values.yaml
   repo: https://charts.bitnami.com/bitnami
-  version: 13.2.24
-  releaseName: postgre 
-  IncludeCRDs: true
+  version: 11.9.1   
+  releaseName: postgresql
+  valuesFile: ./values/postgre-ha-values.yaml
+  includeCRDs: true
   #------------------------------------------
   # CDRO 
   #------------------------------------------    
