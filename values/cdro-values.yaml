@@ -941,7 +941,7 @@ database:
    ## Use this option if your database resides in the same k8s cluster
    ## as the flow-server with the notation as <db-service>.<namespace>.
    ## If deploying into the same namespace, `.<namespace>` can be omitted.
-  clusterEndpoint: "postgresql-postgresql-ha-postgresql"
+  clusterEndpoint: "postgresql-postgresql-ha-pgpool"
 
    ## Use this option if you have an existing credentials or will deploy the
    ## secret yourself. The value *must* given in the format:
