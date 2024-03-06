@@ -197,9 +197,7 @@ postgresql:
   ## @param postgresql.nodeSelector Node labels for PostgreSQL pods assignment
   ## ref: https://kubernetes.io/docs/user-guide/node-selection/
   ##
-  nodeSelector:
-    type: physical
-    usage: sys
+  nodeSelector: {}
   ## @param postgresql.tolerations Tolerations for PostgreSQL pods assignment
   ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
   ##
@@ -301,11 +299,11 @@ postgresql:
   ##
   resources:
     limits:
-      cpu: 12000m
-      memory: 128Gi
+      cpu: 500m
+      memory: 512Mi
     requests:
-      cpu: 8000m
-      memory: 48Gi
+      cpu: 256m
+      memory: 512Mi
   ## PostgreSQL container's liveness probe
   ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes
   ## @param postgresql.livenessProbe.enabled Enable livenessProbe
@@ -917,7 +915,7 @@ witness:
     logTimezone: ""
   ## @param witness.maxConnections Maximum total connections
   ##
-  maxConnections: "200"
+  maxConnections: ""
   ## @param witness.postgresConnectionLimit Maximum connections for the postgres user
   ##
   postgresConnectionLimit: ""
@@ -1192,9 +1190,7 @@ pgpool:
   ## @param pgpool.nodeSelector Node labels for Pgpool pods assignment
   ## ref: https://kubernetes.io/docs/user-guide/node-selection/
   ##
-  nodeSelector:
-    type: physical
-    usage: sys
+  nodeSelector: {}
   ## @param pgpool.tolerations Tolerations for Pgpool pods assignment
   ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
   ##
@@ -1245,23 +1241,13 @@ pgpool:
   ## @param pgpool.resources.limits The resources limits for the container
   ## @param pgpool.resources.requests The requested resources for the container
   ##
-  resources:
-    ## Example:
-    ## limits:
-    ##    cpu: 250m
-    ##    memory: 256Mi
-    ##
+  resources: 
     limits:
-      cpu: 12000m
-      memory: 256Gi
-    ## Examples:
-    ## requests:
-    ##    cpu: 250m
-    ##    memory: 256Mi
-    ##
+      cpu: 500m
+      memory: 512Mi
     requests:
-      cpu: 8000m
-      memory: 128Gi
+      cpu: 250m
+      memory: 256Mi
   ## Pgpool container's liveness probe
   ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes
   ## @param pgpool.livenessProbe.enabled Enable livenessProbe
@@ -1895,7 +1881,7 @@ persistence:
     - ReadWriteOnce
   ## @param persistence.size Persistent Volume Claim size
   ##
-  size: 5Ti
+  size: 8Gi
   ## @param persistence.annotations Persistent Volume Claim annotations
   ##
   annotations: {}
