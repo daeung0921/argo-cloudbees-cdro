@@ -33,7 +33,7 @@ global:
   postgresql:
     username: "postgres"
     password: "postgres"
-    database: ""
+    database: "flow"
     repmgrUsername: "repmgr"
     repmgrPassword: "repmgr"
     repmgrDatabase: ""
@@ -42,8 +42,8 @@ global:
     bindpw: ""
     existingSecret: ""
   pgpool:
-    adminUsername: "postgres"
-    adminPassword: "postgres"
+    adminUsername: "pgpool"
+    adminPassword: "pgpool"
     existingSecret: ""
 
 ## @section Common parameters
@@ -132,7 +132,7 @@ postgresql:
   serviceAnnotations: {}
   ## @param postgresql.replicaCount Number of replicas to deploy. Use an odd number. Having 3 replicas is the minimum to get quorum when promoting a new primary.
   ##
-  replicaCount: 3
+  replicaCount: 2
   ## @param postgresql.updateStrategy.type Postgresql statefulset strategy type
   ## ref: https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/#update-strategies
   ## e.g:
@@ -375,9 +375,9 @@ postgresql:
   ## @param postgresql.password PostgreSQL password
   ## @param postgresql.database PostgreSQL database
   ##
-  username: "postgres"
-  password: "postgres"
-  database: "flow"
+  username: ""
+  password: ""
+  database: ""
   ## @param postgresql.existingSecret PostgreSQL password using existing secret
   ##
   existingSecret: ""
@@ -422,7 +422,7 @@ postgresql:
   ## @param postgresql.repmgrChildNodesConnectedMinCount Repmgr minimum number of connected child nodes before being considered as failed primary for fencing
   ## @param postgresql.repmgrChildNodesDisconnectTimeout Repmgr time before node will be fenced when insufficient child nodes are detected (in seconds)
   ##
-  repmgrUsername: repmgr
+  repmgrUsername: ""
   repmgrPassword: ""
   repmgrDatabase: repmgr
   repmgrLogLevel: NOTICE
@@ -1320,7 +1320,7 @@ pgpool:
   ## @param pgpool.adminUsername Pgpool Admin username
   ## @param pgpool.adminPassword Pgpool Admin password
   ##
-  adminUsername: admin
+  adminUsername: ""
   adminPassword: ""
   ## @param pgpool.usePasswordFile Set to `true` to mount pgpool secret as a file instead of passing environment variable
   ##
