@@ -34,8 +34,8 @@ global:
     username: "postgres"
     password: "postgres"
     database: "flow"
-    repmgrUsername: "repmgr"
-    repmgrPassword: "repmgr"
+    repmgrUsername: repmgr
+    repmgrPassword: repmgr
     repmgrDatabase: ""
     existingSecret: ""
   ldap:
@@ -375,9 +375,9 @@ postgresql:
   ## @param postgresql.password PostgreSQL password
   ## @param postgresql.database PostgreSQL database
   ##
-  username: ""
-  password: ""
-  database: ""
+  username: "postgres"
+  password: "postgres"
+  database: "flow"
   ## @param postgresql.existingSecret PostgreSQL password using existing secret
   ##
   existingSecret: ""
@@ -422,8 +422,8 @@ postgresql:
   ## @param postgresql.repmgrChildNodesConnectedMinCount Repmgr minimum number of connected child nodes before being considered as failed primary for fencing
   ## @param postgresql.repmgrChildNodesDisconnectTimeout Repmgr time before node will be fenced when insufficient child nodes are detected (in seconds)
   ##
-  repmgrUsername: ""
-  repmgrPassword: ""
+  repmgrUsername: repmgr
+  repmgrPassword: repmgr
   repmgrDatabase: repmgr
   repmgrLogLevel: NOTICE
   repmgrConnectTimeout: 5
@@ -1320,8 +1320,8 @@ pgpool:
   ## @param pgpool.adminUsername Pgpool Admin username
   ## @param pgpool.adminPassword Pgpool Admin password
   ##
-  adminUsername: ""
-  adminPassword: ""
+  adminUsername: admin
+  adminPassword: changeme
   ## @param pgpool.usePasswordFile Set to `true` to mount pgpool secret as a file instead of passing environment variable
   ##
   usePasswordFile: ""

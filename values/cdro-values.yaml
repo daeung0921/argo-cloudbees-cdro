@@ -944,10 +944,10 @@ database:
    ## secret yourself. The value *must* given in the format:
    ## existingSecret: server-secrets.yaml::dbSecret
 #  existingSecret: <my-existing-secret>
-  dbName: "flow"
-  dbUser: "admin" 
+  dbName: flow
+  dbUser: admin
   ## If dbPassword is an empty string, a random 20 characters password is generated.
-  dbPassword: "changeme" #"thisisnotsecuredontusethis"
+  dbPassword: changeme
 
   ## Remote database port to connect to.
   dbPort: "5432"
