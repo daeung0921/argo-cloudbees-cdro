@@ -22,29 +22,29 @@
 ## @param global.pgpool.adminPassword Pgpool Admin password (overrides `pgpool.adminPassword`)
 ## @param global.pgpool.existingSecret Pgpool existing secret
 ##
-global:
-  imageRegistry: ""
+#global:
+#  imageRegistry: ""
   ## E.g.
   ## imagePullSecrets:
   ##   - myRegistryKeySecretName
   ##
-  imagePullSecrets: []
-  storageClass: ""
-  postgresql:
-    username: "postgres"
-    password: "postgres"
-    database: "flow"
-    repmgrUsername: repmgr
-    repmgrPassword: repmgr
-    repmgrDatabase: ""
-    existingSecret: ""
-  ldap:
-    bindpw: ""
-    existingSecret: ""
-  pgpool:
-    adminUsername: "admin"
-    adminPassword: "changeme"
-    existingSecret: ""
+#  imagePullSecrets: []
+#  storageClass: ""
+#  postgresql:
+#    username: "postgres"
+#    password: "postgres"
+#    database: "flow"
+#    repmgrUsername: repmgr
+#    repmgrPassword: repmgr
+#    repmgrDatabase: ""
+#    existingSecret: ""
+#  ldap:
+#    bindpw: ""
+#    existingSecret: ""
+#  pgpool:
+#    adminUsername: "admin"
+#    adminPassword: "changeme"
+#    existingSecret: ""
 
 ## @section Common parameters
 
@@ -375,9 +375,9 @@ postgresql:
   ## @param postgresql.password PostgreSQL password
   ## @param postgresql.database PostgreSQL database
   ##
-  username: "postgres"
-  password: "postgres"
-  database: "flow"
+  username: postgres
+  password: postgres
+  database: flow
   ## @param postgresql.existingSecret PostgreSQL password using existing secret
   ##
   existingSecret: ""
