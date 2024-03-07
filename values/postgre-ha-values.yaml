@@ -42,8 +42,8 @@ global:
     bindpw: ""
     existingSecret: ""
   pgpool:
-    adminUsername: "pgpool"
-    adminPassword: "pgpool"
+    adminUsername: "postgres"
+    adminPassword: "postgres"
     existingSecret: ""
 
 ## @section Common parameters
@@ -132,7 +132,7 @@ postgresql:
   serviceAnnotations: {}
   ## @param postgresql.replicaCount Number of replicas to deploy. Use an odd number. Having 3 replicas is the minimum to get quorum when promoting a new primary.
   ##
-  replicaCount: 2
+  replicaCount: 3
   ## @param postgresql.updateStrategy.type Postgresql statefulset strategy type
   ## ref: https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/#update-strategies
   ## e.g:
@@ -375,9 +375,9 @@ postgresql:
   ## @param postgresql.password PostgreSQL password
   ## @param postgresql.database PostgreSQL database
   ##
-  username: ""
-  password: ""
-  database: ""
+  username: postgres
+  password: "postgres"
+  database: "flow"
   ## @param postgresql.existingSecret PostgreSQL password using existing secret
   ##
   existingSecret: ""
@@ -422,7 +422,7 @@ postgresql:
   ## @param postgresql.repmgrChildNodesConnectedMinCount Repmgr minimum number of connected child nodes before being considered as failed primary for fencing
   ## @param postgresql.repmgrChildNodesDisconnectTimeout Repmgr time before node will be fenced when insufficient child nodes are detected (in seconds)
   ##
-  repmgrUsername: ""
+  repmgrUsername: repmgr
   repmgrPassword: ""
   repmgrDatabase: repmgr
   repmgrLogLevel: NOTICE
@@ -1062,8 +1062,8 @@ pgpool:
   ##      usernames: "user01;user02"
   ##      passwords: "pass01;pass02"
   customUsers:
-    usernames: "user01"
-    passwords: "pass01"
+    usernames: ""
+    passwords: ""
   ## @param pgpool.hostAliases Deployment pod host aliases
   ## https://kubernetes.io/docs/concepts/services-networking/add-entries-to-pod-etc-hosts-with-host-aliases/
   ##
@@ -1320,7 +1320,7 @@ pgpool:
   ## @param pgpool.adminUsername Pgpool Admin username
   ## @param pgpool.adminPassword Pgpool Admin password
   ##
-  adminUsername: ""
+  adminUsername: admin
   adminPassword: ""
   ## @param pgpool.usePasswordFile Set to `true` to mount pgpool secret as a file instead of passing environment variable
   ##
