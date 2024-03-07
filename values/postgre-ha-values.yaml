@@ -1062,8 +1062,8 @@ pgpool:
   ##      usernames: "user01;user02"
   ##      passwords: "pass01;pass02"
   customUsers:
-    usernames: ""
-    passwords: ""
+    usernames: "pgpool"
+    passwords: "pgpool"
   ## @param pgpool.hostAliases Deployment pod host aliases
   ## https://kubernetes.io/docs/concepts/services-networking/add-entries-to-pod-etc-hosts-with-host-aliases/
   ##
