@@ -1,12 +1,6 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  annotations:
-    argocd.argoproj.io/hook: PostSync
-    argocd.argoproj.io/hook-delete-policy: HookSucceeded,BeforeHookCreation
-    #helm.sh/hook: post-install,post-upgrade
-    #helm.sh/hook-delete-policy: hook-succeeded,before-hook-creation
-    #helm.sh/hook-weight: "1"
   labels:
     app: flow-server
     chart: cloudbees-flow
@@ -14,7 +8,7 @@ metadata:
     product: cdro
     release: cdro
   name: flow-server-new-init-job
-  #namespace: cdro
+  namespace: cdro
 spec:
   backoffLimit: 0
   template:
