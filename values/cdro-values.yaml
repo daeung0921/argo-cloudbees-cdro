@@ -248,7 +248,10 @@ server:
 #           averageValue: 10000m
 
 jobInit:
-  annotations: {}
+  annotations:
+    "helm.sh/hook": "post-install,post-upgrade"
+    "helm.sh/hook-weight": "1"
+    "helm.sh/hook-delete-policy": hook-succeeded,before-hook-creation
   nodeSelector: {}
   tolerations: []
   affinity: {}
@@ -944,10 +947,10 @@ database:
    ## secret yourself. The value *must* given in the format:
    ## existingSecret: server-secrets.yaml::dbSecret
 #  existingSecret: <my-existing-secret>
-  dbName: flow
-  dbUser: admin
+  dbName: "flow"
+  dbUser: "pgpool"
   ## If dbPassword is an empty string, a random 20 characters password is generated.
-  dbPassword: changeme
+  dbPassword: "pgpool" #"thisisnotsecuredontusethis"
 
   ## Remote database port to connect to.
   dbPort: "5432"
