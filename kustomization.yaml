@@ -134,7 +134,8 @@ patches:
                   --databaseType "$CBF_DB_TYPE" --port "$CBF_DB_PORT" \
                   --databaseName "$CBF_DB_NAME" --userName "$CBF_DB_USER" \
                   --password "$CBF_DB_PASSWORD" --hostName "$CBF_DB_HOST" \
-                  --ignorePasskeyMismatch
+                  --ignorePasskeyMismatch true \
+                  --ignoreServerMismatch true
               then
                   log "ERROR: could not configure CloudBees Flow server."
                   exit 1
