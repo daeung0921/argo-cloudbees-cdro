@@ -42,8 +42,8 @@ global:
     bindpw: ""
     existingSecret: ""
   pgpool:
-    adminUsername: "postgres"
-    adminPassword: "postgres"
+    adminUsername: "admin"
+    adminPassword: "changeme"
     existingSecret: ""
 
 ## @section Common parameters
