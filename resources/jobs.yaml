@@ -13,7 +13,7 @@ metadata:
     heritage: Helm
     product: cdro
     release: cdro
-  name: flow-server-init-job
+  name: flow-server-new-init-job
   #namespace: cdro
 spec:
   backoffLimit: 0
