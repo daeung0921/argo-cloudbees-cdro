@@ -1,0 +1,152 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  annotations:
+    argocd.argoproj.io/hook: PostSync
+    argocd.argoproj.io/hook-delete-policy: HookSucceeded,BeforeHookCreation
+    helm.sh/hook: post-install,post-upgrade
+    helm.sh/hook-delete-policy: hook-succeeded,before-hook-creation
+    helm.sh/hook-weight: "1"
+  labels:
+    app: flow-server
+    chart: cloudbees-flow
+    heritage: Helm
+    product: cdro
+    release: cdro
+  name: flow-server-init-job
+  namespace: cdro
+spec:
+  backoffLimit: 0
+  template:
+    metadata:
+      labels:
+        app: flow-server
+        product: cdro
+        release: cdro
+    spec:
+      containers:
+      - env:
+        - name: CBF_ZK_CONNECTION
+          value: zookeeper:2181
+        - name: CBF_SERVER_HOST
+          value: flow-server
+        - name: CBF_CONFIGURE
+          value: --serverInitMemoryMB=4096 --serverMaxMemoryMB=4096
+        - name: CBF_CLUSTER_INIT
+          value: "true"
+        - name: CBF_SERVER_MYSQL_CONNECTOR_URL
+          value: disable
+        - name: CBF_SERVER_ADMIN_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: CBF_SERVER_ADMIN_PASSWORD
+              name: cdro-cred
+        - name: CBF_WEB_FQDN
+          value: cdro.idtplateer.com
+        - name: CBF_SERVER_SEND_TELEMETRY_DATA
+          value: "true"
+        - name: CBF_DB_TYPE
+          value: postgresql
+        - name: CBF_DB_HOST
+          value: postgresql-postgresql-ha-pgpool
+        - name: CBF_DB_PORT
+          value: "5432"
+        - name: CBF_DB_NAME
+          value: flow
+        - name: CBF_DB_USER
+          valueFrom:
+            secretKeyRef:
+              key: DB_USER
+              name: cdro-cloudbees-flow-db
+        - name: CBF_DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: DB_PASSWORD
+              name: cdro-cloudbees-flow-db
+        image: docker.io/cloudbees/cbflow-server:2023.12.0.171596_3.2.64_20231207
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          exec:
+            command:
+            - /opt/cbflow/health-check
+          initialDelaySeconds: 60
+          periodSeconds: 60
+          timeoutSeconds: 10
+        name: flow-server
+        ports:
+        - containerPort: 8000
+          name: p1-chttp
+          protocol: TCP
+        - containerPort: 8443
+          name: p6-jettys
+          protocol: TCP
+        resources:
+          limits:
+            cpu: 4
+            memory: 6Gi
+          requests:
+            cpu: 2
+            memory: 6Gi
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /plugins-data
+          name: plugins-volume
+        - mountPath: /custom-config/logback-local.groovy
+          name: logback-config
+          subPath: server-logback-config
+        - mountPath: /custom-config/startup.sh
+          name: init-scripts
+          subPath: startup.sh
+        - mountPath: /custom-scripts
+          name: customscript-config
+        - mountPath: /custom-config/startup-serverup.sh
+          name: init-scripts
+          subPath: startup-serverup.sh
+        - mountPath: /opt/cbflow/server/setup/01_setupRemoteRepository.pl
+          name: init-scripts
+          subPath: register_repo.pl
+        - mountPath: /custom-config/ScmSync.groovy
+          name: init-scripts
+          subPath: ScmSync.groovy
+      initContainers:
+      - command:
+        - sh
+        - -c
+        - |
+          set -e
+          set -x
+          chown -R 1000:1000 /plugins-data
+        image: docker.io/cloudbees/cbflow-server:2023.12.0.171596_3.2.64_20231207
+        imagePullPolicy: IfNotPresent
+        name: volumes-permissions
+        resources:
+          limits:
+            cpu: 25m
+            memory: 128Mi
+          requests:
+            cpu: 25m
+            memory: 128Mi
+        securityContext:
+          runAsUser: 0
+        volumeMounts:
+        - mountPath: /plugins-data
+          name: plugins-volume
+      nodeSelector:
+        kubernetes.io/os: linux
+      restartPolicy: Never
+      serviceAccountName: default
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - name: plugins-volume
+        persistentVolumeClaim:
+          claimName: cdro-server-pvc
+      - configMap:
+          name: flow-logging-config
+        name: logback-config
+      - name: customscript-config
+        secret:
+          secretName: cdro-customscript
+      - configMap:
+          name: flow-init-scripts
+        name: init-scripts

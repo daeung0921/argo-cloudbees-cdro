@@ -9,6 +9,7 @@ resources:
 - ./resources/pvcs.yaml
 - ./resources/configmaps.yaml
 - ./resources/metricbeat.yaml
+- ./resources/jobs.yaml
 
 helmCharts:
   #------------------------------------------
