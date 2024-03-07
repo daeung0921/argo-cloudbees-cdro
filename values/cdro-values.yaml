@@ -1226,7 +1226,7 @@ ingress-nginx:
 ### Miscellaneous configuration section
 ### ---------------------------------------------
 
-clusteredMode: true
+clusteredMode: false
 
 ## Flag used to configure the cloudbees-sda chart.
 ## Should not be used from a standalone CloudBees CD/RO installation.
