@@ -140,7 +140,7 @@ server:
   ## The `imageRepository` in the `images.registry` to pull component image from.
   imageRepository: cbflow-server
   ## Number of replicas of this component to create.
-  replicas: 1
+  replicas: 2
 
   ## `expose: true` allows cbflow-server service ingress ports `8443` and `61613`
   ## to be accessed from outside the cluster.
@@ -249,9 +249,7 @@ server:
 
 jobInit:
   annotations:
-    "helm.sh/hook": "post-install,post-upgrade"
-    "helm.sh/hook-weight": "1"
-    "helm.sh/hook-delete-policy": hook-succeeded,before-hook-creation
+    "argocd.argoproj.io/hook": "Sync"
   nodeSelector: {}
   tolerations: []
   affinity: {}
@@ -1229,7 +1227,7 @@ ingress-nginx:
 ### Miscellaneous configuration section
 ### ---------------------------------------------
 
-clusteredMode: false
+clusteredMode: true
 
 ## Flag used to configure the cloudbees-sda chart.
 ## Should not be used from a standalone CloudBees CD/RO installation.
