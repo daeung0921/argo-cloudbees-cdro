@@ -271,7 +271,7 @@ web:
   ## The `imageRepository` in the `images.registry` to pull component image from.
   imageRepository: cbflow-web
   ## Number of replicas of this component to create.
-  replicas: 1
+  replicas: 2
 
   service:
     type: ClusterIP
