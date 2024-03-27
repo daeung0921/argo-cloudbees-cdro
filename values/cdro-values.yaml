@@ -234,8 +234,8 @@ server:
     enabled: true
     minReplicas: 2
     maxReplicas: 3
-    targetCPUUtilizationPercentage: 30
-    targetMemoryUtilizationPercentage: 30
+    targetCPUUtilizationPercentage: 50
+    targetMemoryUtilizationPercentage: 50
     templates: []
     ## Specify custom or additional autoscaling metrics.
     ## Ref: https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/#support-for-custom-metrics
@@ -342,8 +342,8 @@ web:
     enabled: true
     minReplicas: 2
     maxReplicas: 4
-    targetCPUUtilizationPercentage: 30
-    targetMemoryUtilizationPercentage: 30
+    targetCPUUtilizationPercentage: 50
+    targetMemoryUtilizationPercentage: 50
     templates: []
     ## Specify custom or additional autoscaling metrics.
     ## Ref: https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/#support-for-custom-metrics
