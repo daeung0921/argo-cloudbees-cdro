@@ -163,7 +163,7 @@ server:
       memory: 6Gi
     requests:
       cpu: 2
-      memory: 6Gi
+      memory: 4Gi
 
   nodeSelector: {}
   tolerations: []
@@ -234,8 +234,8 @@ server:
     enabled: true
     minReplicas: 2
     maxReplicas: 3
-    targetCPUUtilizationPercentage: 50
-    targetMemoryUtilizationPercentage: 50
+    targetCPUUtilizationPercentage: 30
+    targetMemoryUtilizationPercentage: 40
     templates: []
     ## Specify custom or additional autoscaling metrics.
     ## Ref: https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/#support-for-custom-metrics
