@@ -154,7 +154,7 @@ server:
     port: 2181
 
   ## Interpreted as if passed to the CloudBees ecconfigure utility within the container.
-  ecconfigure: "--serverInitMemoryMB=4096 --serverMaxMemoryMB=4096"
+  ecconfigure: "--serverInitMemoryMB=2048 --serverMaxMemoryMB=3072"
 
   ## Specify the resources to request for this component.
   resources:
@@ -342,7 +342,7 @@ web:
     enabled: true
     minReplicas: 2
     maxReplicas: 4
-    targetCPUUtilizationPercentage: 50
+    targetCPUUtilizationPercentage: 20
     targetMemoryUtilizationPercentage: 50
     templates: []
     ## Specify custom or additional autoscaling metrics.
