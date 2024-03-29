@@ -8,7 +8,7 @@ reclaimPolicy: Delete
 volumeBindingMode: Immediate
 parameters:
   provisioningMode: efs-ap
-  fileSystemId: "fs-07652e1325b542104" # EKS 새로 배포시 바뀜 
+  fileSystemId: "fs-04ede1088bcfac2a4" # EKS 새로 배포시 바뀜 
   directoryPerms: "777"
   gid: "0"
   uid: "0"
