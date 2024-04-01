@@ -233,9 +233,9 @@ server:
   autoscaling:
     enabled: true
     minReplicas: 2
-    maxReplicas: 4
-    targetCPUUtilizationPercentage: 60
-    targetMemoryUtilizationPercentage: 60
+    maxReplicas: 3
+    targetCPUUtilizationPercentage: 50
+    targetMemoryUtilizationPercentage: 40
     templates: []
     ## Specify custom or additional autoscaling metrics.
     ## Ref: https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/#support-for-custom-metrics
@@ -339,7 +339,7 @@ web:
   ## Horizontal Pod Autoscaling configuration for cbflow-web.
   ## This is only supported when `clusteredMode: true`.
   autoscaling:
-    enabled: true
+    enabled: false
     minReplicas: 2
     maxReplicas: 4
     targetCPUUtilizationPercentage: 20
