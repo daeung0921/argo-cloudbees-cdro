@@ -231,7 +231,7 @@ server:
   ## Horizontal Pod Autoscaling configuration for cbflow-server.
   ## This is only supported when `clusteredMode:true`.
   autoscaling:
-    enabled: true
+    enabled: false
     minReplicas: 2
     maxReplicas: 3
     targetCPUUtilizationPercentage: 50
@@ -282,10 +282,10 @@ web:
   ## Specify the resources to request for this component.
   resources:
     limits:
-      cpu: 1
-      memory: 512Mi
+      cpu: 0.5
+      memory: 256Mi
     requests:
-      cpu: 0.25
+      cpu: 0.5
       memory: 256Mi
 
   nodeSelector: {}
@@ -339,11 +339,11 @@ web:
   ## Horizontal Pod Autoscaling configuration for cbflow-web.
   ## This is only supported when `clusteredMode: true`.
   autoscaling:
-    enabled: false
+    enabled: true
     minReplicas: 2
-    maxReplicas: 4
-    targetCPUUtilizationPercentage: 20
-    targetMemoryUtilizationPercentage: 50
+    maxReplicas: 3
+    targetCPUUtilizationPercentage: 70
+    targetMemoryUtilizationPercentage: 70
     templates: []
     ## Specify custom or additional autoscaling metrics.
     ## Ref: https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/#support-for-custom-metrics
