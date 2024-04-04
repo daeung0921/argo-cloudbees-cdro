@@ -36,7 +36,7 @@ helmCharts:
   namespace: cdro
   valuesFile : ./values/cdro-values.yaml
   repo: https://public-charts.artifacts.cloudbees.com/repository/public
-  version: 2.28.0
+  version: 2.29.0
   releaseName: cdro 
   IncludeCRDs: true
   #------------------------------------------
@@ -46,7 +46,7 @@ helmCharts:
   namespace: cdro
   valuesFile : ./values/cdro-agent-values.yaml
   repo: https://public-charts.artifacts.cloudbees.com/repository/public
-  version: 2.28.0
+  version: 2.29.0
   releaseName: cdro-remote-agent
   IncludeCRDs: true
   #------------------------------------------
