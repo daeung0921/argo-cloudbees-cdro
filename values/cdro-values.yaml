@@ -282,8 +282,8 @@ web:
   ## Specify the resources to request for this component.
   resources:
     limits:
-      cpu: 0.5
-      memory: 256Mi
+      cpu: 1
+      memory: 512Mi
     requests:
       cpu: 0.5
       memory: 256Mi
