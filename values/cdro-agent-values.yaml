@@ -114,9 +114,9 @@ service:
   clusterIP: "None"
   ## External DNS hostname to set to as the agent service name.
   ## Used for Gateway Agent configuration.
-  publicHostName: "cdagent.idtplateer.com"
+  publicHostName: null
   ## (OPTIONAL) Provide a service name for the agent pod.
-  name: "agent-headless"
+  name:
 
 
 ## Gateway Agents require port `7800` (by default) to be open externally
@@ -133,13 +133,8 @@ externalService:
   enabled: true
   port: 7800
   annotations:
-      "service.beta.kubernetes.io/aws-load-balancer-type":  "external"
-      "service.beta.kubernetes.io/aws-load-balancer-nlb-target-type": "instance"
-      "service.beta.kubernetes.io/load-balancer-source-ranges": "0.0.0.0/0"
-      "service.beta.kubernetes.io/aws-load-balancer-scheme": "internet-facing"
-      "service.beta.kubernetes.io/aws-load-balancer-ssl-ports": "7800" 
-      "service.beta.kubernetes.io/aws-load-balancer-backend-protocol": "tcp" # "http"
-      "external-dns.alpha.kubernetes.io/hostname": "cdagent.idtplateer.com"
+#    networking.gke.io/load-balancer-type: "Internal"
+#    service.beta.kubernetes.io/aws-load-balancer-internal: "0.0.0.0/0"
 
 ### --------------------------------------------
 ### Flow agent storage and resources configuration section
