@@ -176,7 +176,7 @@ spec:
         - name: ELASTICSEARCH_USERNAME
           value: "admin"
         - name: ELASTICSEARCH_PASSWORD
-          value: "changeme"
+          value: "DevOps4changedme!@#"
         - name: ELASTICSEARCH_PROTOCOL
           value: "https"
         - name: ELASTICSEARCH_SSL_ENABLED

@@ -54,7 +54,7 @@ $ helm search repo es/filebeat  --versions
     - name: ELASTICSEARCH_USERNAME # Elasticsearch 유저명
       value: "admin"
     - name: ELASTICSEARCH_PASSWORD # Elasticsearch 패스워드
-      value: "changeme"
+      value: "DevOps4changedme!@#"
     - name: ELASTICSEARCH_PROTOCOL # Elasticsearch 내부 서비스 프로토콜
       value: "https"
     - name: ELASTICSEARCH_SSL_ENABLED # Elasticsearch 내부 서비스에 SSL 활성화 여부
@@ -111,7 +111,7 @@ k8s 매트릭을 수집하며 추가로 kubernetes 모듈에서 이벤트를 수
         - name: ELASTICSEARCH_USERNAME
           value: "admin"
         - name: ELASTICSEARCH_PASSWORD
-          value: "changeme"
+          value: "DevOps4changedme!@#"
         - name: ELASTICSEARCH_PROTOCOL
           value: "https"
         - name: ELASTICSEARCH_SSL_ENABLED
