@@ -5,10 +5,10 @@ metadata:
   namespace: cdro  # 네임스페이스를 설정하세요
 data:
   # host    데이터베이스명    사용자명    IP주소/마스크    인증방법
-  pg_hba.conf: |-
-     host    all            sherpa    0.0.0.0/0       trust
-     host    flow           sherpa    10.5.145.95/32  trust
-     host    flow           sherpa    10.5.145.72/32  trust
+  #pg_hba.conf: |-
+  #   host    all            sherpa    0.0.0.0/0       trust
+  #   host    flow           sherpa    10.5.145.95/32  trust
+  #   host    flow           sherpa    10.5.145.72/32  trust
   postgresql.conf: |
     # -----------------------------
     # PostgreSQL configuration file
