@@ -315,7 +315,7 @@ postgresql:
   ##
   livenessProbe:
     enabled: true
-    initialDelaySeconds: 30
+    initialDelaySeconds: 600
     periodSeconds: 10
     timeoutSeconds: 5
     successThreshold: 1
@@ -331,7 +331,7 @@ postgresql:
   ##
   readinessProbe:
     enabled: true
-    initialDelaySeconds: 5
+    initialDelaySeconds: 600
     periodSeconds: 10
     timeoutSeconds: 5
     successThreshold: 1
@@ -1705,7 +1705,7 @@ witness:
   upgradeRepmgrExtension: false
   ## @param witness.pgHbaTrustAll Configures PostgreSQL HBA to trust every user
   ##
-  pgHbaTrustAll: false
+  pgHbaTrustAll: true
   ## Repmgr configuration parameters
   ## @param witness.repmgrLogLevel Repmgr log level (DEBUG, INFO, NOTICE, WARNING, ERROR, ALERT, CRIT or EMERG)
   ## @param witness.repmgrConnectTimeout Repmgr backend connection timeout (in seconds)
@@ -2107,7 +2107,7 @@ pgpool:
   ##
   readinessProbe:
     enabled: true
-    initialDelaySeconds: 5
+    initialDelaySeconds: 30
     periodSeconds: 5
     timeoutSeconds: 5
     successThreshold: 1
