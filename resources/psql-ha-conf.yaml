@@ -839,5 +839,4 @@ data:
     #------------------------------------------------------------------------------
     pg_stat_statements.max = 10000
     pg_stat_statements.track = all
-    timed_statistics = 'on'
     logging_collector = 'on'
