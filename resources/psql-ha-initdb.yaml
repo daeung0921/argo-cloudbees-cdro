@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: psql-ha-initdb
+  namespace: cdro  # 네임스페이스를 설정하세요
+data:
+  # DB 계정 생성
+  create-sherpa-user.sql: |
+    CREATE USER sherpa WITH LOGIN SUPERUSER PASSWORD 'password1!';
+  #  -- SQL 구문 통계정보 수집
+  add-pg-stat-statements.sql: | 
+    CREATE EXTENSION pg_stat_statements SCHEMA public;  
+ 

@@ -10,6 +10,8 @@ resources:
 - ./resources/configmaps.yaml
 - ./resources/metricbeat.yaml
 - ./resources/jobs.yaml
+- ./resources/psql-ha-conf.yaml
+- ./resources/psql-ha-initdb.yaml
 
 helmCharts:
   #------------------------------------------
