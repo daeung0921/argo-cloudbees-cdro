@@ -569,7 +569,7 @@ postgresql:
   ## @param postgresql.initdbScriptsCM ConfigMap with scripts to be run at first boot
   ## NOTE: This will override initdbScripts
   ##
-  initdbScriptsCM: "psql-ha-initdb"
+  initdbScriptsCM: "" #"psql-ha-initdb"
   ## @param postgresql.initdbScriptsSecret Secret with scripts to be run at first boot
   ## Note: can be used with initdbScriptsCM or initdbScripts
   ##
