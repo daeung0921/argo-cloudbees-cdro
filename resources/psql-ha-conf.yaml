@@ -4,11 +4,44 @@ metadata:
   name: postgresql-ha-config
   namespace: cdro  # 네임스페이스를 설정하세요
 data:
+  # /opt/bitnami/repmgr/conf/repmgr.conf
+  repmgr.conf: |-
+    event_notification_command='/opt/bitnami/repmgr/events/router.sh %n %e %s "%t" "%d"'
+    ssh_options='-o "StrictHostKeyChecking no" -v'
+    use_replication_slots='1'
+    pg_bindir='/opt/bitnami/postgresql/bin'
+
+    # FIXME: these 2 parameter should work
+    node_id=1000
+    node_name='postgresql-postgresql-ha-postgresql-0'
+    location='default'
+    conninfo='user=repmgr password=repmgr host=postgresql-postgresql-ha-postgresql-0.postgresql-postgresql-ha-postgresql-headless.cdro.svc.cluster.local dbname=repmgr port=5432 connect_timeout=5' 
+    failover='automatic'
+    promote_command='PGPASSWORD=repmgr repmgr standby promote -f "/opt/bitnami/repmgr/conf/repmgr.conf" --log-level DEBUG --verbose'
+    follow_command='PGPASSWORD=repmgr repmgr standby follow -f "/opt/bitnami/repmgr/conf/repmgr.conf" -W --log-level DEBUG --verbose'
+    reconnect_attempts='2'
+    reconnect_interval='3'
+    log_level='NOTICE'
+    priority='100'
+    degraded_monitoring_timeout='5'
+    data_directory='/bitnami/postgresql/data'
+    async_query_timeout='20'
+    pg_ctl_options='-o "--config-file=\"/opt/bitnami/postgresql/conf/postgresql.conf\" --external_pid_file=\"/opt/bitnami/postgresql/tmp/postgresql.pid\" --hba_file=\"/opt/bitnami/postgresql/conf/pg_hba.conf\""'
+    pg_basebackup_options=''
+  # /opt/bitnami/postgresql/conf/pg_hba.conf
   # host    데이터베이스명    사용자명    IP주소/마스크    인증방법
-  #pg_hba.conf: |-
-  #   host    all            sherpa    0.0.0.0/0       trust
-  #   host    flow           sherpa    10.5.145.95/32  trust
-  #   host    flow           sherpa    10.5.145.72/32  trust
+  pg_hba.conf: |-
+    host     all              repmgr    0.0.0.0/0       md5
+    host     repmgr           repmgr    0.0.0.0/0       md5
+    host     repmgr           repmgr    ::/0            md5
+    host     replication      repmgr    0.0.0.0/0       md5
+    host     replication      repmgr    ::/0            md5
+    host     all              all       0.0.0.0/0       md5
+    host     all              all       ::/0            md5
+    local    all              all                       md5
+    host     all              sherpa    0.0.0.0/0       md5
+    host     flow             sherpa    0.0.0.0/0       md5
+  # /opt/bitnami/postgresql/conf/postgresql.conf
   postgresql.conf: |
     # -----------------------------
     # PostgreSQL configuration file
@@ -69,11 +102,11 @@ data:
 
     # - Connection Settings -
 
-    #listen_addresses = 'localhost'         # what IP address(es) to listen on;
+    listen_addresses = '*'
                                             # comma-separated list of addresses;
                                             # defaults to 'localhost'; use '*' for all
                                             # (change requires restart)
-    #port = 5432                            # (change requires restart)
+    port = '5432'
     max_connections = '300'
     #superuser_reserved_connections = 3     # (change requires restart)
     #unix_socket_directories = '/tmp'       # comma-separated list of directories
@@ -216,10 +249,10 @@ data:
 
     wal_level = 'replica'
                                             # (change requires restart)
-    #fsync = on                             # flush data to disk for crash safety
+    fsync = 'on'
                                             # (turning this off can cause
                                             # unrecoverable data corruption)
-    #synchronous_commit = on                # synchronization level;
+    synchronous_commit = 'on'
                                             # off, local, remote_write, remote_apply, or on
     #wal_sync_method = fsync                # the default is the first option
                                             # supported by the operating system:
@@ -250,7 +283,7 @@ data:
     #checkpoint_completion_target = 0.9     # checkpoint target duration, 0.0 - 1.0
     #checkpoint_flush_after = 0             # measured in pages, 0 disables
     #checkpoint_warning = 30s               # 0 disables
-    #max_wal_size = 1GB
+    max_wal_size = '400MB'
     #min_wal_size = 80MB
 
     # - Prefetching during recovery -
@@ -321,7 +354,7 @@ data:
                                     # (change requires restart)
     max_replication_slots = '10'
                                     # (change requires restart)
-    #wal_keep_size = 0              # in megabytes; 0 disables
+    wal_keep_size = '128MB'
     #max_slot_wal_keep_size = -1    # in megabytes; -1 disables
     #wal_sender_timeout = 60s       # in milliseconds; 0 disables
     #track_commit_timestamp = off   # collect timestamp of transaction commit
@@ -331,7 +364,7 @@ data:
 
     # These settings are ignored on a standby server.
 
-    #synchronous_standby_names = '' # standby servers that provide sync rep
+    synchronous_standby_names = '2 ("postgresql-postgresql-ha-postgresql-0","postgresql-postgresql-ha-postgresql-1","postgresql-postgresql-ha-postgresql-2")'
                                     # method to choose sync standbys, number of sync standbys,
                                     # and comma-separated list of application_name
                                     # from standby(s); '*' = all
@@ -460,13 +493,13 @@ data:
                                             # logging_collector to be on.
 
     # This is used when logging to stderr:
-    logging_collector = 'on'
+    #logging_collector = 'on'
                                             # and csvlog into log files. Required
                                             # to be on for csvlogs and jsonlogs.
                                             # (change requires restart)
 
     # These are only used if logging_collector is on:
-    #log_directory = '/opt/bitnami/postgresql/logs'
+    log_directory = '/opt/bitnami/postgresql/logs'
                                             # can be absolute or relative to PGDATA
     log_filename = 'postgresql.log'
                                             # can include strftime() escapes
@@ -749,7 +782,7 @@ data:
 
     #local_preload_libraries = ''
     #session_preload_libraries = ''
-    #shared_preload_libraries = 'repmgr, pgaudit, repmgr'
+    shared_preload_libraries = 'repmgr, pgaudit, repmgr'
     #jit_provider = 'llvmjit'               # JIT library to use
 
     # - Other Defaults -
@@ -829,7 +862,7 @@ data:
     #------------------------------------------------------------------------------
     # Sherpa OPTIONS Override
     #------------------------------------------------------------------------------
-    shared_preload_libraries = 'repmgr, pgaudit, $libdir/pg_stat_statements'
+    shared_preload_libraries = 'repmgr, pgaudit, repmgr, $libdir/pg_stat_statements'
     track_activity_query_size = 65536
     track_functions = all
     log_directory = '/opt/bitnami/postgresql/logs'
