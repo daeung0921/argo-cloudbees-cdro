@@ -4,10 +4,11 @@ metadata:
   name: postgresql-ha-config
   namespace: cdro  # 네임스페이스를 설정하세요
 data:
+  # 
   pg_hba.conf: |-
-     host    all            sherpa    0.0.0.0/0    md5
-     host    flow           sherpa    10.5.145.95  md5
-     host    flow           sherpa    10.5.145.72  md5
+     host    all            sherpa    0.0.0.0/0    trust
+     host    flow           sherpa    10.5.145.95  trust
+     host    flow           sherpa    10.5.145.72  trust
   postgresql.conf: |
     # -----------------------------
     # PostgreSQL configuration file
