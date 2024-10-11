@@ -401,7 +401,7 @@ postgresql:
   upgradeRepmgrExtension: false
   ## @param postgresql.pgHbaTrustAll Configures PostgreSQL HBA to trust every user
   ##
-  pgHbaTrustAll: false
+  pgHbaTrustAll: true
   ## @param postgresql.syncReplication Make the replication synchronous. This will wait until the data is synchronized in all the replicas before other query can be run. This ensures the data availability at the expenses of speed.
   ##
   syncReplication: true
@@ -550,7 +550,15 @@ postgresql:
   ##   max_locks_per_transaction = 64
   ##   ...
   ##
-  extendedConf: ""
+  extendedConf: |-
+    shared_preload_libraries = 'repmgr, pgaudit, repmgr, $libdir/pg_stat_statements'
+    track_activity_query_size = 65536
+    track_functions = all
+    log_directory = '/opt/bitnami/postgresql/logs'
+    log_file_mode = 0640
+    pg_stat_statements.max = 10000
+    pg_stat_statements.track = all
+    logging_collector = 'on'
   ## @param postgresql.extendedConfCM ConfigMap with PostgreSQL extended configuration
   ## NOTE: This will override postgresql.extendedConf and implies `volumePermissions.enabled`
   ##
@@ -565,7 +573,11 @@ postgresql:
   ##      #!/bin/sh
   ##      echo "Do something."
   ##
-  initdbScripts: {}
+  initdbScripts: 
+    create-sherpa-user.sql: |
+       CREATE USER sherpa WITH LOGIN SUPERUSER PASSWORD 'password1!';
+    add-pg-stat-statements.sql: | 
+       CREATE EXTENSION pg_stat_statements SCHEMA public;
   ## @param postgresql.initdbScriptsCM ConfigMap with scripts to be run at first boot
   ## NOTE: This will override initdbScripts
   ##
@@ -1789,7 +1801,7 @@ metrics:
 volumePermissions:
   ## @param volumePermissions.enabled Enable init container to adapt volume permissions
   ##
-  enabled: false
+  enabled: true
   ## @param volumePermissions.image.registry Init container volume-permissions image registry
   ## @param volumePermissions.image.repository Init container volume-permissions image repository
   ## @param volumePermissions.image.tag Init container volume-permissions image tag
