@@ -401,7 +401,7 @@ postgresql:
   upgradeRepmgrExtension: false
   ## @param postgresql.pgHbaTrustAll Configures PostgreSQL HBA to trust every user
   ##
-  pgHbaTrustAll: true
+  pgHbaTrustAll: false
   ## @param postgresql.syncReplication Make the replication synchronous. This will wait until the data is synchronized in all the replicas before other query can be run. This ensures the data availability at the expenses of speed.
   ##
   syncReplication: true
@@ -993,7 +993,16 @@ witness:
   ##   host     repmgr         repmgr    0.0.0.0/0    md
   ##   ...
   ##
-  pgHbaConfiguration: ""
+  pgHbaConfiguration: |-
+    host     all              repmgr    0.0.0.0/0       md5
+    host     repmgr           repmgr    0.0.0.0/0       md5
+    host     repmgr           repmgr    ::/0            md5
+    host     replication      repmgr    0.0.0.0/0       md5
+    host     replication      repmgr    ::/0            md5
+    host     all              sherpa    0.0.0.0/0       md5
+    host     all              sherpa    ::/0            md5
+    local    all              all                       md5
+    local    all              all                       md5
   ## @param witness.configurationCM Name of existing ConfigMap with configuration files
   ## NOTE: This will override witness.repmgrConfiguration, witness.configuration and witness.pgHbaConfiguration
   ##
