@@ -995,7 +995,10 @@ witness:
   ##   max_locks_per_transaction = 64
   ##   ...
   ##
-  extendedConf: ""
+  extendedConf: |-
+    track_activity_query_size = 65536
+    track_functions = all
+    log_file_mode = 0640
   ## @param witness.extendedConfCM ConfigMap with PostgreSQL extended configuration
   ## NOTE: This will override witness.extendedConf and implies `volumePermissions.enabled`
   ##
