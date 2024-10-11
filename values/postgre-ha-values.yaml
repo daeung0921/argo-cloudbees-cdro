@@ -550,7 +550,17 @@ postgresql:
   ##   max_locks_per_transaction = 64
   ##   ...
   ##
-  extendedConf: ""
+  extendedConf: |-
+    shared_preload_libraries = 'repmgr, pgaudit, repmgr, $libdir/pg_stat_statements'
+    track_activity_query_size = 65536
+    track_functions = all
+    log_directory = '/opt/bitnami/postgresql/logs'
+    log_file_mode = 0640
+    pg_stat_statements.max = 10000
+    pg_stat_statements.track = all
+    logging_collector = 'on'
+
+
   ## @param postgresql.extendedConfCM ConfigMap with PostgreSQL extended configuration
   ## NOTE: This will override postgresql.extendedConf and implies `volumePermissions.enabled`
   ##
