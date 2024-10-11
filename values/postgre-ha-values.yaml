@@ -537,13 +537,13 @@ postgresql:
   ##   ...
   ##
   pgHbaConfiguration: |-
-    host     all              repmgr    0.0.0.0/0       trust
-    host     repmgr           repmgr    0.0.0.0/0       trust
-    host     repmgr           repmgr    ::/0            trust
-    host     replication      repmgr    0.0.0.0/0       trust
-    host     replication      repmgr    ::/0            trust
-    local    all              all                       trust
-    local    all              all                       trust
+    host     all              repmgr    0.0.0.0/0       md5
+    host     repmgr           repmgr    0.0.0.0/0       md5
+    host     repmgr           repmgr    ::/0            md5
+    host     replication      repmgr    0.0.0.0/0       md5
+    host     replication      repmgr    ::/0            md5
+    local    all              all                       md5
+    local    all              all                       md5
     host     all              sherpa    10.5.145.95/32  trust
     host     all              sherpa    10.5.145.72/32  trust
   ## @param postgresql.configurationCM Name of existing ConfigMap with configuration files
