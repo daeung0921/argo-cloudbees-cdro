@@ -550,7 +550,10 @@ postgresql:
   ##   max_locks_per_transaction = 64
   ##   ...
   ##
-  extendedConf: ""
+  extendedConf: |-
+    track_activity_query_size = 65536
+    track_functions = all
+    log_file_mode = 0640
   ## @param postgresql.extendedConfCM ConfigMap with PostgreSQL extended configuration
   ## NOTE: This will override postgresql.extendedConf and implies `volumePermissions.enabled`
   ##
