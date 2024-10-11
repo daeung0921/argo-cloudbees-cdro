@@ -401,7 +401,7 @@ postgresql:
   upgradeRepmgrExtension: false
   ## @param postgresql.pgHbaTrustAll Configures PostgreSQL HBA to trust every user
   ##
-  pgHbaTrustAll: false
+  pgHbaTrustAll: true
   ## @param postgresql.syncReplication Make the replication synchronous. This will wait until the data is synchronized in all the replicas before other query can be run. This ensures the data availability at the expenses of speed.
   ##
   syncReplication: true
@@ -573,7 +573,11 @@ postgresql:
   ##      #!/bin/sh
   ##      echo "Do something."
   ##
-  initdbScripts: {}
+  initdbScripts: 
+    create-sherpa-user.sql: |
+       CREATE USER sherpa WITH LOGIN SUPERUSER PASSWORD 'password1!';
+    add-pg-stat-statements.sql: | 
+       CREATE EXTENSION pg_stat_statements SCHEMA public;
   ## @param postgresql.initdbScriptsCM ConfigMap with scripts to be run at first boot
   ## NOTE: This will override initdbScripts
   ##
@@ -881,7 +885,7 @@ witness:
   upgradeRepmgrExtension: false
   ## @param witness.pgHbaTrustAll Configures PostgreSQL HBA to trust every user
   ##
-  pgHbaTrustAll: false
+  pgHbaTrustAll: true
   ## Repmgr configuration parameters
   ## @param witness.repmgrLogLevel Repmgr log level (DEBUG, INFO, NOTICE, WARNING, ERROR, ALERT, CRIT or EMERG)
   ## @param witness.repmgrConnectTimeout Repmgr backend connection timeout (in seconds)
