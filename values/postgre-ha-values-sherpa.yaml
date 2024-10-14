@@ -536,7 +536,16 @@ postgresql:
   ##   host     repmgr         repmgr    0.0.0.0/0    md
   ##   ...
   ##
-  pgHbaConfiguration: ""
+  pgHbaConfiguration: |-
+    host     all              repmgr    0.0.0.0/0       md5
+    host     repmgr           repmgr    0.0.0.0/0       md5
+    host     repmgr           repmgr    ::/0            md5
+    host     replication      repmgr    0.0.0.0/0       md5
+    host     replication      repmgr    ::/0            md5
+    local    all              all                       md5
+    local    all              all                       md5
+    host     all              sherpa    10.5.145.95/32  trust
+    host     all              sherpa    10.5.145.72/32  trust
   ## @param postgresql.configurationCM Name of existing ConfigMap with configuration files
   ## NOTE: This will override postgresql.repmgrConfiguration, postgresql.configuration and postgresql.pgHbaConfiguration
   ##
@@ -550,7 +559,15 @@ postgresql:
   ##   max_locks_per_transaction = 64
   ##   ...
   ##
-  extendedConf: ""
+  extendedConf: |-
+    shared_preload_libraries = 'repmgr, pgaudit, repmgr, $libdir/pg_stat_statements'
+    track_activity_query_size = 65536
+    track_functions = all
+    log_directory = '/opt/bitnami/postgresql/logs'
+    log_file_mode = 0640
+    pg_stat_statements.max = 10000
+    pg_stat_statements.track = all
+    logging_collector = 'on'
   ## @param postgresql.extendedConfCM ConfigMap with PostgreSQL extended configuration
   ## NOTE: This will override postgresql.extendedConf and implies `volumePermissions.enabled`
   ##
@@ -565,7 +582,11 @@ postgresql:
   ##      #!/bin/sh
   ##      echo "Do something."
   ##
-  initdbScripts: {}
+  initdbScripts: 
+    create-sherpa-user.sql: |
+       CREATE USER sherpa WITH LOGIN SUPERUSER PASSWORD 'password1!';
+    add-pg-stat-statements.sql: | 
+       CREATE EXTENSION pg_stat_statements SCHEMA public;
   ## @param postgresql.initdbScriptsCM ConfigMap with scripts to be run at first boot
   ## NOTE: This will override initdbScripts
   ##
@@ -1789,7 +1810,7 @@ metrics:
 volumePermissions:
   ## @param volumePermissions.enabled Enable init container to adapt volume permissions
   ##
-  enabled: false
+  enabled: true
   ## @param volumePermissions.image.registry Init container volume-permissions image registry
   ## @param volumePermissions.image.repository Init container volume-permissions image repository
   ## @param volumePermissions.image.tag Init container volume-permissions image tag
