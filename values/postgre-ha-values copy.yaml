@@ -550,9 +550,7 @@ postgresql:
   ##   max_locks_per_transaction = 64
   ##   ...
   ##
-  extendedConf: |
-    shared_buffers: 512MB
-
+  extendedConf: ""
   ## @param postgresql.extendedConfCM ConfigMap with PostgreSQL extended configuration
   ## NOTE: This will override postgresql.extendedConf and implies `volumePermissions.enabled`
   ##
@@ -1246,10 +1244,10 @@ pgpool:
   resources: 
     limits:
       cpu: 500m
-      memory: 1024Mi
+      memory: 512Mi
     requests:
       cpu: 250m
-      memory: 1024Mi
+      memory: 256Mi
   ## Pgpool container's liveness probe
   ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes
   ## @param pgpool.livenessProbe.enabled Enable livenessProbe
