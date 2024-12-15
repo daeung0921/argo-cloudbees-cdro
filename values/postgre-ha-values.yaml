@@ -551,7 +551,8 @@ postgresql:
   ##   ...
   ##
   extendedConf: |
-    shared_buffers: 512MB
+    shared_buffers = 512MB
+    work_mem = 4MB
 
   ## @param postgresql.extendedConfCM ConfigMap with PostgreSQL extended configuration
   ## NOTE: This will override postgresql.extendedConf and implies `volumePermissions.enabled`
