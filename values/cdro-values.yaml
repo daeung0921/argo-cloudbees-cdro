@@ -63,7 +63,7 @@ ingress:
   enabled: true
   host: "cdro.idtplateer.com" 
   annotations: 
-    "alb.ingress.kubernetes.io/certificate-arn": "arn:aws:acm:ap-northeast-2:960249453675:certificate/5ef7ac4b-8549-480b-ac9b-6efae081ecbf"
+    "alb.ingress.kubernetes.io/certificate-arn": "arn:aws:acm:ap-northeast-2:960249453675:certificate/4fb17721-47f0-4924-b7b1-1b20f849f55c"
     "alb.ingress.kubernetes.io/scheme": "internet-facing"
     "external-dns.alpha.kubernetes.io/hostname": "cdro.idtplateer.com" 
   class: "cdro-ingress" 
