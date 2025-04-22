@@ -154,7 +154,7 @@ server:
     port: 2181
 
   ## Interpreted as if passed to the CloudBees ecconfigure utility within the container.
-  ecconfigure: "--serverInitMemoryMB=2048 --serverMaxMemoryMB=3072 --serverMaxThreadsApi=20 --serverMaxThreadsDispatch=8 --serverMaxThreadsHttp=100 --serverMaxThreadsQuartz==5"
+  ecconfigure: "--serverInitMemoryMB=2048 --serverMaxMemoryMB=3072 --serverMaxThreadsApi=20 --serverMaxThreadsDispatch=8 --serverMaxThreadsHttp=100 --serverMaxThreadsQuartz=5 --serverPreserveSessions=1 --serverIgnoreServerMismatch=1"
 
   ## Specify the resources to request for this component.
   resources:
