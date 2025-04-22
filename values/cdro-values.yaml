@@ -393,7 +393,7 @@ repository:
   logLevel: DEBUG
 
   ## Interpreted as if passed to the CloudBees ecconfigure utility within the container.
-  ecconfigure: "--repositoryInitMemoryMB=512 --repositoryMaxMemoryMB=1024"
+  ecconfigure: "--repositoryInitMemoryMB=512 --repositoryMaxMemoryMB=1024 --serverMaxThreadsDispatch=4 --serverMaxThreadsHttp=20 --agentAcceptQueueSize=1000 --serverMaxThreadsApi=10 --serverMaxThreadsQuartz=5"
 
   ## Specify the resources to request for this component.
   resources:
