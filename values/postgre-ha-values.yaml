@@ -553,8 +553,8 @@ postgresql:
   extendedConf: |
     shared_buffers = 512MB
     work_mem = 4MB
-    max_wal_size = 2GB
-    min_wal_size = 1GB
+    max_wal_size = 512MB
+    min_wal_size = 256MB
 
   ## @param postgresql.extendedConfCM ConfigMap with PostgreSQL extended configuration
   ## NOTE: This will override postgresql.extendedConf and implies `volumePermissions.enabled`
